@@ -68,5 +68,5 @@ export const GET: RequestHandler = async ({ request }) => {
     }
 
     const cookies = response.headers.getSetCookie()
-    return new Response("Hello World!");
+    return new Response(cookies.toString(), { status: 200 });
 };
