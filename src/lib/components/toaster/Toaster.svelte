@@ -1,15 +1,15 @@
-<script lang="ts" context="module">
+<script context="module" lang="ts">
 	export type ToastData = {
-		title: string;
 		description: string;
+		title: string;
 		color: string;
 	};
 	export const closeDelay = 5000;
 	const {
+		actions: { portal },
 		elements,
 		helpers,
-		states: { toasts },
-		actions: { portal }
+		states: { toasts }
 	} = createToaster<ToastData>({
 		closeDelay
 	});
@@ -19,13 +19,14 @@
 <script lang="ts">
 	import { createToaster } from '@melt-ui/svelte';
 	import { flip } from 'svelte/animate';
+
 	import Toast from './Toast.svelte';
 </script>
 
 <div class="fixed top-0 right-0 z-50 m-4 flex flex-col items-start gap-2" use:portal>
-	{#each $toasts as { id, data } (id)}
+	{#each $toasts as { data, id } (id)}
 		<div animate:flip={{ duration: 500 }}>
-			<Toast {data} {id} {elements} />
+			<Toast {elements} {data} {id} />
 		</div>
 	{/each}
 </div>

@@ -3,14 +3,15 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
  -->
 
 <script lang="ts">
-  import { onMount } from "svelte";
-  import {
-    getModeOsPrefers,
-    modeCurrent,
-    setModeCurrent,
-    setModeUserPrefers,
-  } from "./light-switch";
   import { createSwitch, melt } from "@melt-ui/svelte";
+  import { onMount } from "svelte";
+
+  import {
+    setModeUserPrefers,
+    getModeOsPrefers,
+    setModeCurrent,
+    modeCurrent,
+  } from "./light-switch";
 
   $: {
     setModeUserPrefers($modeCurrent);
@@ -18,7 +19,7 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
   }
 
   const {
-    elements: { root, input },
+    elements: { input, root },
   } = createSwitch({ checked: modeCurrent });
 
   // Lifecycle
@@ -39,8 +40,8 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
       Dark Mode
     </label>
     <button
-      use:melt={$root}
       class="relative h-6 w-11 rounded-full bg-dark-hover dark:bg-light-hover transition-colors data-[state=checked]:bg-black dark:data-[state=checked]:bg-white"
+      use:melt={$root}
       id="dark-mode"
     >
       <span

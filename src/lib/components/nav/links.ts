@@ -1,27 +1,27 @@
 export const navItems = [
     {
-        title: 'Skema',
+        external: false,
         href: '/skema',
-        external: false
+        title: 'Skema'
     },
     {
-        title: 'Opgaver',
+        external: false,
         href: '/opgaver',
-        external: false
+        title: 'Opgaver'
     },
     {
-        title: 'Lektier',
+        external: false,
         href: '/lektier',
-        external: false
+        title: 'Lektier'
     },
     {
-        title: 'Fravær',
+        external: false,
         href: '/fravær',
-        external: false
+        title: 'Fravær'
     },
     {
-        title: 'Fri',
+        external: false,
         href: '/fri',
-        external: false
+        title: 'Fri'
     }
 ]

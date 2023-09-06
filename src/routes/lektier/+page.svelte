@@ -1,29 +1,28 @@
 <script lang="ts">
-  import { RequestData } from "$components";
-  import { Card } from "$components/ui/card";
+  import type { RawHomework, Homework } from "$lib/types/homework";
+
   import { Skeleton } from "$components/ui/skeleton";
-  import { authStore } from "$lib/stores";
-  import type { Homework, RawHomework } from "$lib/types/homework";
   import { constructInterval } from "$lib/utilities";
-  import { decodeUserID } from "$lib/utilities/cookie";
+  import { Card } from "$components/ui/card";
+  import { RequestData } from "$components";
   import { DateTime } from "luxon";
 
   let loading = true;
   let data: RawHomework[];
-  let homework: { date: string; homework: Homework[] }[] = [];
+  let homework: { homework: Homework[]; date: string }[] = [];
   $: if (!loading && data) {
     const tempHomework = data.map((item) => ({
-      lesson: {
-        id: item.aktivitet.absid,
-        name: item.aktivitet.navn ?? "",
-        class: item.aktivitet.hold ?? "",
-        teacher: item.aktivitet.lærer ?? "",
-        status: item.aktivitet.status ?? "",
-        room: item.aktivitet.lokale ?? "",
-        note: item.aktivitet.andet ?? "",
-        interval: constructInterval(item.aktivitet.tidspunkt),
-      },
       homework: item.lektier.beskrivelse,
+      lesson: {
+        class: item.aktivitet.hold ?? "",
+        id: item.aktivitet.absid,
+        interval: constructInterval(item.aktivitet.tidspunkt),
+        name: item.aktivitet.navn ?? "",
+        note: item.aktivitet.andet ?? "",
+        room: item.aktivitet.lokale ?? "",
+        status: item.aktivitet.status ?? "",
+        teacher: item.aktivitet.lærer ?? "",
+      },
     }));
     const tempDates = tempHomework.map((item) => item.lesson.interval.start);
     let dates: DateTime[] = [];
@@ -51,7 +50,7 @@
   };
 </script>
 
-<RequestData bind:loading bind:data path="lektier" />
+<RequestData path="lektier" bind:loading bind:data />
 
 <div class="page-container">
   <h1 class="mb-2">Lektier</h1>

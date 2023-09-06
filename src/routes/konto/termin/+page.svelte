@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { RequestData } from "$components";
   import { addToast } from "$components/toaster";
+  import { RequestData } from "$components";
   import { authStore } from "$lib/stores";
 
   let loading = true;
-  let terminer: { selected: string; terminer: { [key: string]: string } };
+  let terminer: { terminer: { [key: string]: string }; selected: string };
 
   async function save() {
     const res = await fetch(
@@ -19,24 +19,24 @@
     if (!res.ok || data.success == false) {
       return addToast({
         data: {
-          title: "Fejl",
-          description: "Der skete en ukendt fejl.",
           color: "bg-red-500",
+          description: "Der skete en ukendt fejl.",
+          title: "Fejl",
         },
       });
     }
 
     addToast({
       data: {
-        title: "Termin ændret",
-        description: `Terminen er nu ændret til ${terminer.selected}.`,
         color: "",
+        description: `Terminen er nu ændret til ${terminer.selected}.`,
+        title: "Termin ændret",
       },
     });
   }
 </script>
 
-<RequestData bind:loading bind:data={terminer} path="terminer" />
+<RequestData bind:data={terminer} path="terminer" bind:loading />
 
 <section>
   <h2 class="mt-0">Termin</h2>
@@ -60,8 +60,8 @@
     </div>
     <div class="mt-4">
       <button
-        on:click={save}
         class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
+        on:click={save}
         >Gem</button
       >
     </div>

@@ -9,10 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 export function errorToast(message: string) {
   addToast({
     data: {
-      title: "Ukendt fejl",
+      color: "bg-red-500",
       description:
         `Der skete en ukendt fejl i python-lectio (ude af vores kontrol). Venligst rapporter denne fejl til udviklerne.\n\nFejl: ${message}`,
-      color: "bg-red-500",
+      title: "Ukendt fejl",
     },
   });
 }

@@ -19,10 +19,10 @@
         Hvis du ikke ved hvad det er, så lad være med at ændre den.
       </p>
       <input
-        bind:value={cookie}
-        placeholder={$authStore.cookie}
-        type="text"
         class="w-full mt-2 border dark:border-gray-600 border-gray-400 rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]"
+        placeholder={$authStore.cookie}
+        bind:value={cookie}
+        type="text"
       />
     </div>
     <footer
@@ -37,14 +37,14 @@
             $authStore.cookie = cookie;
             addToast({
               data: {
-                title: "Cookie ændret",
-                description: "Din cookie er nu blevet opdateret.",
                 color: "",
+                description: "Din cookie er nu blevet opdateret.",
+                title: "Cookie ændret",
               },
             });
           }}
-          disabled={cookie === "" || cookie === $authStore.cookie}
           class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={cookie === "" || cookie === $authStore.cookie}
           >Gem</button
         >
       </div>

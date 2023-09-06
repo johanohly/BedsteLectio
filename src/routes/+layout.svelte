@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { SiteHeader } from "$components";
+  import type { AfterNavigate } from "@sveltejs/kit";
+
   import { setInitialClassState } from "$components/light-switch/light-switch";
-  import "../lib/utilities/string";
-  import "../app.postcss";
   import { afterNavigate } from "$app/navigation";
   import { Toaster } from "$components/toaster";
+  import { SiteHeader } from "$components";
+  import { page } from "$app/stores";
+
+  import "../lib/utilities/string";
+  import "../app.postcss";
 
   $: title =
     $page.url.pathname == "/"
@@ -24,9 +27,9 @@
   }
 
   // Lifecycle
-  afterNavigate((params: any) => {
+  afterNavigate((params: AfterNavigate) => {
     // Scroll to top
-    const isNewPage: boolean =
+    const isNewPage =
       params.from && params.to && params.from.route.id !== params.to.route.id;
     const elemPage = document.querySelector("#page");
     if (isNewPage && elemPage !== null) {
@@ -40,37 +43,37 @@
   <title>{title}</title>
 
   <!-- Meta Tags -->
-  <meta name="title" content={title} />
+  <meta content={title} name="title" />
   <meta
-    name="description"
     content="BedsteLectio er en elegant og brugervenlig webside, der præsenterer data fra Lectio på en forbedret måde. "
+    name="description"
   />
   <meta
-    name="keywords"
     content="bedstelectio, betterlectio, lectio, studieadministration, skoleskema, karakterer, fravær, beskeder, brugervenlig, æstetisk, intuitiv, pæn, overskuelig"
+    name="keywords"
   />
   <meta name="theme-color" content="#ffffff" />
-  <meta name="author" content="Johnny JTH" />
+  <meta content="Johnny JTH" name="author" />
   <!-- Open Graph - https://ogp.me/ -->
   <meta property="og:site_name" content="BedsteLectio" />
   <meta property="og:type" content="website" />
   <meta
-    property="og:url"
     content="https://bedstelectio.tech{$page.url.pathname}"
+    property="og:url"
   />
   <meta property="og:locale" content="da_DK" />
   <meta property="og:title" content={title} />
   <meta
-    property="og:description"
     content="BedsteLectio er en elegant og brugervenlig webside, der præsenterer data fra Lectio på en forbedret måde. "
+    property="og:description"
   />
   <meta
+    content="https://bedstelectio.tech/favicon-dark.png"
     property="og:image"
-    content="https://bedstelectio.tech/favicon-dark.png"
   />
   <meta
-    property="og:image:secure_url"
     content="https://bedstelectio.tech/favicon-dark.png"
+    property="og:image:secure_url"
   />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="256" />
@@ -82,6 +85,6 @@
 
 <Toaster />
 <SiteHeader />
-<div id="page" class="prose dark:prose-invert max-w-none">
+<div class="prose dark:prose-invert max-w-none" id="page">
   <slot />
 </div>

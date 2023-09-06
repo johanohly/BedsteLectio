@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { authStore } from "$lib/stores";
+  import { goto } from "$app/navigation";
   import { onMount } from "svelte";
+
   import { addToast } from "./toaster";
 
   export let redirectIfFail = "/log-ind";
@@ -10,9 +11,9 @@
     active: false,
     path: "/log-ind",
     toast: {
-      title: "Serverfejl",
-      description: "Der skete en fejl på serveren.",
       color: "bg-red-500",
+      description: "Der skete en fejl på serveren.",
+      title: "Serverfejl",
     },
   };
 
@@ -33,8 +34,8 @@
       if ($authStore.username != "" && $authStore.password != "") {
         response = await fetch("https://api.betterlectio.dk/auth", {
           headers: {
-            brugernavn: $authStore.username,
             adgangskode: $authStore.password,
+            brugernavn: $authStore.username,
             skoleid: String($authStore.school),
           },
         });

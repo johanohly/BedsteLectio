@@ -8,11 +8,11 @@
   export let value: string | number;
 
   const {
-    elements: { trigger, menu, option },
-    states: { value: rootValue, valueLabel, open },
+    elements: { menu, option, trigger },
+    states: { open, value: rootValue, valueLabel },
   } = createSelect({
-    forceVisible: true,
     defaultValue: value,
+    forceVisible: true,
   });
   rootValue.subscribe((v) => {
     value = v;
@@ -34,8 +34,8 @@
       class="z-10 flex max-h-[360px] flex-col
       overflow-y-auto rounded-md bg-neutral-50 text-slate-900 dark:bg-neutral-950 dark:text-slate-100
       p-1 focus:!ring-0"
-      use:melt={$menu}
       transition:fly={{ duration: 100, y: -5 }}
+      use:melt={$menu}
     >
       {#each Object.entries(options) as [key, value]}
         <div
@@ -43,7 +43,7 @@
               focus:z-10 focus:text-primary-700
             data-[highlighted]:bg-[#e3ffe7] data-[selected]:bg-[#abfcb7]
             dark:data-[highlighted]:bg-[#8778f9be] dark:data-[selected]:bg-[#8678F9]"
-          use:melt={$option({ value: value, label: key })}
+          use:melt={$option({ label: key, value: value })}
         >
           {key}
         </div>

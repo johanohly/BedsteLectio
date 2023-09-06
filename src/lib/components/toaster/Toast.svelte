@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { createProgress, melt, type ToastsElements } from "@melt-ui/svelte";
+  import { type ToastsElements, createProgress, melt } from "@melt-ui/svelte";
+  import { fly } from "svelte/transition";
+  import { writable } from "svelte/store";
   import { X } from "lucide-svelte";
   import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
-  import { closeDelay, type ToastData } from "./Toaster.svelte";
-  import { writable } from "svelte/store";
+
+  import { type ToastData, closeDelay } from "./Toaster.svelte";
 
   export let elements: ToastsElements;
-  $: ({ content, title, description, close } = elements);
+  $: ({ close, content, description, title } = elements);
   export let data: ToastData;
   export let id: string;
 
@@ -18,8 +19,8 @@
     elements: { root: progressEl },
     options: { max },
   } = createProgress({
-    value: progress,
     max: 100,
+    value: progress,
   });
 
   onMount(() => {
@@ -49,29 +50,29 @@
 </script>
 
 <div
-  use:melt={$content(id)}
-  in:fly={{ duration: 150, x: "100%" }}
-  out:fly={{ duration: 150, x: "100%" }}
-  on:pointerenter={() => (hovering = true)}
-  on:pointerleave={() => (hovering = false)}
   class="rounded-lg overflow-hidden bg-white dark:bg-dark text-foreground shadow-md"
+  on:pointerleave={() => (hovering = false)}
+  on:pointerenter={() => (hovering = true)}
+  out:fly={{ duration: 150, x: "100%" }}
+  in:fly={{ duration: 150, x: "100%" }}
+  use:melt={$content(id)}
 >
   <div
-    use:melt={$progressEl}
     class="relative h-1 rounded-full w-full overflow-hidden bg-[#dfdfdf] dark:bg-dark-hover"
+    use:melt={$progressEl}
   >
     <div
-      class="h-full w-full bg-[#f0f0f0] dark:bg-dark/80"
       style={`transform: translateX(-${
         100 - (100 * ($progress ?? 0)) / ($max ?? 1)
       }%)`}
+      class="h-full w-full bg-[#f0f0f0] dark:bg-dark/80"
     />
   </div>
   <div
     class="relative flex w-[24rem] max-w-[calc(100vw-2rem)] items-center justify-between gap-4 p-5"
   >
     <div>
-      <h3 use:melt={$title(id)} class="flex items-center gap-2 font-semibold">
+      <h3 class="flex items-center gap-2 font-semibold" use:melt={$title(id)}>
         {data.title}
         <span class="rounded-full square-1.5 {data.color}" />
       </h3>
@@ -80,9 +81,9 @@
       </div>
     </div>
     <button
-      use:melt={$close(id)}
       class="absolute right-4 top-4 grid place-items-center rounded-full text-foreground square-6
       hover:bg-[#dfdfdf] dark:hover:bg-dark-hover"
+      use:melt={$close(id)}
     >
       <X class="square-4" />
     </button>

@@ -1,23 +1,24 @@
 <script lang="ts">
-  import { Badge } from "$components/ui/badge";
+  import type {
+    RawSimpleAssignment,
+    SimpleAssignment,
+  } from "$lib/types/assignments";
+  import type { Writable } from "svelte/store";
+
   import {
-    Card,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
+    Card,
   } from "$components/ui/card";
   import { Skeleton } from "$components/ui/skeleton";
-  import { DateTime } from "luxon";
-  import type {
-    SimpleAssignment,
-    RawSimpleAssignment,
-  } from "$lib/types/assignments";
   import Tabs from "$components/ui/tabs/Tabs.svelte";
-  import type { Writable } from "svelte/store";
-  import { Search } from "lucide-svelte";
-  import { filter } from "fuzzy";
+  import { Badge } from "$components/ui/badge";
   import { RequestData } from "$components";
+  import { Search } from "lucide-svelte";
+  import { DateTime } from "luxon";
+  import { filter } from "fuzzy";
 
   let loading = true;
   let data: RawSimpleAssignment[];
@@ -26,20 +27,20 @@
 
   $: if (!loading && data) {
     assignments = data.map((assignment) => ({
-      title: assignment.opgavetitel,
-      description: assignment.opgavenote,
       date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
         locale: "da",
       }),
-      status: assignment.status,
+      description: assignment.opgavenote,
       hold: assignment.hold,
       link: `/opgave/${assignment.exerciseid}`,
+      status: assignment.status,
+      title: assignment.opgavetitel,
     }));
   }
 
-  type Status = "Kommende" | "Færdige" | "Manglende";
+  type Status = "Manglende" | "Kommende" | "Færdige";
   let selectedTab: Writable<Status>;
-  let searchTerm: string = "";
+  let searchTerm = "";
   let matchingAssignments: string[] = [];
   $: if (searchTerm) {
     matchingAssignments = filter(
@@ -65,16 +66,16 @@
   });
 </script>
 
-<RequestData bind:loading bind:data path="opgaver" />
+<RequestData path="opgaver" bind:loading bind:data />
 
 <div class="!overflow-hidden page-container">
   <div class="max-h-[88vh] flex flex-col">
     <h1 class="mb-2">Opgaver</h1>
     <div class="flex justify-between">
       <Tabs
-        bind:selectedTab
         tabs={["Kommende", "Færdige", "Manglende"]}
         defaultActive="Kommende"
+        bind:selectedTab
       />
       <div class="hidden md:block relative">
         <div
@@ -83,14 +84,14 @@
           <Search class="h-4 w-4 text-gray-500 dark:text-gray-400" />
         </div>
         <input
-          bind:value={searchTerm}
-          type="search"
           class="bg-white dark:bg-dark border border-gray-300 dark:border-gray-600 text-sm rounded-lg block h-10 pl-10 p-2.5 dark:placeholder:text-[#3b3b3b] focus:ring-blue-500 focus:border-blue-500"
+          bind:value={searchTerm}
           placeholder="Søg..."
           autocapitalize="off"
           autocomplete="off"
-          autocorrect="off"
           spellcheck="false"
+          autocorrect="off"
+          type="search"
         />
       </div>
     </div>
@@ -110,7 +111,7 @@
           }) as assignment}
           <div class="not-prose">
             <a href={assignment.link}>
-              <Card class="mb-4" animate={true}>
+              <Card animate={true} class="mb-4">
                 <CardHeader>
                   <CardTitle
                     >{assignment.title}<span

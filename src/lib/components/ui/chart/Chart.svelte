@@ -16,4 +16,4 @@
   }
 </script>
 
-<div class="w-full" bind:this={chartEl} />
+<div bind:this={chartEl} class="w-full" />

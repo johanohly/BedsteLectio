@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable, writable } from "svelte/store";
 
   let originalTabs: string[] = [];
   export { originalTabs as tabs };
-  export let defaultActive: string = "";
+  export let defaultActive = "";
   export let selectedTab = writable(defaultActive);
   $: selectedTab.set(tabs[$selectedTabIndex]?.label ?? "");
 
@@ -80,21 +80,21 @@
 </script>
 
 <nav
-  bind:this={navRef}
   class="flex flex-shrink-0 items-center relative z-0 py-2"
   on:pointerleave={onLeaveTabs}
+  bind:this={navRef}
 >
   {#each tabs as tab, i}
     <button
-      id={String(i)}
       class="text-md relative rounded-md flex items-center h-8 px-4 z-20 bg-transparent text-base text-slate-500 dark:text-slate-400 cursor-pointer select-none transition-colors {$hoveredTabIndex ===
         i || $selectedTabIndex === i
         ? '!text-black dark:!text-white'
         : ''}"
-      bind:this={$buttonRefs[i]}
       on:pointerenter={(e) => onEnterTab(e, i)}
       on:focus={(e) => onEnterTab(e, i)}
       on:click={() => onSelectTab(i)}
+      bind:this={$buttonRefs[i]}
+      id={String(i)}
     >
       {tab.label}
     </button>

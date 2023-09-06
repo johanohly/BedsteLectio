@@ -1,13 +1,13 @@
 <script lang="ts">
+  import { createLabel, melt } from "@melt-ui/svelte";
   import { cva } from "class-variance-authority";
   import { cn } from "$lib/utils";
-  import { createLabel, melt } from "@melt-ui/svelte";
 
   const labelVariants = cva(
     "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
   );
 
-  let className: string | undefined | null = undefined;
+  let className: undefined | string | null = undefined;
   export { className as class };
 
   const {
@@ -15,6 +15,6 @@
   } = createLabel();
 </script>
 
-<label use:melt={$root} class={cn(labelVariants(), className)} {...$$restProps}>
+<label class={cn(labelVariants(), className)} use:melt={$root} {...$$restProps}>
   <slot />
 </label>

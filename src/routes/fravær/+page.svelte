@@ -1,21 +1,22 @@
 <script lang="ts">
-  import { RequestData } from "$components";
-  import { modeCurrent } from "$components/light-switch/light-switch";
-  import { Badge } from "$components/ui/badge";
-  import { Button } from "$components/ui/button";
-  import { Card, CardContent, CardHeader } from "$components/ui/card";
-  import { Chart } from "$components/ui/chart";
-  import { Select } from "$components/ui/select";
-  import * as Table from "$lib/components/ui/table";
-  import { authStore } from "$lib/stores";
   import type { RawAbsence } from "$lib/types/absence";
-  import { constructInterval } from "$lib/utilities";
-  import { decodeUserID } from "$lib/utilities/cookie";
-  import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
-  import { DateTime, Info, Interval } from "luxon";
+
   import { createTable, Subscribe, Render } from "svelte-headless-table";
+  import { modeCurrent } from "$components/light-switch/light-switch";
+  import { CardContent, CardHeader, Card } from "$components/ui/card";
+  import { ArrowUpDown, ArrowDown, ArrowUp } from "lucide-svelte";
   import { addSortBy } from "svelte-headless-table/plugins";
-  import { get, writable, type Writable } from "svelte/store";
+  import { type Writable, writable } from "svelte/store";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import { constructInterval } from "$lib/utilities";
+  import * as Table from "$lib/components/ui/table";
+  import { DateTime, Interval, Info } from "luxon";
+  import { Button } from "$components/ui/button";
+  import { Select } from "$components/ui/select";
+  import { Badge } from "$components/ui/badge";
+  import { Chart } from "$components/ui/chart";
+  import { RequestData } from "$components";
+  import { authStore } from "$lib/stores";
 
   let loading = true;
   let data: RawAbsence;
@@ -45,11 +46,11 @@
   let absenceReasons: Writable<
     {
       lessonId: string;
-      class: string;
+      category: string;
       absence: string;
       date: Interval;
-      category: string;
       reason: string;
+      class: string;
     }[]
   > = writable([]);
 
@@ -102,10 +103,10 @@
         return [
           ...old,
           {
-            lessonId: item.aktivitet.absid,
-            class: item.aktivitet.hold ?? "Ukendt",
             absence: item.fravær,
+            class: item.aktivitet.hold ?? "Ukendt",
             date: constructInterval(item.aktivitet.tidspunkt),
+            lessonId: item.aktivitet.absid,
             reason: reason,
           },
         ];
@@ -125,44 +126,44 @@
       return acc;
     }, {});
     pyramidChart = {
-      theme: {
-        mode: "light",
-      },
       chart: {
         type: "bar",
       },
-      legend: {
-        show: false,
-      },
-      title: {
-        text: "Fraværende moduler per hold",
-      },
-      series: [
-        {
-          name: "",
-          data: Object.values(lessonsPerClass),
-        },
-      ],
-      xaxis: {
-        categories: Object.keys(lessonsPerClass),
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 0,
-          horizontal: true,
-          distributed: true,
-          barHeight: "80%",
-          isFunnel: true,
-        },
-      },
       dataLabels: {
+        dropShadow: {
+          enabled: true,
+        },
         enabled: true,
         formatter: function (val, opt) {
           return opt.w.globals.labels[opt.dataPointIndex];
         },
-        dropShadow: {
-          enabled: true,
+      },
+      legend: {
+        show: false,
+      },
+      plotOptions: {
+        bar: {
+          barHeight: "80%",
+          borderRadius: 0,
+          distributed: true,
+          horizontal: true,
+          isFunnel: true,
         },
+      },
+      series: [
+        {
+          data: Object.values(lessonsPerClass),
+          name: "",
+        },
+      ],
+      theme: {
+        mode: "light",
+      },
+      title: {
+        text: "Fraværende moduler per hold",
+      },
+      xaxis: {
+        categories: Object.keys(lessonsPerClass),
       },
     };
     const lessonsPerMonthPerClass = absentLessons.reduce((acc, item) => {
@@ -185,35 +186,36 @@
       return acc;
     }, {});
     monthlyChart = {
-      theme: {
-        mode: "light",
-      },
       chart: {
         type: "area",
-      },
-      title: {
-        text: "Månedligt fravær per hold",
-      },
-      series: Object.entries(lessonsPerMonthPerClass).map(([key, value]) => {
-        return {
-          name: key,
-          data: Object.values(value),
-        };
-      }),
-      xaxis: {
-        categories: Info.months("long", { locale: "da" }),
       },
       dataLabels: {
         enabled: false,
       },
+      series: Object.entries(lessonsPerMonthPerClass).map(([key, value]) => {
+        return {
+          data: Object.values(value),
+          name: key,
+        };
+      }),
       stroke: {
         curve: "smooth",
+      },
+      theme: {
+        mode: "light",
+      },
+      title: {
+        text: "Månedligt fravær per hold",
+      },
+      xaxis: {
+        categories: Info.months("long", { locale: "da" }),
       },
     };
   }
 
   const absenceTable = createTable(absence, {
     sort: addSortBy({
+      disableMultiSort: true,
       initialSortKeys: [
         {
           id: "percent",
@@ -221,19 +223,18 @@
         },
       ],
       toggleOrder: ["asc", "desc"],
-      disableMultiSort: true,
     }),
   });
   const absenceColumns = absenceTable.createColumns([
     absenceTable.column({
-      id: "class",
-      header: "Hold",
       accessor: (row) => row[0],
+      header: "Hold",
+      id: "class",
     }),
     absenceTable.column({
-      id: "percent",
-      header: "Procent",
       accessor: (row) => row[1],
+      header: "Procent",
+      id: "percent",
       plugins: {
         sort: {
           compareFn(left, right) {
@@ -247,9 +248,9 @@
       },
     }),
     absenceTable.column({
-      id: "lessons",
-      header: "Moduler",
       accessor: (row) => row[2],
+      header: "Moduler",
+      id: "lessons",
       plugins: {
         sort: {
           compareFn(left, right) {
@@ -264,14 +265,15 @@
   const {
     headerRows: absenceHeaderRows,
     pageRows: absencePageRows,
+    pluginStates: absencePluginStates,
     tableAttrs: absenceTableAttrs,
     tableBodyAttrs: absenceTableBodyAttrs,
-    pluginStates: absencePluginStates,
   } = absenceTable.createViewModel(absenceColumns);
   const { sortKeys: absenceSortKeys } = absencePluginStates.sort;
 
   const absenceReasonTable = createTable(absenceReasons, {
     sort: addSortBy({
+      disableMultiSort: true,
       initialSortKeys: [
         {
           id: "absence",
@@ -279,21 +281,20 @@
         },
       ],
       toggleOrder: ["asc", "desc"],
-      disableMultiSort: true,
     }),
   });
   const absenceReasonColumns = absenceReasonTable.createColumns([
     absenceReasonTable.column({
-      id: "class",
-      header: "Hold",
       accessor: "class",
+      header: "Hold",
+      id: "class",
     }),
 
     absenceReasonTable.column({
-      id: "date",
-      header: "Dato",
       accessor: (item) =>
         item.date.toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
+      header: "Dato",
+      id: "date",
       plugins: {
         sort: {
           compareFn(left, right) {
@@ -303,9 +304,9 @@
       },
     }),
     absenceReasonTable.column({
-      id: "absence",
-      header: "Fravær",
       accessor: "absence",
+      header: "Fravær",
+      id: "absence",
       plugins: {
         sort: {
           compareFn(left, right) {
@@ -319,22 +320,22 @@
       },
     }),
     absenceReasonTable.column({
-      id: "reason",
-      header: "Årsag",
       accessor: "reason",
+      header: "Årsag",
+      id: "reason",
     }),
   ]);
   const {
     headerRows: absenceReasonHeaderRows,
     pageRows: absenceReasonPageRows,
+    pluginStates: absenceReasonPluginStates,
     tableAttrs: absenceReasonTableAttrs,
     tableBodyAttrs: absenceReasonTableBodyAttrs,
-    pluginStates: absenceReasonPluginStates,
   } = absenceReasonTable.createViewModel(absenceReasonColumns);
   const { sortKeys: absenceReasonSortKeys } = absenceReasonPluginStates.sort;
 </script>
 
-<RequestData bind:loading bind:data path="fravaer" />
+<RequestData path="fravaer" bind:loading bind:data />
 
 {#if loading}
   loading
@@ -345,7 +346,7 @@
     >
       <h1 class="!mb-0">Fravær</h1>
       <Select
-        options={{ Opgjort: "calculated", "For året": "yearly" }}
+        options={{ "For året": "yearly", Opgjort: "calculated" }}
         bind:value={selectedAbsenceType}
         placeholder="Opgjort"
       />
@@ -373,7 +374,7 @@
       {#if data.moduler.manglende_fraværsårsager.length}
         <div class="mb-[1em] flex">
           <h2 class="m-0">Fraværsårsager</h2>
-          <Badge class="ml-2" variant="destructive"
+          <Badge variant="destructive" class="ml-2"
             >Manglende fraværsårsager: {data.moduler.manglende_fraværsårsager
               .length}</Badge
           >
@@ -389,13 +390,13 @@
                 {#each headerRow.cells as cell (cell.id)}
                   <Subscribe
                     attrs={cell.attrs()}
-                    let:attrs
                     props={cell.props()}
+                    let:attrs
                     let:props
                   >
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
-                        <Button variant="ghost" on:click={props.sort.toggle}>
+                        <Button on:click={props.sort.toggle} variant="ghost">
                           <Render of={cell.render()} />
                           {#if $absenceReasonSortKeys[0]?.id == cell.id}
                             {#if $absenceReasonSortKeys[0].order === "asc"}
@@ -427,12 +428,12 @@
                       {#if cell.id === "reason"}
                         {#if cell.value.startsWith("NOTGIVEN_")}
                           <Badge
-                            variant="destructive"
                             href={`https://www.lectio.dk/lectio/${
                               $authStore.school
                             }/fravaer_aarsag.aspx?elevid=${decodeUserID(
                               $authStore.cookie
                             )}&id=${cell.value.split("_")[1]}&atype=aa`}
+                            variant="destructive"
                             target="_blank">Angiv fraværsårsag</Badge
                           >
                         {:else}
@@ -460,13 +461,13 @@
                 {#each headerRow.cells as cell (cell.id)}
                   <Subscribe
                     attrs={cell.attrs()}
-                    let:attrs
                     props={cell.props()}
+                    let:attrs
                     let:props
                   >
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
-                        <Button variant="ghost" on:click={props.sort.toggle}>
+                        <Button on:click={props.sort.toggle} variant="ghost">
                           <Render of={cell.render()} />
                           {#if $absenceSortKeys[0]?.id == cell.id}
                             {#if $absenceSortKeys[0].order === "asc"}

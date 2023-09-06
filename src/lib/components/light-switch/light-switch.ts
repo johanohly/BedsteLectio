@@ -2,9 +2,9 @@
 
 // Lightswitch Service
 
-import { get } from "svelte/store";
 // DO NOT replace this ⬇ import, it has to be imported directly
 import { localStorageStore } from "$lib/utilities"
+import { get } from "svelte/store";
 
 // Stores ---
 // TRUE: light, FALSE: dark
@@ -12,7 +12,7 @@ import { localStorageStore } from "$lib/utilities"
 /** Store: OS Preference Mode */
 export const modeOsPrefers = localStorageStore<boolean>("modeOsPrefers", false);
 /** Store: User Preference Mode */
-export const modeUserPrefers = localStorageStore<boolean | undefined>(
+export const modeUserPrefers = localStorageStore<undefined | boolean>(
 	"modeUserPrefers",
 	undefined
 );
@@ -31,7 +31,7 @@ export function getModeOsPrefers(): boolean {
 }
 
 /** Get the User for light/dark mode */
-export function getModeUserPrefers(): boolean | undefined {
+export function getModeUserPrefers(): undefined | boolean {
 	return get(modeUserPrefers);
 }
 

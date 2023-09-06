@@ -1,18 +1,18 @@
 <script lang="ts">
   import { Calendar } from "lucide-svelte";
 
-  let className: string | undefined | null = undefined;
+  let className: undefined | string | null = undefined;
   export { className as class };
 
   export let title: string;
-  export let titleNote: string | undefined = undefined;
+  export let titleNote: undefined | string = undefined;
   export let time: string;
   export let description: string;
-  export let link: string | undefined = undefined;
+  export let link: undefined | string = undefined;
 </script>
 
 <li class={className}>
-  <a href={link} class="no-underline">
+  <a class="no-underline" href={link}>
     <span
       class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-0 dark:bg-blue-900"
     >

@@ -1,7 +1,7 @@
 declare global {
     interface String {
-        toTitleCase(): string;
         containsAny(chars: string[]): boolean;
+        toTitleCase(): string;
     }
 }
 

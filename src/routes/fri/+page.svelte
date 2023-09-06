@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { authStore } from "$lib/stores";
+  import type { RawLesson } from "$lib/types/lesson";
+
   import { decodeUserID } from "$lib/utilities/cookie";
-  import { DateTime } from "luxon";
-  import JSConfetti from "js-confetti";
   import { constructInterval } from "$lib/utilities";
   import { RequestData } from "$components";
-  import type { RawLesson } from "$lib/types/lesson";
+  import { authStore } from "$lib/stores";
+  import JSConfetti from "js-confetti";
+  import { DateTime } from "luxon";
 
   const confetti = new JSConfetti();
 
@@ -44,10 +45,10 @@
   let endTime: DateTime | null = null;
   const dt = DateTime.local();
 
-  let loading: boolean = true;
+  let loading = true;
   let data: { moduler: RawLesson[] };
   $: if (!loading && data) {
-    let endLesson: string | undefined = undefined;
+    let endLesson: undefined | string = undefined;
     for (let i = 0; i < data.moduler.length; i++) {
       if (data.moduler[i].status != "aflyst") {
         if (!nameBlacklisted(data.moduler[i].navn ?? "")) {
@@ -69,12 +70,12 @@
 
   async function end() {
     await confetti.addConfetti({
-      emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
       confettiNumber: 500,
+      emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
     });
     await confetti.addConfetti({
-      emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
       confettiNumber: 500,
+      emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
     });
   }
 
@@ -103,11 +104,11 @@
 
 <svelte:window bind:innerWidth={width} />
 <RequestData
-  bind:data
-  bind:loading
   path={`skema?id=S${decodeUserID($authStore.cookie)}&uge=${dt.weekNumber}&år=${
     dt.year
   }`}
+  bind:loading
+  bind:data
 />
 
 <div class="">

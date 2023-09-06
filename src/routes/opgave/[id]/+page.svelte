@@ -1,19 +1,21 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
-  import { Skeleton } from "$components/ui/skeleton";
-  import type { Assignment, RawAssignment } from "$lib/types/assignments";
-  import { DateTime } from "luxon";
+  import type { RawAssignment, Assignment } from "$lib/types/assignments";
+
   import {
-    Card,
     CardDescription,
     CardHeader,
     CardTitle,
+    Card,
   } from "$components/ui/card";
-  import SvelteMarkdown from "svelte-markdown";
-  import { Download, ExternalLink } from "lucide-svelte";
-  import { RequestData } from "$components";
+  import { ExternalLink, Download } from "lucide-svelte";
   import { decodeUserID } from "$lib/utilities/cookie";
+  import { Skeleton } from "$components/ui/skeleton";
+  import SvelteMarkdown from "svelte-markdown";
+  import { RequestData } from "$components";
   import { authStore } from "$lib/stores";
+  import { DateTime } from "luxon";
+
+  import type { PageData } from "./$types";
 
   export let data: PageData;
 
@@ -23,14 +25,8 @@
   $: if (!loading && assignmentData) {
     console.log(assignmentData);
     assignment = {
-      title: assignmentData.oplysninger.opgavetitel,
-      description: assignmentData.oplysninger.opgavenote,
-      details:
-        assignmentData.oplysninger.opgavebeskrivelse?.replace(")", ")<br>") ??
-        "",
-      status: assignmentData.afleveres_af.status_fravær
-        .toLowerCase()
-        .replace("aflev.", "afleveret "),
+      billedTime: assignmentData.oplysninger.elevtid,
+      class: assignmentData.oplysninger.hold,
       date: DateTime.fromFormat(
         assignmentData.oplysninger.afleveringsfrist,
         "d/M-yyyy HH:mm",
@@ -38,16 +34,16 @@
           locale: "da",
         }
       ),
-      billedTime: assignmentData.oplysninger.elevtid,
-      class: assignmentData.oplysninger.hold,
+      description: assignmentData.oplysninger.opgavenote,
+      details:
+        assignmentData.oplysninger.opgavebeskrivelse?.replace(")", ")<br>") ??
+        "",
       documents: assignmentData.opgave_indlæg.map((document) => ({
-        // @ts-ignore
-        name: document.dokument.match(/\[(.*?)\]/)[1],
-        // @ts-ignore
-        url: document.dokument.match(/\((.*?)\)/)[1],
         date: DateTime.fromFormat(document.tidspunkt, "d/M-yyyy HH:mm", {
           locale: "da",
         }),
+        name: document.dokument.match(/\[(.*?)\]/)[1],
+        url: document.dokument.match(/\((.*?)\)/)[1],
         user: {
           id: document.bruger.bruger_id,
           name: document.bruger.navn,
@@ -57,23 +53,27 @@
         id: participant.bruger_id,
         name: participant.navn,
       })),
+      status: assignmentData.afleveres_af.status_fravær
+        .toLowerCase()
+        .replace("aflev.", "afleveret "),
+      title: assignmentData.oplysninger.opgavetitel,
     };
   }
 </script>
 
 <RequestData
-  bind:loading
-  bind:data={assignmentData}
-  path={`opgave?exerciseid=${data.id}`}
   onServerError={{
     active: true,
     path: "/opgaver",
     toast: {
-      title: "Ukendt opgave",
-      description: "Denne opgave findes ikke.",
       color: "bg-red-500",
+      description: "Denne opgave findes ikke.",
+      title: "Ukendt opgave",
     },
   }}
+  path={`opgave?exerciseid=${data.id}`}
+  bind:data={assignmentData}
+  bind:loading
 />
 
 <div class="page-container">
@@ -98,8 +98,8 @@
           }/ElevAflevering.aspx?exerciseid=${data.id}&elevid=${decodeUserID(
             $authStore.cookie
           )}`}
-          target="_blank"
           class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
+          target="_blank"
           >Lectio <ExternalLink class="ml-2 h-4 w-4" /></a
         >
       </div>

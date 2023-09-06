@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { authStore } from "$lib/stores";
-  import { getInitials } from "$lib/utilities";
   import { createAvatar, melt } from "@melt-ui/svelte";
+  import { getInitials } from "$lib/utilities";
+  import { authStore } from "$lib/stores";
   import { onMount } from "svelte";
 
   export let user: {
@@ -9,7 +9,7 @@
     id: string;
   };
   const {
-    elements: { image, fallback },
+    elements: { fallback, image },
     options: { src },
   } = createAvatar();
 
@@ -34,8 +34,8 @@
 >
   <img use:melt={$image} alt="Avatar" />
   <span
-    use:melt={$fallback}
     class="text-2xl font-medium text-white dark:text-black"
+    use:melt={$fallback}
     >{getInitials(user.name)}</span
   >
 </div>

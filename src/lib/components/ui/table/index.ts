@@ -1,28 +1,28 @@
-import Root from "./Table.svelte";
-import Body from "./TableBody.svelte";
 import Caption from "./TableCaption.svelte";
-import Cell from "./TableCell.svelte";
 import Footer from "./TableFooter.svelte";
-import Head from "./TableHead.svelte";
 import Header from "./TableHeader.svelte";
+import Body from "./TableBody.svelte";
+import Cell from "./TableCell.svelte";
+import Head from "./TableHead.svelte";
 import Row from "./TableRow.svelte";
+import Root from "./Table.svelte";
 
 export {
-	Root,
-	Body,
-	Caption,
-	Cell,
-	Footer,
-	Head,
-	Header,
-	Row,
+	Caption as TableCaption,
+	Footer as TableFooter,
+	Header as TableHeader,
+	Body as TableBody,
+	Cell as TableCell,
+	Head as TableHead,
+	Row as TableRow,
 	//
 	Root as Table,
-	Body as TableBody,
-	Caption as TableCaption,
-	Cell as TableCell,
-	Footer as TableFooter,
-	Head as TableHead,
-	Header as TableHeader,
-	Row as TableRow
+	Caption,
+	Footer,
+	Header,
+	Root,
+	Body,
+	Cell,
+	Head,
+	Row
 };

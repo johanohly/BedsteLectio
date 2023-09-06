@@ -1,15 +1,15 @@
-const { round, max, min, pow } = Math;
+const { max, min, pow } = Math;
 
 export const stringToColor = (str: string, saturation = 100, lightness = 75) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    hash = hash & hash;
+    hash &= hash;
   }
   return {
     h: hash % 360,
-    s: saturation,
     l: lightness,
+    s: saturation,
     string: `hsl(${hash % 360}, ${saturation}%, ${lightness}%)`,
   };
 };
@@ -25,18 +25,18 @@ export function rgbToHex(r: number, g: number, b: number) {
 }
 
 export function hslToRgb(hue: number, sat: number, light: number) {
-  let t1, t2, r, g, b;
+  let t2;
   hue = hue / 60;
   if (light <= 0.5) {
     t2 = light * (sat + 1);
   } else {
     t2 = light + sat - (light * sat);
   }
-  t1 = light * 2 - t2;
-  r = hueToRgb(t1, t2, hue + 2) * 255;
-  g = hueToRgb(t1, t2, hue) * 255;
-  b = hueToRgb(t1, t2, hue - 2) * 255;
-  return { r: r, g: g, b: b };
+  const t1 = light * 2 - t2;
+  const r = hueToRgb(t1, t2, hue + 2) * 255;
+  const g = hueToRgb(t1, t2, hue) * 255;
+  const b = hueToRgb(t1, t2, hue - 2) * 255;
+  return { b: b, g: g, r: r };
 }
 function hueToRgb(t1, t2, hue) {
   if (hue < 0) hue += 6;

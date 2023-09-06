@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { cn } from "$lib/utils";
   import { createSwitch, melt } from "@melt-ui/svelte";
+  import { cn } from "$lib/utils";
 
-  let className: string | undefined | null = undefined;
+  let className: undefined | string | null = undefined;
   export { className as class };
 
-  export let disabled: boolean = false;
-  export let checked: boolean = false;
+  export let disabled = false;
+  export let checked = false;
 
   const {
-    elements: { root, input },
-    states: { checked: rootChecked },
+    elements: { input, root },
     options: { disabled: rootDisabled },
+    states: { checked: rootChecked },
   } = createSwitch();
   $: rootDisabled.set(disabled);
   $: rootChecked.set(checked);
@@ -21,11 +21,11 @@
 </script>
 
 <button
-  use:melt={$root}
   class={cn(
     "peer inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
     className
   )}
+  use:melt={$root}
   {...$$restProps}
 >
   <span

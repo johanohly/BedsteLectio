@@ -1,17 +1,17 @@
-import type { Lesson, RawLesson } from "./lesson"
+import type { RawLesson, Lesson } from "./lesson"
 
 export type Module = {
-    lesson: Lesson;
-    homework: string | null;
-    note: string | null;
     presentation: string | null;
     otherContent: string | null;
+    homework: string | null;
+    note: string | null;
+    lesson: Lesson;
 }
 
 export type RawModule = {
-    aktivitet: RawLesson;
-    lektier: string | null;
-    note: string | null;
-    "præsentation": string | null;
     "øvrigt_indhold": string | null;
+    "præsentation": string | null;
+    lektier: string | null;
+    aktivitet: RawLesson;
+    note: string | null;
 }

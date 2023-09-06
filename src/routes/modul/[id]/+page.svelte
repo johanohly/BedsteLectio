@@ -1,14 +1,16 @@
 <script lang="ts">
-  import { RequestData } from "$components";
+  import type { RawModule, Module } from "$lib/types/module";
+
+  import { decodeUserID } from "$lib/utilities/cookie";
   import { Skeleton } from "$components/ui/skeleton";
-  import type { Module, RawModule } from "$lib/types/module";
   import { constructInterval } from "$lib/utilities";
-  import { authStore } from "$lib/stores";
-  import { DateTime } from "luxon";
-  import type { PageData } from "./$types";
   import SvelteMarkdown from "svelte-markdown";
   import { ExternalLink } from "lucide-svelte";
-  import { decodeUserID } from "$lib/utilities/cookie";
+  import { RequestData } from "$components";
+  import { authStore } from "$lib/stores";
+  import { DateTime } from "luxon";
+
+  import type { PageData } from "./$types";
 
   export let data: PageData;
 
@@ -17,37 +19,37 @@
   let module: Module;
   $: if (!loading && moduleData) {
     module = {
-      lesson: {
-        id: moduleData.aktivitet.absid,
-        name: moduleData.aktivitet.navn ?? "",
-        class: moduleData.aktivitet.hold ?? "",
-        teacher: moduleData.aktivitet.lærer ?? "",
-        status: moduleData.aktivitet.status ?? "",
-        room: moduleData.aktivitet.lokale ?? "",
-        note: moduleData.aktivitet.andet ?? "",
-        interval: constructInterval(moduleData.aktivitet.tidspunkt),
-      },
       homework: moduleData.lektier,
+      lesson: {
+        class: moduleData.aktivitet.hold ?? "",
+        id: moduleData.aktivitet.absid,
+        interval: constructInterval(moduleData.aktivitet.tidspunkt),
+        name: moduleData.aktivitet.navn ?? "",
+        note: moduleData.aktivitet.andet ?? "",
+        room: moduleData.aktivitet.lokale ?? "",
+        status: moduleData.aktivitet.status ?? "",
+        teacher: moduleData.aktivitet.lærer ?? "",
+      },
       note: moduleData.note,
-      presentation: moduleData.præsentation,
       otherContent: moduleData.øvrigt_indhold,
+      presentation: moduleData.præsentation,
     };
   }
 </script>
 
 <RequestData
-  bind:loading
-  bind:data={moduleData}
-  path={`modul?absid=${data.id}`}
   onServerError={{
     active: true,
     path: "/skema",
     toast: {
-      title: "Ukendt modul",
-      description: "Dette modul findes ikke.",
       color: "bg-red-500",
+      description: "Dette modul findes ikke.",
+      title: "Ukendt modul",
     },
   }}
+  path={`modul?absid=${data.id}`}
+  bind:data={moduleData}
+  bind:loading
 />
 
 <div class="page-container">
@@ -78,8 +80,8 @@
           }/aktivitet/aktivitetforside2.aspx?absid=${
             data.id
           }&elevid=${decodeUserID($authStore.cookie)}`}
-          target="_blank"
           class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
+          target="_blank"
           >Lectio <ExternalLink class="ml-2 h-4 w-4" /></a
         >
       </div>
