@@ -1,0 +1,77 @@
+{
+    "short_name": "BedsteLectio",
+    "name": "BedsteLectio",
+    "description": "Lectio PWA.",
+    "start_url": "/",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "favicon-light.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon-light.png",
+            "sizes": "256x256",
+            "type": "image/png",
+            "purpose": "monochrome"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Skema",
+            "short_name": "Skema",
+            "description": "Check dit skema",
+            "url": "/skema",
+            "icons": [
+                {
+                    "src": "calendar.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Opgaver",
+            "short_name": "Opgaver",
+            "description": " Hold styr på dine opgaver.",
+            "url": "/opgaver",
+            "icons": [
+                {
+                    "src": "tasks.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Lektier",
+            "short_name": "Lektier",
+            "description": "Få en oversigt over dine lektier.",
+            "url": "/lektier",
+            "icons": [
+                {
+                    "src": "homework.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Fravær",
+            "short_name": "Fravær",
+            "description": "Få en oversigt over dit fravær.",
+            "url": "/fravær",
+            "icons": [
+                {
+                    "src": "absence.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "display": "standalone",
+    "background_color": "#fff",
+    "theme_color": "#adffb9"
+}
