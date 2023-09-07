@@ -1,10 +1,9 @@
 <script lang="ts">
   import { createDialog, melt } from "@melt-ui/svelte";
   import { ChevronsUpDown, X } from "lucide-svelte";
-  import { filter } from "fuzzy";
+  import { flyAndScale } from "$lib/utilities"; import { filter } from "fuzzy";
 
   import Input from "../input/Input.svelte";
-  import { flyAndScale } from "$lib/utilities";
 
   const {
     elements: {

@@ -3,3 +3,4 @@ export { localStorageStore } from "./localStorageStore";
 export { constructInterval } from "./interval";
 export { flyAndScale } from "./transition";
 export { getInitials } from "./initials";
+export { notEmpty } from "./array";
