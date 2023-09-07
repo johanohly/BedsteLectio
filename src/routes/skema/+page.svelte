@@ -68,7 +68,6 @@
   let calendarEl: HTMLElement;
   let calendar: Calendar;
   onMount(() => {
-    console.log(width);
     calendar = new Calendar(calendarEl, {
       allDaySlot: false,
       contentHeight: "auto",

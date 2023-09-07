@@ -3,8 +3,8 @@
   import { ChevronsUpDown, X } from "lucide-svelte";
   import { filter } from "fuzzy";
 
-  import { flyAndScale } from "./transition";
   import Input from "../input/Input.svelte";
+  import { flyAndScale } from "$lib/utilities";
 
   const {
     elements: {
