@@ -1,15 +1,16 @@
 <script lang="ts">
-  import { ChevronsUpDown, ArrowRight, X, Check, Plus } from "lucide-svelte";
+  import type { RawLesson } from "$lib/types/lesson";
+
+  import { ChevronsUpDown, ArrowRight, Check, Plus, X } from "lucide-svelte";
+  import { constructInterval, flyAndScale, notEmpty } from "$lib/utilities";
   import { MultiRequestData, RequestData } from "$components";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { Button } from "$components/ui/button";
   import { Input } from "$components/ui/input";
-  import { constructInterval, flyAndScale, notEmpty } from "$lib/utilities";
+  import { DateTime, Interval } from "luxon";
   import { authStore } from "$lib/stores";
   import { filter } from "fuzzy";
-  import type { RawLesson } from "$lib/types/lesson";
-  import { DateTime, Interval } from "luxon";
 
   const {
     elements: {
@@ -55,50 +56,79 @@
 
   let results: {
     [key: string]: {
-      meet: { me: DateTime; student: DateTime; same: boolean };
-      leave: { me: DateTime; student: DateTime; same: boolean };
+      leave: { me: string; student: string; same: boolean };
+      meet: { me: string; student: string; same: boolean };
     };
   } = {};
-  let data: { [key: string]: { ugeDage: string[]; moduler: RawLesson[] } } = {};
+  let data: { [key: string]: { moduler: RawLesson[]; ugeDage: string[] } } = {};
   $: meData = me ? data[`skema?id=${me.id}`] : undefined;
   $: studentData = selectedStudent
     ? data[`skema?id=${selectedStudent.id}`]
     : undefined;
   $: if (meData && studentData) {
-    const meDates = meData.moduler
-      .map((modul) => constructInterval(modul.tidspunkt).start)
-      .filter(notEmpty);
-    const studentDates = studentData.moduler
-      .map((modul) => constructInterval(modul.tidspunkt).start)
-      .filter(notEmpty);
+    const meIntervals = meData.moduler.map((modul) =>
+      constructInterval(modul.tidspunkt)
+    );
+    const studentIntervals = studentData.moduler.map((modul) =>
+      constructInterval(modul.tidspunkt)
+    );
     for (const rawDay of meData.ugeDage) {
       const [monthDay, month] = rawDay
         .replaceAll(/\(|\)/gm, "")
         .split(" ")[1]
         .split("/");
       const day = DateTime.local().set({ day: +monthDay, month: +month });
-      const filteredMeDates = meDates
+      const meMeetDates = meIntervals
+        .map((interval) => interval.start)
+        .filter(notEmpty)
         .filter((date) => date.hasSame(day, "day"))
-        .sort((a, b) => a.toMillis() - b.toMillis());
-      const filteredStudentDates = studentDates
+        .sort((a, b) => a?.toMillis() - b?.toMillis());
+      const meMeetDate = meMeetDates.length
+        ? meMeetDates[0].toLocaleString(DateTime.TIME_24_SIMPLE)
+        : "Ingen moduler";
+      const studentMeetDates = studentIntervals
+        .map((interval) => interval.start)
+        .filter(notEmpty)
         .filter((date) => date.hasSame(day, "day"))
-        .sort((a, b) => a.toMillis() - b.toMillis());
+        .sort((a, b) => a?.toMillis() - b?.toMillis());
+      const studentMeetDate = studentMeetDates.length
+        ? studentMeetDates[0].toLocaleString(DateTime.TIME_24_SIMPLE)
+        : "Ingen moduler";
+      const meLeaveDates = meIntervals
+        .map((interval) => interval.end)
+        .filter(notEmpty)
+        .filter((date) => date.hasSame(day, "day"))
+        .sort((a, b) => a?.toMillis() - b?.toMillis());
+      const meLeaveDate = meLeaveDates.length
+        ? meLeaveDates[meLeaveDates.length - 1].toLocaleString(
+            DateTime.TIME_24_SIMPLE
+          )
+        : "Ingen moduler";
+      const studentLeaveDates = studentIntervals
+        .map((interval) => interval.end)
+        .filter(notEmpty)
+        .filter((date) => date.hasSame(day, "day"))
+        .sort((a, b) => a?.toMillis() - b?.toMillis());
+      const studentLeaveDate = studentLeaveDates.length
+        ? studentLeaveDates[studentLeaveDates.length - 1].toLocaleString(
+            DateTime.TIME_24_SIMPLE
+          )
+        : "Ingen moduler";
+
       results[rawDay] = {
-        meet: {
-          me: filteredMeDates[0],
-          student: filteredStudentDates[0],
-          same: filteredMeDates[0]?.hasSame(
-            filteredStudentDates[0],
-            "millisecond"
-          ),
-        },
         leave: {
-          me: filteredMeDates[filteredMeDates.length - 1],
-          student: filteredStudentDates[filteredStudentDates.length - 1],
-          same: filteredMeDates[filteredMeDates.length - 1]?.hasSame(
-            filteredStudentDates[filteredStudentDates.length - 1],
-            "millisecond"
-          ),
+          same: meLeaveDate == studentLeaveDate,
+          me: `${me?.name.split(" (")[0]}: ${meLeaveDate}`,
+          student: `${
+            selectedStudent?.name.split(" (")[0]
+          }: ${studentLeaveDate}`,
+        },
+        meet: {
+          same: meMeetDate == studentMeetDate,
+          me: `${me?.name.split(" (")[0]}: ${meMeetDate}`,
+          student: `${
+            selectedStudent?.name.split(" (")[0]
+          }: ${studentMeetDate}`,
         },
       };
     }
@@ -109,8 +139,8 @@
 {#key selectedStudent}
   {#if me && selectedStudent}
     <MultiRequestData
-      bind:data
       paths={[`skema?id=${me.id}`, `skema?id=${selectedStudent.id}`]}
+      bind:data
     />
   {/if}
 {/key}
@@ -145,12 +175,9 @@
               />{/if}
           </div>
           <p>
-            {result.meet.same
-              ? result.meet.me.toLocaleString(DateTime.TIME_24_SIMPLE)
-              : Interval.fromDateTimes(
-                  result.meet.me,
-                  result.meet.student
-                ).toLocaleString(DateTime.TIME_24_SIMPLE)}
+            {result.meet.me}
+            <br />
+            {result.meet.student}
           </p>
           <div class="flex items-center">
             <h3 class="m-0">Fri</h3>
@@ -159,12 +186,9 @@
               />{/if}
           </div>
           <p>
-            {result.leave.same
-              ? result.leave.me.toLocaleString(DateTime.TIME_24_SIMPLE)
-              : Interval.fromDateTimes(
-                  result.leave.me,
-                  result.leave.student
-                ).toLocaleString(DateTime.TIME_24_SIMPLE)}
+            {result.leave.me}
+            <br />
+            {result.leave.student}
           </p>
         </div>
       {/each}
