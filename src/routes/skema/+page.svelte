@@ -1,7 +1,12 @@
 <script lang="ts">
   import type { RawLesson } from "$lib/types/lesson";
 
-  import { constructInterval, stringToColor, contrast, hslToRgb } from "$lib/utilities";
+  import {
+    constructInterval,
+    stringToColor,
+    contrast,
+    hslToRgb,
+  } from "$lib/utilities";
   import { type EventSourceFunc, Calendar } from "@fullcalendar/core";
   import { decodeUserID } from "$lib/utilities/cookie";
   import timeGridPlugin from "@fullcalendar/timegrid";
@@ -121,7 +126,13 @@
 
 <div class="page-container">
   <h1 class="mb-0">Skema</h1>
-  <!-- <div class="p-8 bg-white rounded-md"> -->
   <div class="!mt-0 not-prose" bind:this={calendarEl} />
-  <!-- </div> -->
+  <div class="not-prose block !mt-4">
+    <a
+      href="/skema/sammenlign"
+      class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+    >
+      Se, hvornår dine venner har fri og sammenlign mødetider.
+    </a>
+  </div>
 </div>
