@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { AfterNavigate } from "@sveltejs/kit";
 
-  import { setInitialClassState } from "$components/light-switch/light-switch";
   import { afterNavigate } from "$app/navigation";
-  import { Toaster } from "$components/toaster";
-  import { SiteHeader } from "$components";
   import { page } from "$app/stores";
+  import { SiteHeader } from "$components";
+  import { setInitialClassState } from "$components/light-switch/light-switch";
+  import { Toaster } from "$components/toaster";
 
-  import "../lib/utilities/string";
   import "../app.postcss";
+  import "../lib/utilities/string";
 
   $: title =
     $page.url.pathname == "/"
@@ -52,17 +52,17 @@
     content="bedstelectio, betterlectio, lectio, studieadministration, skoleskema, karakterer, fravær, beskeder, brugervenlig, æstetisk, intuitiv, pæn, overskuelig"
     name="keywords"
   />
-  <meta name="theme-color" content="#ffffff" />
+  <meta content="#ffffff" name="theme-color" />
   <meta content="Johnny JTH" name="author" />
   <!-- Open Graph - https://ogp.me/ -->
-  <meta property="og:site_name" content="BedsteLectio" />
-  <meta property="og:type" content="website" />
+  <meta content="BedsteLectio" property="og:site_name" />
+  <meta content="website" property="og:type" />
   <meta
     content="https://bedstelectio.tech{$page.url.pathname}"
     property="og:url"
   />
-  <meta property="og:locale" content="da_DK" />
-  <meta property="og:title" content={title} />
+  <meta content="da_DK" property="og:locale" />
+  <meta content={title} property="og:title" />
   <meta
     content="BedsteLectio er en elegant og brugervenlig webside, der præsenterer data fra Lectio på en forbedret måde. "
     property="og:description"
@@ -75,9 +75,9 @@
     content="https://bedstelectio.tech/favicon-dark.png"
     property="og:image:secure_url"
   />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:width" content="256" />
-  <meta property="og:image:height" content="256" />
+  <meta content="image/png" property="og:image:type" />
+  <meta content="256" property="og:image:width" />
+  <meta content="256" property="og:image:height" />
 
   <!-- This causes the new eslint-plugin-svelte: https://github.com/sveltejs/eslint-plugin-svelte/issues/492 -->
   {@html `<\u{73}cript nonce="%sveltekit.nonce%">(${setInitialClassState.toString()})();</script>`}

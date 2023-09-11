@@ -1,22 +1,22 @@
 <script lang="ts">
   import type { RawAbsence } from "$lib/types/absence";
 
-  import { createTable, Subscribe, Render } from "svelte-headless-table";
-  import { modeCurrent } from "$components/light-switch/light-switch";
-  import { CardContent, CardHeader, Card } from "$components/ui/card";
-  import { ArrowUpDown, ArrowDown, ArrowUp } from "lucide-svelte";
-  import { addSortBy } from "svelte-headless-table/plugins";
-  import { type Writable, writable } from "svelte/store";
-  import { decodeUserID } from "$lib/utilities/cookie";
-  import { constructInterval } from "$lib/utilities";
-  import * as Table from "$lib/components/ui/table";
-  import { DateTime, Interval, Info } from "luxon";
-  import { Button } from "$components/ui/button";
-  import { Select } from "$components/ui/select";
-  import { Badge } from "$components/ui/badge";
-  import { Chart } from "$components/ui/chart";
   import { RequestData } from "$components";
+  import { modeCurrent } from "$components/light-switch/light-switch";
+  import { Badge } from "$components/ui/badge";
+  import { Button } from "$components/ui/button";
+  import { Card, CardContent, CardHeader } from "$components/ui/card";
+  import { Chart } from "$components/ui/chart";
+  import { Select } from "$components/ui/select";
+  import * as Table from "$lib/components/ui/table";
   import { authStore } from "$lib/stores";
+  import { constructInterval } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
+  import { DateTime, Info, Interval } from "luxon";
+  import { type Writable, writable } from "svelte/store";
+  import { Render, Subscribe, createTable } from "svelte-headless-table";
+  import { addSortBy } from "svelte-headless-table/plugins";
 
   let loading = true;
   let data: RawAbsence;
@@ -45,19 +45,19 @@
   });
   let absenceReasons: Writable<
     {
-      lessonId: string;
-      category: string;
       absence: string;
-      date: Interval;
-      reason: string;
+      category: string;
       class: string;
+      date: Interval;
+      lessonId: string;
+      reason: string;
     }[]
   > = writable([]);
 
   let yearlyAbsence: string;
   let calculatedAbsence: string;
-  let pyramidChart: object | null = null;
-  let monthlyChart: object | null = null;
+  let pyramidChart: null | object = null;
+  let monthlyChart: null | object = null;
   $: if (!loading && data) {
     rawAbsence.set([]);
     absenceReasons.set([]);
@@ -335,7 +335,7 @@
   const { sortKeys: absenceReasonSortKeys } = absenceReasonPluginStates.sort;
 </script>
 
-<RequestData path="fravaer" bind:loading bind:data />
+<RequestData bind:data bind:loading path="fravaer" />
 
 {#if loading}
   loading
@@ -346,8 +346,8 @@
     >
       <h1 class="!mb-0">Fravær</h1>
       <Select
-        options={{ "For året": "yearly", Opgjort: "calculated" }}
         bind:value={selectedAbsenceType}
+        options={{ "For året": "yearly", Opgjort: "calculated" }}
         placeholder="Opgjort"
       />
     </div>
@@ -374,7 +374,7 @@
       {#if data.moduler.manglende_fraværsårsager.length}
         <div class="mb-[1em] flex">
           <h2 class="m-0">Fraværsårsager</h2>
-          <Badge variant="destructive" class="ml-2"
+          <Badge class="ml-2" variant="destructive"
             >Manglende fraværsårsager: {data.moduler.manglende_fraværsårsager
               .length}</Badge
           >
@@ -390,9 +390,9 @@
                 {#each headerRow.cells as cell (cell.id)}
                   <Subscribe
                     attrs={cell.attrs()}
-                    props={cell.props()}
                     let:attrs
                     let:props
+                    props={cell.props()}
                   >
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
@@ -420,7 +420,7 @@
         </Table.Header>
         <Table.Body {...$absenceReasonTableBodyAttrs}>
           {#each $absenceReasonPageRows as row (row.id)}
-            <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+            <Subscribe let:rowAttrs rowAttrs={row.attrs()}>
               <Table.Row {...rowAttrs}>
                 {#each row.cells as cell (cell.id)}
                   <Subscribe attrs={cell.attrs()} let:attrs>
@@ -433,8 +433,8 @@
                             }/fravaer_aarsag.aspx?elevid=${decodeUserID(
                               $authStore.cookie
                             )}&id=${cell.value.split("_")[1]}&atype=aa`}
-                            variant="destructive"
-                            target="_blank">Angiv fraværsårsag</Badge
+                            target="_blank"
+                            variant="destructive">Angiv fraværsårsag</Badge
                           >
                         {:else}
                           <Render of={cell.render()} />
@@ -461,9 +461,9 @@
                 {#each headerRow.cells as cell (cell.id)}
                   <Subscribe
                     attrs={cell.attrs()}
-                    props={cell.props()}
                     let:attrs
                     let:props
+                    props={cell.props()}
                   >
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
@@ -491,7 +491,7 @@
         </Table.Header>
         <Table.Body {...$absenceTableBodyAttrs}>
           {#each $absencePageRows as row (row.id)}
-            <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+            <Subscribe let:rowAttrs rowAttrs={row.attrs()}>
               <Table.Row {...rowAttrs}>
                 {#each row.cells as cell (cell.id)}
                   <Subscribe attrs={cell.attrs()} let:attrs>

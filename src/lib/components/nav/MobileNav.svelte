@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { SidebarOpen, School } from "lucide-svelte";
+  import { School, SidebarOpen } from "lucide-svelte";
   import { fade, fly } from "svelte/transition";
 
   import MobileLink from "./MobileLink.svelte";

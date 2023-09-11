@@ -1,19 +1,19 @@
 <script lang="ts">
-  import type { RawAssignment, Assignment } from "$lib/types/assignments";
+  import type { Assignment, RawAssignment } from "$lib/types/assignments";
 
+  import { RequestData } from "$components";
   import {
+    Card,
     CardDescription,
     CardHeader,
     CardTitle,
-    Card,
   } from "$components/ui/card";
-  import { ExternalLink, Download } from "lucide-svelte";
-  import { decodeUserID } from "$lib/utilities/cookie";
   import { Skeleton } from "$components/ui/skeleton";
-  import SvelteMarkdown from "svelte-markdown";
-  import { RequestData } from "$components";
   import { authStore } from "$lib/stores";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import { Download, ExternalLink } from "lucide-svelte";
   import { DateTime } from "luxon";
+  import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
 
@@ -62,6 +62,8 @@
 </script>
 
 <RequestData
+  bind:data={assignmentData}
+  bind:loading
   onServerError={{
     active: true,
     path: "/opgaver",
@@ -72,8 +74,6 @@
     },
   }}
   path={`opgave?exerciseid=${data.id}`}
-  bind:data={assignmentData}
-  bind:loading
 />
 
 <div class="page-container">
@@ -93,12 +93,12 @@
       <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
         <h1 class="!mb-0">{assignment.title} ({assignment.class})</h1>
         <a
+          class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
           href={`https://www.lectio.dk/lectio/${
             $authStore.school
           }/ElevAflevering.aspx?exerciseid=${data.id}&elevid=${decodeUserID(
             $authStore.cookie
           )}`}
-          class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
           target="_blank"
           >Lectio <ExternalLink class="ml-2 h-4 w-4" /></a
         >

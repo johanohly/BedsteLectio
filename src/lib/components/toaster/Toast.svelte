@@ -1,9 +1,9 @@
 <script lang="ts">
   import { type ToastsElements, createProgress, melt } from "@melt-ui/svelte";
-  import { fly } from "svelte/transition";
-  import { writable } from "svelte/store";
   import { X } from "lucide-svelte";
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
+  import { fly } from "svelte/transition";
 
   import { type ToastData, closeDelay } from "./Toaster.svelte";
 
@@ -51,10 +51,10 @@
 
 <div
   class="rounded-lg overflow-hidden bg-white dark:bg-dark text-foreground shadow-md"
-  on:pointerleave={() => (hovering = false)}
-  on:pointerenter={() => (hovering = true)}
-  out:fly={{ duration: 150, x: "100%" }}
   in:fly={{ duration: 150, x: "100%" }}
+  on:pointerenter={() => (hovering = true)}
+  on:pointerleave={() => (hovering = false)}
+  out:fly={{ duration: 150, x: "100%" }}
   use:melt={$content(id)}
 >
   <div
@@ -62,10 +62,10 @@
     use:melt={$progressEl}
   >
     <div
+      class="h-full w-full bg-[#f0f0f0] dark:bg-dark/80"
       style={`transform: translateX(-${
         100 - (100 * ($progress ?? 0)) / ($max ?? 1)
       }%)`}
-      class="h-full w-full bg-[#f0f0f0] dark:bg-dark/80"
     />
   </div>
   <div

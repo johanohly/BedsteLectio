@@ -1,20 +1,20 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { addToast } from "$components/toaster";
+  import { Button } from "$components/ui/button";
   import {
-    CardDescription,
+    Card,
     CardContent,
+    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
-    Card,
   } from "$components/ui/card";
-  import { SchoolSelect } from "$components/ui/schoolselect";
-  import { addToast } from "$components/toaster";
-  import { Button } from "$components/ui/button";
-  import { Switch } from "$components/ui/switch";
   import { Input } from "$components/ui/input";
   import { Label } from "$components/ui/label";
+  import { SchoolSelect } from "$components/ui/schoolselect";
+  import { Switch } from "$components/ui/switch";
   import { authStore } from "$lib/stores";
-  import { goto } from "$app/navigation";
   import { Loader } from "lucide-svelte";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
@@ -31,7 +31,7 @@
   onMount(async () => {
     const tempSchools = (await fetch("https://api.betterlectio.dk/skoler").then(
       (res) => res.json()
-    )) as { skole: string; id: number }[];
+    )) as { id: number; skole: string }[];
     schools = {};
     for (const item of tempSchools) {
       schools[item.skole] = +item.id;
@@ -96,8 +96,8 @@
         <Input
           autocomplete="current-password"
           bind:value={password}
-          type="password"
           id="password"
+          type="password"
         />
       </div>
       <div class="grid gap-2">
@@ -114,8 +114,8 @@
           </span>
         </Label>
         <Switch
-          disabled={saveCredentials}
           bind:checked={saveSchool}
+          disabled={saveCredentials}
           id="save-school"
         />
       </div>
@@ -132,9 +132,9 @@
     </CardContent>
     <CardFooter>
       <Button
+        class="w-full"
         disabled={loading || !username || !password || !school}
         on:click={login}
-        class="w-full"
       >
         {#if loading}
           <Loader class="mr-2" />

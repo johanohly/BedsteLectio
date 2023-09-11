@@ -2,8 +2,8 @@
 // https://github.com/joshnuss/svelte-local-storage-store/blob/master/index.ts
 // Represents version v0.4.0 (2023-01-18)
 
-import { writable as internal, type Writable, get } from 'svelte/store';
 import { BROWSER } from 'esm-env';
+import { type Writable, get, writable as internal } from 'svelte/store';
 
 declare type Updater<T> = (value: T) => T;
 declare type StoreDict<T> = { [key: string]: Writable<T> };
@@ -12,11 +12,11 @@ declare type StoreDict<T> = { [key: string]: Writable<T> };
 const stores: StoreDict<any> = {};
 
 interface Serializer<T> {
-	stringify(object: T): string;
 	parse(text: string): T;
+	stringify(object: T): string;
 }
 
-type StorageType = 'session' | 'local';
+type StorageType = 'local' | 'session';
 
 interface Options<T> {
 	serializer?: Serializer<T>;

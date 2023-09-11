@@ -5,7 +5,7 @@
 
   export let options: object;
   export let placeholder: string;
-  export let value: string | number;
+  export let value: number | string;
 
   const {
     elements: { menu, option, trigger },

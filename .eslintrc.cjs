@@ -7,7 +7,7 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:perfectionist/recommended-line-length',
+		'plugin:perfectionist/recommended-natural',
 		'plugin:svelte/recommended'
 	],
 	overrides: [

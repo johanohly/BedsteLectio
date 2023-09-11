@@ -1,15 +1,15 @@
 <script lang="ts">
+  import type { VariantProps } from "class-variance-authority";
   import type {
     HTMLAnchorAttributes,
     HTMLButtonAttributes,
   } from "svelte/elements";
-  import type { VariantProps } from "class-variance-authority";
 
   import { cn } from "$lib/utils";
 
   import { buttonVariants } from ".";
 
-  let className: undefined | string | null = undefined;
+  let className: null | string | undefined = undefined;
   export { className as class };
   export let href: HTMLAnchorAttributes["href"] = undefined;
   export let type: HTMLButtonAttributes["type"] = undefined;
@@ -20,16 +20,16 @@
 
 <svelte:element
   class={cn(buttonVariants({ className, size, variant }))}
-  type={href ? undefined : type}
-  this={href ? "a" : "button"}
   {href}
+  this={href ? "a" : "button"}
+  type={href ? undefined : type}
   {...$$restProps}
-  on:mouseenter
-  on:mouseleave
-  on:keydown
   on:change
   on:click
+  on:keydown
   on:keyup
+  on:mouseenter
+  on:mouseleave
 >
   <slot />
 </svelte:element>

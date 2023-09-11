@@ -1,7 +1,7 @@
 <script>
-  import { School } from "lucide-svelte";
   import { page } from "$app/stores";
   import { cn } from "$lib/utils";
+  import { School } from "lucide-svelte";
 
   import { navItems } from "./links";
 </script>
@@ -20,9 +20,9 @@
             ? "text-foreground"
             : "text-foreground/60"
         )}
+        href={navItem.href}
         rel={navItem.external ? "noreferrer" : undefined}
         target={navItem.external ? "_blank" : undefined}
-        href={navItem.href}
       >
         {navItem.title}
       </a>

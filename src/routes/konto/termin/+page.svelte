@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { addToast } from "$components/toaster";
   import { RequestData } from "$components";
+  import { addToast } from "$components/toaster";
   import { authStore } from "$lib/stores";
 
   let loading = true;
-  let terminer: { terminer: { [key: string]: string }; selected: string };
+  let terminer: { selected: string; terminer: { [key: string]: string } };
 
   async function save() {
     const res = await fetch(
@@ -36,7 +36,7 @@
   }
 </script>
 
-<RequestData bind:data={terminer} path="terminer" bind:loading />
+<RequestData bind:data={terminer} bind:loading path="terminer" />
 
 <section>
   <h2 class="mt-0">Termin</h2>

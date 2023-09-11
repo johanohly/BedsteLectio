@@ -7,7 +7,7 @@
   export let href: string;
   export let open: Writable<boolean>;
 
-  let className: undefined | string | null = undefined;
+  let className: null | string | undefined = undefined;
   export { className as class };
 </script>
 
@@ -16,8 +16,8 @@
     $page.url.pathname === href ? "text-foreground" : "text-foreground/60",
     className
   )}
-  on:click={() => {open.set(false)}}
   {href}
+  on:click={() => {open.set(false)}}
   {...$$restProps}
 >
   <slot />

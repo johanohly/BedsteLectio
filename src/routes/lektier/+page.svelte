@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { RawHomework, Homework } from "$lib/types/homework";
+  import type { Homework, RawHomework } from "$lib/types/homework";
 
+  import { RequestData } from "$components";
+  import { Card } from "$components/ui/card";
   import { Skeleton } from "$components/ui/skeleton";
   import { constructInterval } from "$lib/utilities";
-  import { Card } from "$components/ui/card";
-  import { RequestData } from "$components";
   import { DateTime } from "luxon";
 
   let loading = true;
   let data: RawHomework[];
-  let homework: { homework: Homework[]; date: string }[] = [];
+  let homework: { date: string; homework: Homework[] }[] = [];
   $: if (!loading && data) {
     const tempHomework = data.map((item) => ({
       homework: item.lektier.beskrivelse,
@@ -50,7 +50,7 @@
   };
 </script>
 
-<RequestData path="lektier" bind:loading bind:data />
+<RequestData bind:data bind:loading path="lektier" />
 
 <div class="page-container">
   <h1 class="mb-2">Lektier</h1>

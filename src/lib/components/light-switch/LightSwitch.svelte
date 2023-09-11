@@ -7,10 +7,10 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
   import { onMount } from "svelte";
 
   import {
-    setModeUserPrefers,
     getModeOsPrefers,
-    setModeCurrent,
     modeCurrent,
+    setModeCurrent,
+    setModeUserPrefers,
   } from "./light-switch";
 
   $: {
@@ -41,8 +41,8 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
     </label>
     <button
       class="relative h-6 w-11 rounded-full bg-dark-hover dark:bg-light-hover transition-colors data-[state=checked]:bg-black dark:data-[state=checked]:bg-white"
-      use:melt={$root}
       id="dark-mode"
+      use:melt={$root}
     >
       <span
         class="block h-5 w-5 translate-x-0.5 rounded-full bg-white dark:bg-black

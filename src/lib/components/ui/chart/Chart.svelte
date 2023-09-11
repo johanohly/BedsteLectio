@@ -3,7 +3,7 @@
   import ApexCharts from "apexcharts";
 
   let chartEl: HTMLElement;
-  export let options: object | null;
+  export let options: null | object;
 
   $: if (chartEl && options != null) {
     const chart = new ApexCharts(chartEl, options);

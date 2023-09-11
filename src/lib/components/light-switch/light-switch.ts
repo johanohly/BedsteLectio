@@ -12,7 +12,7 @@ import { get } from "svelte/store";
 /** Store: OS Preference Mode */
 export const modeOsPrefers = localStorageStore<boolean>("modeOsPrefers", false);
 /** Store: User Preference Mode */
-export const modeUserPrefers = localStorageStore<undefined | boolean>(
+export const modeUserPrefers = localStorageStore<boolean | undefined>(
 	"modeUserPrefers",
 	undefined
 );
@@ -31,7 +31,7 @@ export function getModeOsPrefers(): boolean {
 }
 
 /** Get the User for light/dark mode */
-export function getModeUserPrefers(): undefined | boolean {
+export function getModeUserPrefers(): boolean | undefined {
 	return get(modeUserPrefers);
 }
 

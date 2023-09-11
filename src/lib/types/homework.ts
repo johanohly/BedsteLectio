@@ -1,11 +1,11 @@
-import type { RawLesson, Lesson } from "./lesson";
+import type { Lesson, RawLesson } from "./lesson";
 
 export type RawHomework = {
+    aktivitet: RawLesson;
     lektier: {
         beskrivelse: string;
         link: string;
     };
-    aktivitet: RawLesson;
     note: string;
 };
 

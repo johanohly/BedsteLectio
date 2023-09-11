@@ -1,24 +1,24 @@
 import type { Interval } from "luxon";
 
 export type RawLesson = {
-    status: "eksamen" | "normal" | "aflyst" | "ændret" | string | null;
-    hold_id: string | null;
-    lokale: string | null;
-    lærer: string | null;
-    andet: string | null;
-    navn: string | null;
-    hold: string | null;
-    tidspunkt: string;
     absid: string;
+    andet: null | string;
+    hold: null | string;
+    hold_id: null | string;
+    lokale: null | string;
+    lærer: null | string;
+    navn: null | string;
+    status: "aflyst" | "eksamen" | "normal" | "ændret" | null | string;
+    tidspunkt: string;
 };
 
 export type Lesson = {
-    interval: Interval;
-    teacher: string;
-    status: string;
     class: string;
-    name: string;
-    room: string;
-    note: string;
     id: string;
+    interval: Interval;
+    name: string;
+    note: string;
+    room: string;
+    status: string;
+    teacher: string;
 }

@@ -1,17 +1,17 @@
 <script lang="ts">
   import type { RawLesson } from "$lib/types/lesson";
 
+  import { authStore } from "$lib/stores";
   import {
     constructInterval,
-    stringToColor,
     contrast,
     hslToRgb,
+    stringToColor,
   } from "$lib/utilities";
-  import { type EventSourceFunc, Calendar } from "@fullcalendar/core";
   import { decodeUserID } from "$lib/utilities/cookie";
-  import timeGridPlugin from "@fullcalendar/timegrid";
+  import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
   import luxonPlugin from "@fullcalendar/luxon3";
-  import { authStore } from "$lib/stores";
+  import timeGridPlugin from "@fullcalendar/timegrid";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
 
@@ -126,11 +126,11 @@
 
 <div class="page-container">
   <h1 class="mb-0">Skema</h1>
-  <div class="!mt-0 not-prose" bind:this={calendarEl} />
+  <div bind:this={calendarEl} class="!mt-0 not-prose" />
   <div class="not-prose block !mt-4">
     <a
-      href="/skema/sammenlign"
       class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+      href="/skema/sammenlign"
     >
       Se, hvornår dine venner har fri og sammenlign mødetider.
     </a>

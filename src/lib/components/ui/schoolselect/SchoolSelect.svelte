@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { flyAndScale } from "$lib/utilities"
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { ChevronsUpDown, X } from "lucide-svelte";
-  import { flyAndScale } from "$lib/utilities"; import { filter } from "fuzzy";
+  import { filter } from "fuzzy"; import { ChevronsUpDown, X } from "lucide-svelte";
 
   import Input from "../input/Input.svelte";
 
@@ -65,7 +65,7 @@
       >
         Søg efter din skole i søgefeltet nedenfor.
       </p>
-      <Input id="school-select-input" bind:value={searchTerm} class="mb-5" />
+      <Input bind:value={searchTerm} class="mb-5" id="school-select-input" />
       <div class="space-y-2">
         {#each filteredSchools as school}
           <button
@@ -82,10 +82,10 @@
         {/each}
       </div>
       <button
+        aria-label="close"
         class="absolute right-4 top-4 inline-flex h-6 w-6 appearance-none
                 items-center justify-center rounded-full p-1 text-foreground
                 hover:bg-light-hover/60 dark:hover:bg-dark-hover/60"
-        aria-label="close"
         use:melt={$close}
       >
         <X class="square-4" />

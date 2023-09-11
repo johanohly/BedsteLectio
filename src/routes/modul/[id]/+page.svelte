@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { RawModule, Module } from "$lib/types/module";
+  import type { Module, RawModule } from "$lib/types/module";
 
-  import { decodeUserID } from "$lib/utilities/cookie";
-  import { Skeleton } from "$components/ui/skeleton";
-  import { constructInterval } from "$lib/utilities";
-  import SvelteMarkdown from "svelte-markdown";
-  import { ExternalLink } from "lucide-svelte";
   import { RequestData } from "$components";
+  import { Skeleton } from "$components/ui/skeleton";
   import { authStore } from "$lib/stores";
+  import { constructInterval } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import { ExternalLink } from "lucide-svelte";
   import { DateTime } from "luxon";
+  import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
 
@@ -38,6 +38,8 @@
 </script>
 
 <RequestData
+  bind:data={moduleData}
+  bind:loading
   onServerError={{
     active: true,
     path: "/skema",
@@ -48,8 +50,6 @@
     },
   }}
   path={`modul?absid=${data.id}`}
-  bind:data={moduleData}
-  bind:loading
 />
 
 <div class="page-container">
@@ -75,12 +75,12 @@
           <h1 class="!mb-0">{module.lesson.class}</h1>
         {/if}
         <a
+          class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
           href={`https://www.lectio.dk/lectio/${
             $authStore.school
           }/aktivitet/aktivitetforside2.aspx?absid=${
             data.id
           }&elevid=${decodeUserID($authStore.cookie)}`}
-          class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
           target="_blank"
           >Lectio <ExternalLink class="ml-2 h-4 w-4" /></a
         >

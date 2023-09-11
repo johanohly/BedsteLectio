@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from "$lib/utils";
 
-	let className: undefined | string | null = undefined;
+	let className: null | string | undefined = undefined;
 	export { className as class };
 
 	export let tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = "h3";

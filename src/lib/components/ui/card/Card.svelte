@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn } from "$lib/utils";
 
-  let className: undefined | string | null = undefined;
+  let className: null | string | undefined = undefined;
   export { className as class };
 </script>
 
@@ -11,11 +11,11 @@
     className
   )}
   {...$$restProps}
+  on:click
+  on:focusin
+  on:focusout
   on:mouseenter
   on:mouseleave
-  on:focusout
-  on:focusin
-  on:click
 >
   <slot />
 </div>

@@ -5,20 +5,20 @@
   } from "$lib/types/assignments";
   import type { Writable } from "svelte/store";
 
+  import { RequestData } from "$components";
+  import { Badge } from "$components/ui/badge";
   import {
+    Card,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
-    Card,
   } from "$components/ui/card";
   import { Skeleton } from "$components/ui/skeleton";
   import Tabs from "$components/ui/tabs/Tabs.svelte";
-  import { Badge } from "$components/ui/badge";
-  import { RequestData } from "$components";
+  import { filter } from "fuzzy";
   import { Search } from "lucide-svelte";
   import { DateTime } from "luxon";
-  import { filter } from "fuzzy";
 
   let loading = true;
   let data: RawSimpleAssignment[];
@@ -38,7 +38,7 @@
     }));
   }
 
-  type Status = "Manglende" | "Kommende" | "Færdige";
+  type Status = "Færdige" | "Kommende" | "Manglende";
   let selectedTab: Writable<Status>;
   let searchTerm = "";
   let matchingAssignments: string[] = [];
@@ -66,16 +66,16 @@
   });
 </script>
 
-<RequestData path="opgaver" bind:loading bind:data />
+<RequestData bind:data bind:loading path="opgaver" />
 
 <div class="!overflow-hidden page-container">
   <div class="max-h-[88vh] flex flex-col">
     <h1 class="mb-2">Opgaver</h1>
     <div class="flex justify-between">
       <Tabs
-        tabs={["Kommende", "Færdige", "Manglende"]}
-        defaultActive="Kommende"
         bind:selectedTab
+        defaultActive="Kommende"
+        tabs={["Kommende", "Færdige", "Manglende"]}
       />
       <div class="hidden md:block relative">
         <div
@@ -84,13 +84,13 @@
           <Search class="h-4 w-4 text-gray-500 dark:text-gray-400" />
         </div>
         <input
-          class="bg-white dark:bg-dark border border-gray-300 dark:border-gray-600 text-sm rounded-lg block h-10 pl-10 p-2.5 dark:placeholder:text-[#3b3b3b] focus:ring-blue-500 focus:border-blue-500"
-          bind:value={searchTerm}
-          placeholder="Søg..."
           autocapitalize="off"
           autocomplete="off"
-          spellcheck="false"
           autocorrect="off"
+          bind:value={searchTerm}
+          class="bg-white dark:bg-dark border border-gray-300 dark:border-gray-600 text-sm rounded-lg block h-10 pl-10 p-2.5 dark:placeholder:text-[#3b3b3b] focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Søg..."
+          spellcheck="false"
           type="search"
         />
       </div>

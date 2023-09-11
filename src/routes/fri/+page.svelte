@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { RawLesson } from "$lib/types/lesson";
 
-  import { decodeUserID } from "$lib/utilities/cookie";
-  import { constructInterval } from "$lib/utilities";
   import { RequestData } from "$components";
   import { authStore } from "$lib/stores";
+  import { constructInterval } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
   import JSConfetti from "js-confetti";
   import { DateTime } from "luxon";
 
@@ -48,7 +48,7 @@
   let loading = true;
   let data: { moduler: RawLesson[] };
   $: if (!loading && data) {
-    let endLesson: undefined | string = undefined;
+    let endLesson: string | undefined = undefined;
     for (let i = 0; i < data.moduler.length; i++) {
       if (data.moduler[i].status != "aflyst") {
         if (!nameBlacklisted(data.moduler[i].navn ?? "")) {
@@ -104,15 +104,15 @@
 
 <svelte:window bind:innerWidth={width} />
 <RequestData
+  bind:data
+  bind:loading
   path={`skema?id=S${decodeUserID($authStore.cookie)}&uge=${dt.weekNumber}&år=${
     dt.year
   }`}
-  bind:loading
-  bind:data
 />
 
 <div class="">
-  <time style="margin-left: {marginLeft}; font-size: {fontSize}" class="clock-font pulsate"
+  <time class="clock-font pulsate" style="margin-left: {marginLeft}; font-size: {fontSize}"
     >{hours}:{minutes}:{seconds}</time
   >
 </div>

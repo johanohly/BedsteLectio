@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { authStore } from "$lib/stores";
   import { goto } from "$app/navigation";
+  import { authStore } from "$lib/stores";
   import { onMount } from "svelte";
 
   import { addToast } from "./toaster";

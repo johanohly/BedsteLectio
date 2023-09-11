@@ -6,81 +6,81 @@ type RawUser = {
 }
 
 type RawDocument = {
-    tidspunkt: string;
+    bruger: RawUser;
     dokument: string;
     "indlæg": string;
-    bruger: RawUser;
+    tidspunkt: string;
 }
 
 export type RawAssignment = {
-    oplysninger: {
-        i_undervisningsbeskrivelse: "Nej" | "Ja";
-        opgavebeskrivelse: string | null;
-        afleveringsfrist: string;
-        karakterskala: string;
-        opgavetitel: string;
-        ansvarlig: RawUser;
-        opgavenote: string;
-        elevtid: string;
-        hold: string;
-    };
     afleveres_af: {
-        "status_fravær": string;
-        karakternote: string;
         afsluttet: boolean;
         afventer: string;
+        elev: RawUser;
         elevnote: string;
         karakter: string;
-        elev: RawUser;
+        karakternote: string;
+        "status_fravær": string;
     };
-    "opgave_indlæg": RawDocument[];
     gruppemedlemmer: RawUser[];
+    "opgave_indlæg": RawDocument[];
+    oplysninger: {
+        afleveringsfrist: string;
+        ansvarlig: RawUser;
+        elevtid: string;
+        hold: string;
+        i_undervisningsbeskrivelse: "Ja" | "Nej";
+        karakterskala: string;
+        opgavebeskrivelse: null | string;
+        opgavenote: string;
+        opgavetitel: string;
+    };
 };
 
 type User = {
-    name: string;
     id: string;
+    name: string;
 }
 
 type Document = {
-    name: string | null;
-    url: string | null;
     date: DateTime;
+    name: null | string;
+    url: null | string;
     user: User;
 };
 
 export type Assignment = {
+    billedTime: string;
+    class: string;
+    date: DateTime;
+    description: string;
+    details: string;
     documents: Document[];
     participants: User[];
-    description: string;
-    billedTime: string;
-    details: string;
     status: string;
-    date: DateTime;
     title: string;
-    class: string;
 };
 
 export type SimpleAssignment = {
-    status: "Afleveret" | "Mangler" | "Venter";
-    description: string;
     date: DateTime;
-    title: string;
+    description: string;
     hold: string;
     link: string;
+    status: "Afleveret" | "Mangler" | "Venter";
+    title: string;
 };
 
 export type RawSimpleAssignment = {
-    status: "Afleveret" | "Mangler" | "Venter";
-    afventer: "Lærer" | "Elev" | "";
-    opgavetitel: string;
+    afventer: "" | "Elev" | "Lærer";
     "elev-tid": string;
-    exerciseid: string;
-    opgavenote: string;
     elevnote: string;
+    exerciseid: string;
     "fravær": string;
-    karakter: string;
     frist: string;
     hold: string;
+    karakter: string;
+    opgavenote: string;
+    opgavetitel: string;
+    status: "Afleveret" | "Mangler" | "Venter";
     uge: string;
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { createSwitch, melt } from "@melt-ui/svelte";
   import { cn } from "$lib/utils";
+  import { createSwitch, melt } from "@melt-ui/svelte";
 
-  let className: undefined | string | null = undefined;
+  let className: null | string | undefined = undefined;
   export { className as class };
 
   export let disabled = false;

@@ -1,38 +1,38 @@
 <script lang="ts">
-  import type { RawDocument, Document } from "$lib/types/documents";
-  import type { RawHomework, Homework } from "$lib/types/homework";
-  import type { RawMessage, Message } from "$lib/types/messages";
-  import type { RawLesson, Lesson } from "$lib/types/lesson";
-  import type { RawNews, News } from "$lib/types/news";
+  import type { Document, RawDocument } from "$lib/types/documents";
+  import type { Homework, RawHomework } from "$lib/types/homework";
+  import type { Lesson, RawLesson } from "$lib/types/lesson";
+  import type { RawSimpleMessage, SimpleMessage } from "$lib/types/messages";
+  import type { News, RawNews } from "$lib/types/news";
   import type { Writable } from "svelte/store";
 
-  import { TimelineItem, Timeline } from "$components/ui/timeline";
-  import { decodeUserID } from "$lib/utilities/cookie";
-  import { ArrowRight, Download } from "lucide-svelte";
+  import { RequestData } from "$components";
   import { Skeleton } from "$components/ui/skeleton";
   import Tabs from "$components/ui/tabs/Tabs.svelte";
-  import { constructInterval } from "$lib/utilities";
-  import SvelteMarkdown from "svelte-markdown";
-  import { RequestData } from "$components";
+  import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
+  import { constructInterval } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
+  import SvelteMarkdown from "svelte-markdown";
 
   let loading = true;
   let data: {
+    aktuelt: RawNews[];
     kommunikation: {
+      beskeder: RawSimpleMessage[];
       dokumenter: RawDocument[];
-      beskeder: RawMessage[];
     };
     skema: RawLesson[];
-    aktuelt: RawNews[];
   };
   let hwLoading = true;
   let hwData: RawHomework[];
 
-  let lessons: { selected: boolean; lessons: Lesson[]; day: string }[] = [];
+  let lessons: { day: string; lessons: Lesson[]; selected: boolean }[] = [];
   let news: News[] = [];
   let homework: Homework[] = [];
-  let messages: Message[] = [];
+  let messages: SimpleMessage[] = [];
   let documents: Document[] = [];
   $: if (!loading && data) {
     const tempLessons: Lesson[] = data.skema.map((lesson) => {
@@ -40,11 +40,7 @@
         class: lesson.hold ?? "",
         id: lesson.absid,
         interval: constructInterval(lesson.tidspunkt),
-        name:
-          lesson.navn
-            ?.replace("prv.", "prøve")
-            .replace("mdt.", "mundtlig")
-            .replace("skr.", "skriftlig") ?? "",
+        name: lesson.navn?.replace("prv.", "prøve").replace("mdt.", "mundtlig").replace("skr.", "skriftlig") ?? "",
         note: lesson.andet ?? "",
         room: lesson.lokale ?? "",
         status: lesson.status ?? "",
@@ -53,15 +49,7 @@
     });
     for (let i = 0; i < tempLessons.length; i++) {
       const lesson = tempLessons[i];
-      const day = lesson.interval.start?.hasSame(DateTime.now(), "day")
-        ? "I dag"
-        : (lesson.interval.start?.hasSame(
-            DateTime.now().plus({ days: 1 }),
-            "day"
-          )
-            ? "I morgen"
-            : lesson.interval.start?.toFormat("EEEE d/M").toTitleCase()) ??
-          "N/A";
+      const day = lesson.interval.start?.hasSame(DateTime.now(), "day") ? "I dag" : (lesson.interval.start?.hasSame(DateTime.now().plus({ days: 1 }), "day") ? "I morgen" : lesson.interval.start?.toFormat("EEEE d/M").toTitleCase()) ?? "N/A";
       const dayIndex = lessons.findIndex((item) => item.day === day);
       if (dayIndex === -1) {
         lessons.push({
@@ -130,14 +118,12 @@
   }
 </script>
 
-<RequestData path="forside" bind:loading bind:data />
-<RequestData bind:loading={hwLoading} bind:data={hwData} path="lektier" />
+<RequestData bind:data bind:loading path="forside" />
+<RequestData bind:data={hwData} bind:loading={hwLoading} path="lektier" />
 
 <div class="page-container">
   <div class="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-4">
-    <div
-      class="lg:col-span-2 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6"
-    >
+    <div class="lg:col-span-2 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.8888889em] flex items-center justify-between">
         <h1 class="mb-0">Skema</h1>
         <a href="/skema">
@@ -158,26 +144,11 @@
         <Skeleton class="mt-[1.25em] mb-[0.5em] w-3/4 h-[1em] rounded-xl" />
         <Skeleton class="w-3/4 h-[1em] rounded-xl" />
       {:else if lessons.length > 0}
-        <Tabs
-          tabs={lessons.map((item) => item.day)}
-          defaultActive={lessons[0].day}
-          bind:selectedTab
-        />
+        <Tabs bind:selectedTab defaultActive={lessons[0].day} tabs={lessons.map((item) => item.day)} />
         <div class="overflow-y-auto">
           <Timeline class="ml-3">
             {#each lessons.filter((day) => day.selected)[0].lessons as lesson}
-              <TimelineItem
-                description={`${
-                  lesson.note != ""
-                    ? `${lesson.note}<br>${lesson.room}`
-                    : lesson.room
-                }`}
-                time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)}
-                title={lesson.name != "" ? lesson.name : lesson.class}
-                link={`/modul/${lesson.id}`}
-                titleNote={lesson.teacher}
-                class="mb-10"
-              />
+              <TimelineItem class="mb-10" description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
             {/each}
           </Timeline>
         </div>
@@ -185,9 +156,7 @@
         <p class="text-center">Ingen kommende lektioner.</p>
       {/if}
     </div>
-    <div
-      class="lg:col-span-1 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6"
-    >
+    <div class="lg:col-span-1 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <h1 class="mb-0">Aktuelt</h1>
       <div class="block overflow-y-auto">
         {#if loading}
@@ -209,9 +178,7 @@
         {/if}
       </div>
     </div>
-    <div
-      class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6"
-    >
+    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.8888889em] flex items-center justify-between">
         <h1 class="mb-0">Lektier</h1>
         <a href="/lektier">
@@ -223,18 +190,10 @@
           loading
         {:else if homework.length > 0}
           {#each homework as hwItem}
-            <a
-              class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4"
-              href="/modul/{hwItem.lesson.id}"
-              target="_blank"
-            >
+            <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href="/modul/{hwItem.lesson.id}" target="_blank">
               <div class="flex-1 min-w-0">
-                <p
-                  class="text-sm font-semibold text-gray-900 truncate dark:text-white"
-                >
-                  {hwItem.lesson.name != ""
-                    ? hwItem.lesson.name
-                    : hwItem.lesson.class}
+                <p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
+                  {hwItem.lesson.name != "" ? hwItem.lesson.name : hwItem.lesson.class}
                 </p>
                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {hwItem.homework}
@@ -250,37 +209,23 @@
         {/if}
       </div>
     </div>
-    <div
-      class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6"
-    >
+    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <h1>Beskeder</h1>
       <div class="block overflow-y-auto">
         {#if loading}
           loading
         {:else if messages.length > 0}
           {#each messages as message}
-            <a
-              href={`https://www.lectio.dk/lectio/${
-                $authStore.school
-              }/beskeder2.aspx?type=showthread&id=${
-                message.id
-              }&elevid=${decodeUserID($authStore.cookie)}`}
-              class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4"
-              target="_blank"
-            >
+            <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href={`https://www.lectio.dk/lectio/${$authStore.school}/beskeder2.aspx?type=showthread&id=${message.id}&elevid=${decodeUserID($authStore.cookie)}`} target="_blank">
               <div class="flex-1 min-w-0">
-                <p
-                  class="text-sm font-semibold text-gray-900 truncate dark:text-white"
-                >
+                <p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
                   {message.title}
                 </p>
                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {message.sender}
                 </p>
               </div>
-              <div
-                class="inline-flex items-center text-sm text-gray-900 dark:text-white"
-              >
+              <div class="inline-flex items-center text-sm text-gray-900 dark:text-white">
                 {message.date.toLocaleString(DateTime.DATE_SHORT)}
               </div>
             </a>
@@ -290,33 +235,23 @@
         {/if}
       </div>
     </div>
-    <div
-      class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6"
-    >
+    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <h1>Dokumenter</h1>
       <div class="block overflow-y-auto">
         {#if loading}
           loading
         {:else if documents.length > 0}
           {#each documents as document}
-            <a
-              class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4"
-              href={`https://www.lectio.dk/lectio/${$authStore.school}/dokumenthent.aspx?documentid=${document.id}`}
-              target="_blank"
-            >
+            <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href={`https://www.lectio.dk/lectio/${$authStore.school}/dokumenthent.aspx?documentid=${document.id}`} target="_blank">
               <div class="flex-1 min-w-0">
-                <p
-                  class="flex items-center text-sm font-semibold text-gray-900 truncate dark:text-white"
-                >
+                <p class="flex items-center text-sm font-semibold text-gray-900 truncate dark:text-white">
                   {document.title}<Download class="ml-2" size="20" />
                 </p>
                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {document.author}
                 </p>
               </div>
-              <div
-                class="inline-flex items-center text-sm text-gray-900 dark:text-white"
-              >
+              <div class="inline-flex items-center text-sm text-gray-900 dark:text-white">
                 {document.date.toLocaleString(DateTime.DATE_SHORT)}
               </div>
             </a>

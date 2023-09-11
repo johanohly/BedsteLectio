@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
 	export type ToastData = {
+		color: string;
 		description: string;
 		title: string;
-		color: string;
 	};
 	export const closeDelay = 5000;
 	const {
@@ -26,7 +26,7 @@
 <div class="fixed top-0 right-0 z-50 m-4 flex flex-col items-start gap-2" use:portal>
 	{#each $toasts as { data, id } (id)}
 		<div animate:flip={{ duration: 500 }}>
-			<Toast {elements} {data} {id} />
+			<Toast {data} {elements} {id} />
 		</div>
 	{/each}
 </div>

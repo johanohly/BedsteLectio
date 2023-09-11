@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Calendar } from "lucide-svelte";
 
-  let className: undefined | string | null = undefined;
+  let className: null | string | undefined = undefined;
   export { className as class };
 
   export let title: string;
-  export let titleNote: undefined | string = undefined;
+  export let titleNote: string | undefined = undefined;
   export let time: string;
   export let description: string;
-  export let link: undefined | string = undefined;
+  export let link: string | undefined = undefined;
 </script>
 
 <li class={className}>
