@@ -64,7 +64,6 @@
     }
     username = "";
     password = "";
-    school = 0;
     addToast({
       data: {
         color: "bg-red-500",
