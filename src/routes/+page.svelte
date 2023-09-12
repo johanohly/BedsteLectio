@@ -64,7 +64,7 @@
 
     news = data.aktuelt.map((item) => {
       return {
-        description: item.text.replace("@", "@<!-- -->"), // Without this, the email gets obfuscated with random hex characters. https://github.com/github/markup/issues/1168
+        description: item.text.replaceAll("@", "@<!-- -->"), // Without this, the email gets obfuscated with random hex characters. https://github.com/github/markup/issues/1168
       };
     });
 

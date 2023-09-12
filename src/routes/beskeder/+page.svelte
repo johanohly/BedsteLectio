@@ -6,8 +6,11 @@
     import { Skeleton } from "$components/ui/skeleton";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
-    import { Send } from "lucide-svelte";
+    import { Plus, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
+    import { fade, slide } from "svelte/transition";
+    import SvelteMarkdown from "svelte-markdown";
+    import { Badge } from "$components/ui/badge";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
@@ -39,21 +42,29 @@
         });
     }
 
-    let selectedMessage: number | undefined = 61780835214;
+    let selectedMessage: number | undefined = undefined;
 
-    let loadingMessage = false;
     let dataMessage: RawFullMessage | undefined = undefined;
     let fullMessage: FullMessage | undefined = undefined;
     $: if (dataMessage && dataMessage.beskeder) {
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
                 return {
-                    body: message.besked,
+                    body: message.besked.replaceAll("@", "@<!-- -->").replaceAll(/^.*Redigeret af.*$/gm, ""),
                     date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
                         locale: "da",
                     }),
+                    edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
                     sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0] },
                     title: message.titel,
+                    attachments: message.vedhæftninger
+                        ? message.vedhæftninger.map((attachment) => {
+                              return {
+                                  link: attachment.href,
+                                  name: attachment.navn,
+                              };
+                          })
+                        : [],
                 };
             }),
             receivers: dataMessage.modtagere,
@@ -65,18 +76,18 @@
 <RequestData bind:data bind:loading path="beskeder2" />
 {#key selectedMessage}
     {#if selectedMessage}
-        <RequestData bind:data={dataMessage} bind:loading={loadingMessage} path={`besked?id=${selectedMessage}`} />
+        <RequestData bind:data={dataMessage} path={`besked?id=${selectedMessage}`} />
     {/if}
 {/key}
 
-<div class="w-full h-full grid grid-cols-[30%_1fr]">
+<div class="w-full h-full grid {selectedMessage ? 'grid-cols-[30%_1fr]' : ''}">
     <div class="grid grid-rows-[auto_1fr] border-r dark:border-white/10">
         <header class="border-b dark:border-white/10 p-4">
-            <h3>Filtrér</h3>
-            (wip)
+            <h3 class="mt-0">Filtrér</h3>
+            <p>(wip)</p>
         </header>
         <div class="p-4 space-y-4">
-            <h3>Beskeder</h3>
+            <h3 class="mt-0">Beskeder</h3>
             <div class="space-y-1 max-h-[70vh] overflow-y-auto">
                 {#if !loading && students && messages}
                     {#each messages as message}
@@ -134,46 +145,73 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-row-[auto_1fr_auto]">
-        <section class="border-b dark:border-white/10 p-4">
-            <h2>Besked titel (wip)</h2>
-        </section>
-        <section class="p-4 overflow-y-auto space-y-4 not-prose">
-            {#if !loadingMessage && students}
-                {#if fullMessage}
-                    {#each fullMessage.messages as message}
-                        {#if message.sender.name === me?.name}
-                            <div class="grid grid-cols-[1fr_auto] gap-2">
-                                <div class="rounded-md p-4 rounded-tr-none space-y-2 bg-[#c9fcd0] dark:bg-[#8778f983]">
-                                    <header class="flex justify-between items-center">
-                                        <p class="font-bold">{message.title}</p>
-                                        <small class="opacity-50">{message.date.toRelative()}</small>
-                                    </header>
-                                    <p>{message.body}</p>
+    {#if fullMessage && students}
+        <div class="grid grid-rows-[auto_1fr]" transition:fade={{ duration: 1000 }}>
+            <section class="border-b dark:border-white/10 p-4 flex items-center justify-between">
+                <h2 class="my-0">{fullMessage.messages[0].title}</h2>
+                <div
+                    on:click={() => {
+                        dataMessage = undefined;
+                        fullMessage = undefined;
+                        selectedMessage = undefined;
+                    }}
+                    on:keydown={() => {}}
+                    class="cursor-pointer"
+                >
+                    <Plus class="rotate-45" />
+                </div>
+            </section>
+            <section class="p-4 overflow-y-auto space-y-4 not-prose">
+                {#each fullMessage.messages as message}
+                    {#if message.sender.name === me?.name}
+                        <div class="grid grid-cols-[1fr_auto] gap-2">
+                            <div class="rounded-md p-4 rounded-tr-none space-y-2 bg-[#c9fcd0] dark:bg-[#8778f983]">
+                                <header class="flex justify-between items-center">
+                                    <p class="font-bold">{message.title}</p>
+                                    <small class="opacity-50">{message.date.toRelative()}</small>
+                                </header>
+                                <div>
+                                    {#if message.attachments.length}
+                                        <div class="flex space-x-2">
+                                            {#each message.attachments as attachment}
+                                                <Badge href={attachment.link}>{attachment.name}</Badge>
+                                            {/each}
+                                        </div>
+                                    {/if}
+                                    <SvelteMarkdown source={message.body} />
                                 </div>
-                                <Avatar user={message.sender} />
                             </div>
-                        {:else}
-                            <div class="grid grid-cols-[auto_1fr] gap-2">
-                                <Avatar user={message.sender} />
-                                <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
-                                    <header class="flex justify-between items-center">
-                                        <p class="font-bold">{message.title}</p>
-                                        <small class="opacity-50">{message.date.toRelative()}</small>
-                                    </header>
-                                    <p>{message.body}</p>
+                            <Avatar user={message.sender} />
+                        </div>
+                    {:else}
+                        <div class="grid grid-cols-[auto_1fr] gap-2">
+                            <Avatar user={message.sender} />
+                            <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
+                                <header class="flex justify-between items-center">
+                                    <p class="font-bold">{message.title}</p>
+                                    <small class="opacity-50">{message.date.toRelative()}</small>
+                                </header>
+                                <div>
+                                    {#if message.attachments.length}
+                                        <div class="flex space-x-2">
+                                            {#each message.attachments as attachment}
+                                                <Badge href={attachment.link}>{attachment.name}</Badge>
+                                            {/each}
+                                        </div>
+                                    {/if}
+                                    <SvelteMarkdown source={message.body} />
+                                    {#if message.edits.length}
+                                        {#each message.edits as edit}
+                                            <p class="text-sm text-gray-400">{edit}</p>
+                                        {/each}
+                                    {/if}
                                 </div>
                             </div>
-                        {/if}
-                    {/each}
-                {:else}
-                    <div class="text-center">Vælg en besked</div>
-                {/if}
-            {:else}
-                <div class="text-center">Indlæser...</div>
-            {/if}
-        </section>
-        <!-- <section class="border-t dark:border-white/10 p-4">
+                        </div>
+                    {/if}
+                {/each}
+            </section>
+            <!-- <section class="border-t dark:border-white/10 p-4">
             <div class="input-group input-group-divider grid-cols-[1fr_auto] rounded-container-token">
                 <textarea
                     bind:value={currentMessage}
@@ -194,5 +232,6 @@
                 </button>
             </div>
         </section> -->
-    </div>
+        </div>
+    {/if}
 </div>

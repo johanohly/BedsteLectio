@@ -7,14 +7,23 @@ export type RawFullMessage = {
         dato: string;
         id: string;
         titel: string;
+        vedhæftninger?: {
+            href: string;
+            navn: string
+        }[];
     }[];
     modtagere: string;
 }
 
 export type FullMessage = {
     messages: {
+        attachments: {
+            link: string;
+            name: string;
+        }[];
         body: string;
         date: DateTime;
+        edits: string[];
         sender: { id: string, name: string };
         title: string;
     }[];
