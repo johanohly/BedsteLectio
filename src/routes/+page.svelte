@@ -16,7 +16,6 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
-  import { getDeviceID } from "$lib/utilities";
 
   let loading = true;
   let data: {
@@ -117,8 +116,6 @@
       lessons[selectedIndex].selected = false;
     }
   }
-
-  $: console.log(getDeviceID());
 </script>
 
 <RequestData bind:data bind:loading path="forside" />
