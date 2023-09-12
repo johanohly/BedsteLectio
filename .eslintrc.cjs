@@ -7,7 +7,7 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:perfectionist/recommended-natural',
+		'plugin:svelte/recommended',
 	],
 	overrides: [
 		{
@@ -24,15 +24,6 @@ module.exports = {
 		extraFileExtensions: ['.svelte'],
 		sourceType: 'module'
 	},
-	plugins: ['perfectionist', '@typescript-eslint'],
+	plugins: ['@typescript-eslint'],
 	root: true,
-	"rules": {
-		"perfectionist/sort-objects": [
-			"error",
-			{
-				"order": "asc",
-				"type": "natural"
-			}
-		]
-	}
 };
