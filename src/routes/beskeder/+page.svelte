@@ -3,6 +3,7 @@
 
     import { RequestData } from "$components";
     import { Avatar } from "$components/ui/avatar";
+    import { Badge } from "$components/ui/badge";
     import { Skeleton } from "$components/ui/skeleton";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
@@ -10,7 +11,6 @@
     import { DateTime } from "luxon";
     import { fade, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { Badge } from "$components/ui/badge";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
@@ -50,13 +50,6 @@
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
                 return {
-                    body: message.besked.replaceAll("@", "@<!-- -->").replaceAll(/^.*Redigeret af.*$/gm, ""),
-                    date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
-                        locale: "da",
-                    }),
-                    edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
-                    sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0] },
-                    title: message.titel,
                     attachments: message.vedhæftninger
                         ? message.vedhæftninger.map((attachment) => {
                               return {
@@ -65,6 +58,13 @@
                               };
                           })
                         : [],
+                    body: message.besked.replaceAll("@", "@<!-- -->").replaceAll(/^.*Redigeret af.*$/gm, ""),
+                    date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
+                        locale: "da",
+                    }),
+                    edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
+                    sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0] },
+                    title: message.titel,
                 };
             }),
             receivers: dataMessage.modtagere,
@@ -150,13 +150,13 @@
             <section class="border-b dark:border-white/10 p-4 flex items-center justify-between">
                 <h2 class="my-0">{fullMessage.messages[0].title}</h2>
                 <div
+                    class="cursor-pointer"
                     on:click={() => {
                         dataMessage = undefined;
                         fullMessage = undefined;
                         selectedMessage = undefined;
                     }}
                     on:keydown={() => {}}
-                    class="cursor-pointer"
                 >
                     <Plus class="rotate-45" />
                 </div>

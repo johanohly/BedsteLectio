@@ -8,7 +8,6 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:perfectionist/recommended-natural',
-		'plugin:svelte/recommended'
 	],
 	overrides: [
 		{
