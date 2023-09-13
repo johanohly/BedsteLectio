@@ -31,7 +31,7 @@
         teacher: moduleData.aktivitet.lærer ?? "",
       },
       note: moduleData.note,
-      otherContent: moduleData.øvrigt_indhold,
+      otherContent: moduleData.øvrigtIndhold,
       presentation: moduleData.præsentation,
     };
   }
@@ -66,31 +66,18 @@
     <Skeleton class="!mt-4 w-full rounded-[10px] h-[8em]" />
   {:else}
     <section>
-      <div
-        class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between"
-      >
+      <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
         {#if module.lesson.name != ""}
           <h1 class="!mb-0">{module.lesson.name} ({module.lesson.class})</h1>
         {:else}
           <h1 class="!mb-0">{module.lesson.class}</h1>
         {/if}
-        <a
-          class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
-          href={`https://www.lectio.dk/lectio/${
-            $authStore.school
-          }/aktivitet/aktivitetforside2.aspx?absid=${
-            data.id
-          }&elevid=${decodeUserID($authStore.cookie)}`}
-          target="_blank"
-          >Lectio <ExternalLink class="ml-2 h-4 w-4" /></a
-        >
+        <a class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black" href={`https://www.lectio.dk/lectio/${$authStore.school}/aktivitet/aktivitetforside2.aspx?absid=${data.id}&elevid=${decodeUserID($authStore.cookie)}`} target="_blank">Lectio <ExternalLink class="ml-2 h-4 w-4" /></a>
       </div>
 
       <h3 class="!mt-1 !mb-0">Modul</h3>
       <p class="!mt-0 !mb-0">
-        Tidspunkt: {module.lesson.interval.toLocaleString(
-          DateTime.DATETIME_FULL
-        )} ({module.lesson.interval.start?.toRelative()})
+        Tidspunkt: {module.lesson.interval.toLocaleString(DateTime.DATETIME_FULL)} ({module.lesson.interval.start?.toRelative()})
         <br />
         Lokale: {module.lesson.room}
         <br />
@@ -112,7 +99,7 @@
     {#if module.otherContent}
       <section>
         <h2 class="!mb-0">Øvrigt Indhold</h2>
-        <SvelteMarkdown source={module.otherContent} />
+        <SvelteMarkdown source={module.otherContent.replaceAll(")", ")<br>")} />
       </section>
     {/if}
     {#if module.presentation}

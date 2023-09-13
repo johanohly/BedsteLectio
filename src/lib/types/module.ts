@@ -13,5 +13,5 @@ export type RawModule = {
     lektier: null | string;
     note: null | string;
     "præsentation": null | string;
-    "øvrigt_indhold": null | string;
+    "øvrigtIndhold": null | string;
 }
