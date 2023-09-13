@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { flyAndScale } from "$lib/utilities"
+  import { flyAndScale } from "$lib/utils"
   import { createDialog, melt } from "@melt-ui/svelte";
   import { filter } from "fuzzy"; import { ChevronsUpDown, X } from "lucide-svelte";
 

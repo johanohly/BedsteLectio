@@ -5,7 +5,8 @@
   import { Button } from "$components/ui/button";
   import { Input } from "$components/ui/input";
   import { authStore } from "$lib/stores";
-  import { constructInterval, flyAndScale, notEmpty } from "$lib/utilities";
+  import { constructInterval, notEmpty } from "$lib/utilities";
+  import { flyAndScale } from "$lib/utils";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { filter } from "fuzzy";

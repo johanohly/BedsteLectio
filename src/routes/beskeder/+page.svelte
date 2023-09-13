@@ -5,12 +5,15 @@
     import { Avatar } from "$components/ui/avatar";
     import { Badge } from "$components/ui/badge";
     import { Skeleton } from "$components/ui/skeleton";
+    import { Tooltip } from "$components/ui/tooltip";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
     import { Plus, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
+    import { tweened } from "svelte/motion";
     import { fade, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
+    import { cubicOut } from "svelte/easing";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
@@ -89,7 +92,7 @@
 <svelte:window bind:innerHeight={height} />
 
 <div bind:this={element} class="w-full flex flex-row">
-    <div class="w-[28rem] flex flex-col border-r dark:border-white/10">
+    <div class="{fullMessage ? 'hidden w-[28rem] xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
         <header class="border-b dark:border-white/10 p-4">
             <h3 class="mt-0">Filtrér</h3>
             <p>(wip)</p>
@@ -154,22 +157,24 @@
         </div>
     </div>
     {#if fullMessage && students}
-        <div class="flex flex-col h-full px-4 py-6 space-y-4" transition:fade={{ duration: 1000 }}>
-            <section class="bg-white dark:bg-dark shadow-lg rounded-md p-4 flex items-center justify-between">
-                <h2 class="my-0">{fullMessage.messages[0].title}</h2>
-                <div
-                    class="cursor-pointer"
-                    on:click={() => {
-                        dataMessage = undefined;
-                        fullMessage = undefined;
-                        selectedMessage = undefined;
-                    }}
-                    on:keydown={() => {}}
-                >
-                    <Plus class="rotate-45" />
+        <div class="flex flex-col w-full h-full space-y-4" transition:fade={{ duration: 500 }}>
+            <section class="p-4">
+                <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center justify-between">
+                    <h2 class="my-0">{fullMessage.messages[0].title}</h2>
+                    <div
+                        class="cursor-pointer"
+                        on:click={() => {
+                            dataMessage = undefined;
+                            fullMessage = undefined;
+                            selectedMessage = undefined;
+                        }}
+                        on:keydown={() => {}}
+                    >
+                        <Plus class="rotate-45" />
+                    </div>
                 </div>
             </section>
-            <section class="h-full overflow-y-hidden not-prose">
+            <section class="h-full overflow-y-hidden p-4 py-0 not-prose">
                 <div class="h-full overflow-y-auto space-y-4">
                     {#each fullMessage.messages as message}
                         {#if message.sender.name === me?.name}
@@ -190,11 +195,15 @@
                                         <SvelteMarkdown source={message.body} />
                                     </div>
                                 </div>
-                                <Avatar user={message.sender} />
+                                <Tooltip text={message.sender.name} class="w-10 h-10">
+                                    <Avatar user={message.sender} />
+                                </Tooltip>
                             </div>
                         {:else}
                             <div class="grid grid-cols-[auto_1fr] gap-2">
-                                <Avatar user={message.sender} />
+                                <Tooltip text={message.sender.name} class="w-10 h-10">
+                                    <Avatar user={message.sender} />
+                                </Tooltip>
                                 <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
                                     <header class="flex justify-between items-center">
                                         <p class="font-bold">{message.title}</p>
@@ -221,27 +230,14 @@
                     {/each}
                 </div>
             </section>
-            <!-- <section class="border-t dark:border-white/10 p-4">
-            <div class="input-group input-group-divider grid-cols-[1fr_auto] rounded-container-token">
-                <textarea
-                    bind:value={currentMessage}
-                    class="bg-transparent border-0 ring-0"
-                    name="message"
-                    id="message"
-                    placeholder="Skriv en besked..."
-                    rows="1"
-                    on:keydown={async () => {
-                        if (["Enter"].includes(event.code)) {
-                            event.preventDefault();
-                            await sendMessage();
-                        }
-                    }}
-                />
-                <button class={currentMessage ? "" : "input-group-shim"} on:click={sendMessage}>
-                    <Send />
-                </button>
-            </div>
-        </section> -->
+            <section class="w-full p-4 !mt-0">
+                <div class="grid grid-cols-[1fr_auto] overflow-hidden rounded-md bg-white">
+                    <textarea disabled class="bg-transparent border-0 ring-0 py-2 px-3" name="message" id="message" placeholder="Skriv en besked..." rows="1" />
+                    <button class="flex items-center content-between px-4">
+                        <Send />
+                    </button>
+                </div>
+            </section>
         </div>
     {/if}
 </div>
