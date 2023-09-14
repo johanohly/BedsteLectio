@@ -8,7 +8,7 @@
     import { Tooltip } from "$components/ui/tooltip";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
-    import { ChevronDown, ChevronUp, Plus, Search, Send } from "lucide-svelte";
+    import { ChevronDown, ChevronUp, Minus, Plus, RotateCcw, Search, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
     import { fade, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
@@ -16,6 +16,7 @@
     import { test } from "fuzzy";
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
+    import { Button } from "$components/ui/button";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
@@ -52,12 +53,18 @@
     let searchFilter: "All" | "Received" | "Sent" = "All";
     let searchFrom = "";
     let searchTo = "";
-    $: console.log(searchFrom, searchTo);
+    $: searchResetable = searchTerm != "" || searchFilter != "All" || searchFrom != "" || searchTo != "";
     $: filteredMessages = messages
         ? messages.filter((message) => {
               if (searchFilter != "All") {
                   if (message.sender == me?.name && searchFilter == "Received") return false;
                   if (message.sender != me?.name && searchFilter == "Sent") return false;
+              }
+              if (searchFrom) {
+                  if (DateTime.fromISO(searchFrom).plus({ hours: 2 }) > message.date) return false;
+              }
+              if (searchTo) {
+                  if (DateTime.fromISO(searchTo).plus({ hours: 2 }) < message.date) return false;
               }
               return test(searchTerm, message.title);
           })
@@ -117,14 +124,31 @@
 <div bind:this={element} class="w-full flex flex-row">
     <div class="{fullMessage ? 'hidden w-[28rem] xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
         <header use:melt={$root} class="border-b dark:border-white/10 p-4">
-            <button use:melt={$trigger} disabled={loading} class="flex items-center justify-between p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
-                <h3 class="m-0">Filtre</h3>
-                {#if $open}
-                    <ChevronUp class="ml-1 square-5" />
-                {:else}
-                    <ChevronDown class="ml-1 square-5" />
+            <div class="flex items-center">
+                <button use:melt={$trigger} disabled={loading} class="flex items-center p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
+                    <h3 class="m-0">Filtre</h3>
+                    {#if $open}
+                        <ChevronUp class="ml-1 square-5" />
+                    {:else}
+                        <ChevronDown class="ml-1 square-5" />
+                    {/if}
+                </button>
+                {#if searchResetable}
+                    <Tooltip text="Nulstil alle filtre">
+                        <button
+                            on:click={() => {
+                                searchTerm = "";
+                                searchFilter = "All";
+                                searchFrom = "";
+                                searchTo = "";
+                            }}
+                            class="flex items-center justify-center"
+                        >
+                            <RotateCcw class="text-red-500 ml-2 square-5" />
+                        </button>
+                    </Tooltip>
                 {/if}
-            </button>
+            </div>
             <div class="relative my-2 rounded-lg bg-white">
                 <div class="absolute h-10 inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                     <Search class="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -154,9 +178,16 @@
                                 selected={searchFilter == "Sent"}>Sendt</Tab
                             >
                         </div>
-                        <div class="flex flex-row space-x-4">
-                            <Datetime id="fromDate" bind:value={searchFrom} />
-                            <Datetime id="toDate" bind:value={searchTo} />
+                        <div class="flex flex-row max-sm:justify-between">
+                            <div class="mr-2">
+                                <Datetime bind:value={searchFrom} />
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <Minus />
+                            </div>
+                            <div class="ml-2">
+                                <Datetime bind:value={searchTo} />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -186,7 +217,24 @@
                             </div>
                         {/each}
                     {:else}
-                        <div class="text-center">Ingen resultater</div>
+                        <div class="flex items-center justify-center">
+                            <div class="flex flex-col">
+                                Ingen resultater
+                                {#if searchResetable}
+                                    <Button
+                                        on:click={() => {
+                                            searchTerm = "";
+                                            searchFilter = "All";
+                                            searchFrom = "";
+                                            searchTo = "";
+                                        }}
+                                        variant="destructive"
+                                    >
+                                        Nulstil filtre
+                                    </Button>
+                                {/if}
+                            </div>
+                        </div>
                     {/if}
                 {:else}
                     <div class="relative flex flex-row items-center p-4">
