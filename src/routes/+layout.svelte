@@ -10,6 +10,8 @@
   import "../app.postcss";
   import "../lib/utilities/string";
 
+  import "flatpickr/dist/flatpickr.css";
+
   $: title =
     $page.url.pathname == "/"
       ? "BedsteLectio"
