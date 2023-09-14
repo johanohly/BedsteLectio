@@ -8,18 +8,20 @@
     import { Tooltip } from "$components/ui/tooltip";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
-    import { Plus, Send } from "lucide-svelte";
+    import { ChevronDown, ChevronUp, Plus, Search, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
-    import { tweened } from "svelte/motion";
     import { fade, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { cubicOut } from "svelte/easing";
+    import { createCollapsible, melt } from "@melt-ui/svelte";
+    import { test } from "fuzzy";
+    import { Tab } from "$components/ui/tab";
+    import { Datetime } from "$components/ui/datetime";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
     $: if (dataStudents) {
         students = Object.entries({ ...dataStudents.elever, ...dataStudents.lærere } ?? {}).map(([name, id]) => {
-            const formatted = name.split(" (")[0];
+            const formatted = name.split(" (")[0].split(" -")[0];
             return {
                 id,
                 name: formatted,
@@ -31,6 +33,7 @@
     let loading = true;
     let data: RawMessage[] = [];
     let messages: Message[];
+
     $: if (!loading && data) {
         messages = data.map((message) => {
             return {
@@ -39,11 +42,26 @@
                 }),
                 id: +message.message_id,
                 receivers: message.modtagere,
-                sender: message.førsteBesked.split(" (")[0],
+                sender: message.førsteBesked.split(" (")[0].split(" -")[0],
                 title: message.emne,
             };
         });
     }
+
+    let searchTerm = "";
+    let searchFilter: "All" | "Received" | "Sent" = "All";
+    let searchFrom = "";
+    let searchTo = "";
+    $: console.log(searchFrom, searchTo);
+    $: filteredMessages = messages
+        ? messages.filter((message) => {
+              if (searchFilter != "All") {
+                  if (message.sender == me?.name && searchFilter == "Received") return false;
+                  if (message.sender != me?.name && searchFilter == "Sent") return false;
+              }
+              return test(searchTerm, message.title);
+          })
+        : [];
 
     let selectedMessage: number | undefined = undefined;
 
@@ -66,13 +84,18 @@
                         locale: "da",
                     }),
                     edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
-                    sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0] },
+                    sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0].split(" -")[0] },
                     title: message.titel,
                 };
             }),
             receivers: dataMessage.modtagere,
         };
     }
+
+    const {
+        elements: { root, content, trigger },
+        states: { open },
+    } = createCollapsible();
 
     let element: HTMLDivElement;
     let height = 0;
@@ -93,32 +116,78 @@
 
 <div bind:this={element} class="w-full flex flex-row">
     <div class="{fullMessage ? 'hidden w-[28rem] xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
-        <header class="border-b dark:border-white/10 p-4">
-            <h3 class="mt-0">Filtrér</h3>
-            <p>(wip)</p>
+        <header use:melt={$root} class="border-b dark:border-white/10 p-4">
+            <button use:melt={$trigger} disabled={loading} class="flex items-center justify-between p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
+                <h3 class="m-0">Filtre</h3>
+                {#if $open}
+                    <ChevronUp class="ml-1 square-5" />
+                {:else}
+                    <ChevronDown class="ml-1 square-5" />
+                {/if}
+            </button>
+            <div class="relative my-2 rounded-lg bg-white">
+                <div class="absolute h-10 inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                    <Search class="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                </div>
+                <input bind:value={searchTerm} autocapitalize="off" autocomplete="off" autocorrect="off" class="bg-white dark:bg-dark text-sm rounded-lg block w-full h-10 pl-10 p-2.5 dark:placeholder:text-[#3b3b3b] focus:ring-blue-500 focus:border-blue-500" placeholder="Søg..." spellcheck="false" type="search" />
+            </div>
+            {#if $open}
+                <div use:melt={$content} transition:slide>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex flex-row space-x-2">
+                            <Tab
+                                on:click={() => {
+                                    searchFilter = "All";
+                                }}
+                                selected={searchFilter == "All"}>Alle</Tab
+                            >
+                            <Tab
+                                on:click={() => {
+                                    searchFilter = "Received";
+                                }}
+                                selected={searchFilter == "Received"}>Modtaget</Tab
+                            >
+                            <Tab
+                                on:click={() => {
+                                    searchFilter = "Sent";
+                                }}
+                                selected={searchFilter == "Sent"}>Sendt</Tab
+                            >
+                        </div>
+                        <div class="flex flex-row space-x-4">
+                            <Datetime id="fromDate" bind:value={searchFrom} />
+                            <Datetime id="toDate" bind:value={searchTo} />
+                        </div>
+                    </div>
+                </div>
+            {/if}
         </header>
         <div class="h-full overflow-hidden p-4 space-y-4">
             <h3 class="mt-0">Beskeder</h3>
             <div class="h-full overflow-y-auto space-y-1">
                 {#if !loading && students && messages}
-                    {#each messages as message}
-                        <div
-                            class="relative flex flex-row items-center p-4 cursor-pointer rounded-md hover:bg-light-hover dark:hover:bg-dark-hover {selectedMessage === message.id ? 'bg-light dark:bg-dark' : ''}"
-                            on:click={() => {
-                                dataMessage = undefined;
-                                fullMessage = undefined;
-                                selectedMessage = message.id;
-                            }}
-                            on:keydown={() => {}}
-                        >
-                            <div class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4">{message.date.toRelative()}</div>
-                            <Avatar user={{ id: students.find((student) => student.name == message.sender)?.id ?? "123", name: message.sender }} />
-                            <div class="flex flex-col flex-grow ml-3">
-                                <div class="text-sm font-medium">{message.sender}</div>
-                                <div class="text-xs truncate">{message.title}</div>
+                    {#if filteredMessages.length}
+                        {#each filteredMessages as message}
+                            <div
+                                class="relative flex flex-row items-center p-4 cursor-pointer rounded-md hover:bg-light-hover dark:hover:bg-dark-hover {selectedMessage === message.id ? 'bg-light dark:bg-dark' : ''}"
+                                on:click={() => {
+                                    dataMessage = undefined;
+                                    fullMessage = undefined;
+                                    selectedMessage = message.id;
+                                }}
+                                on:keydown={() => {}}
+                            >
+                                <div class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4">{message.date.toRelative()}</div>
+                                <Avatar user={{ id: students.find((student) => student.name == message.sender)?.id ?? "123", name: message.sender }} />
+                                <div class="flex flex-col flex-grow ml-3">
+                                    <div class="text-sm font-medium">{message.sender}</div>
+                                    <div class="text-xs truncate">{message.title}</div>
+                                </div>
                             </div>
-                        </div>
-                    {/each}
+                        {/each}
+                    {:else}
+                        <div class="text-center">Ingen resultater</div>
+                    {/if}
                 {:else}
                     <div class="relative flex flex-row items-center p-4">
                         <Skeleton class="absolute right-0 top-0 mr-4 mt-4 w-12 h-4" />
@@ -158,7 +227,7 @@
     </div>
     {#if fullMessage && students}
         <div class="flex flex-col w-full h-full space-y-4" transition:fade={{ duration: 500 }}>
-            <section class="p-4">
+            <section class="p-4 pb-0">
                 <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center justify-between">
                     <h2 class="my-0">{fullMessage.messages[0].title}</h2>
                     <div
@@ -231,7 +300,7 @@
                 </div>
             </section>
             <section class="w-full p-4 !mt-0">
-                <div class="grid grid-cols-[1fr_auto] overflow-hidden rounded-md bg-white">
+                <div class="grid grid-cols-[1fr_auto] overflow-hidden rounded-md bg-white dark:bg-dark">
                     <textarea disabled class="bg-transparent border-0 ring-0 py-2 px-3" name="message" id="message" placeholder="Skriv en besked..." rows="1" />
                     <button class="flex items-center content-between px-4">
                         <Send />
