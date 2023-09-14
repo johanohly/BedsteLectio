@@ -2,8 +2,8 @@
   import type { AfterNavigate } from "@sveltejs/kit";
 
   import { afterNavigate } from "$app/navigation";
-  import { page } from "$app/stores";
-  import { SiteHeader } from "$components";
+  import { navigating, page } from "$app/stores";
+  import { Preloading, SiteHeader } from "$components";
   import { setInitialClassState } from "$components/light-switch/light-switch";
   import { Toaster } from "$components/toaster";
 
@@ -82,6 +82,10 @@
   <!-- This causes the new eslint-plugin-svelte: https://github.com/sveltejs/eslint-plugin-svelte/issues/492 -->
   {@html `<\u{73}cript nonce="%sveltekit.nonce%">(${setInitialClassState.toString()})();</script>`}
 </svelte:head>
+
+{#if $navigating}
+	<Preloading />
+{/if}
 
 <Toaster />
 <SiteHeader />
