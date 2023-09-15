@@ -11,6 +11,7 @@ export type RawFullMessage = {
             href: string;
             navn: string
         }[];
+        padding_left: number;
     }[];
     modtagere: string;
 }
@@ -26,6 +27,8 @@ export type FullMessage = {
         edits: string[];
         sender: { id: string, name: string };
         title: string;
+        id: string;
+        indent: number;
     }[];
     receivers: string;
 }
@@ -42,7 +45,7 @@ export type RawMessage = {
 
 export type Message = {
     date: DateTime;
-    id: number;
+    id: string;
     receivers: string[];
     sender: string;
     title: string;

@@ -19,7 +19,9 @@ const config = {
 		extend: {
 			backgroundColor: {
 				"dark": "#1E1E1E",
+				"darker": "#1b1b1b",
 				"light": "#e5e5e5",
+				"lighter": "#eeeeee",
 				"dark-hover": "#3f3f3f",
 				"light-hover": "#d4d4d4",
 			},

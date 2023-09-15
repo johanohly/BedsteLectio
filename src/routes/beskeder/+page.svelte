@@ -17,6 +17,7 @@
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
     import { Button } from "$components/ui/button";
+    import { addToast } from "$components/toaster";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
@@ -41,7 +42,7 @@
                 date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
                     locale: "da",
                 }),
-                id: +message.message_id,
+                id: message.message_id,
                 receivers: message.modtagere,
                 sender: message.førsteBesked.split(" (")[0].split(" -")[0],
                 title: message.emne,
@@ -70,12 +71,13 @@
           })
         : [];
 
-    let selectedMessage: number | undefined = undefined;
+    let selectedMessage: string | undefined = undefined;
 
     let dataMessage: RawFullMessage | undefined = undefined;
     let fullMessage: FullMessage | undefined = undefined;
     let messageLoading: boolean;
     $: if (dataMessage && dataMessage.beskeder) {
+        console.log(dataMessage);
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
                 return {
@@ -94,11 +96,66 @@
                     edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
                     sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0].split(" -")[0] },
                     title: message.titel,
+                    id: message.id,
+                    indent: message.padding_left,
                 };
             }),
             receivers: dataMessage.modtagere,
         };
     }
+
+    let replyTo: FullMessage["messages"][0] | undefined = undefined;
+    let replyContent = "";
+    const sendReply = async () => {
+        if (!fullMessage) return;
+        if (!replyTo) return;
+        if (!replyContent) return;
+        console.log(fullMessage, replyTo);
+        const res = await fetch("https://api.betterlectio.dk/besvar_besked", {
+            method: "POST",
+            headers: {
+                "lectio-cookie": $authStore.cookie,
+            },
+            body: JSON.stringify({
+                message_id: fullMessage.messages[0].id.replace("ANSWERMESSAGE_", ""),
+                id: replyTo.id,
+                titel: replyTo.title.includes("Re: ") ? replyTo.title : `Re: ${replyTo.title}`,
+                content: replyContent,
+            }),
+        });
+        if (res.status == 200) {
+            addToast({
+                data: {
+                    title: "Besked sendt",
+                    description: "Din besked blev sendt.",
+                    color: "bg-green-500",
+                },
+            });
+            selectedMessage = selectedMessage + " ";
+        } else {
+            addToast({
+                data: {
+                    title: "Besked ikke sendt",
+                    description: "Din besked kunne ikke blive sendt. Prøv igen senere.",
+                    color: "bg-red-500",
+                },
+            });
+        }
+        replyTo = undefined;
+        replyContent = "";
+    };
+    const onWindowKeydown = (event: KeyboardEvent) => {
+        if (event.key == "Escape") {
+            if (replyTo) {
+                replyTo = undefined;
+            }
+        }
+    };
+    const maybeReply = async (event: KeyboardEvent) => {
+        if (event.key == "Enter") {
+            await sendReply();
+        }
+    };
 
     const {
         elements: { root, content, trigger },
@@ -139,7 +196,6 @@
     };
     let sidebar: HTMLDivElement;
     $: if (container && sidebar) {
-        console.log(selectedMessage);
         if (selectedMessage) {
             removeAllOccurences(container, ["lg:container", "lg:mx-auto", "lg:!pt-0"]);
             removeAllOccurences(sidebar, "w-full");
@@ -162,7 +218,7 @@
     {/if}
 {/key}
 
-<svelte:window bind:innerHeight={height} />
+<svelte:window on:keydown={onWindowKeydown} bind:innerHeight={height} />
 
 <div bind:this={container} class="lg:container lg:mx-auto lg:!pt-0 w-full flex flex-col lg:flex-row">
     <div bind:this={sidebar} style="transition: width 1000ms ease;" class="w-full lg:flex flex-col">
@@ -248,6 +304,8 @@
                                     if (selectedMessage == message.id) return;
                                     dataMessage = undefined;
                                     fullMessage = undefined;
+                                    replyTo = undefined;
+                                    replyContent = "";
                                     selectedMessage = message.id;
                                 }}
                                 on:keydown={() => {}}
@@ -329,6 +387,8 @@
                                 dataMessage = undefined;
                                 fullMessage = undefined;
                                 selectedMessage = undefined;
+                                replyTo = undefined;
+                                replyContent = "";
                             }}
                             on:keydown={() => {}}
                         >
@@ -343,64 +403,62 @@
                 <div class="h-full overflow-y-auto space-y-4">
                     {#if fullMessage}
                         {#each fullMessage.messages as message}
-                            {#if message.sender.name === me?.name}
-                                <div class="grid grid-cols-[1fr_auto] gap-2">
-                                    <div class="rounded-md p-4 rounded-tr-none space-y-2 bg-[#c9fcd0] dark:bg-[#8778f983]">
-                                        <header class="flex justify-between items-center">
-                                            <p class="font-bold">{message.title}</p>
-                                            <small class="opacity-50">{message.date.toRelative()}</small>
-                                        </header>
-                                        <div>
-                                            {#if message.attachments.length}
-                                                <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
-                                                    {#each message.attachments as attachment}
-                                                        <Badge href={attachment.link}>{attachment.name}</Badge>
-                                                    {/each}
-                                                </div>
-                                            {/if}
-                                            <SvelteMarkdown source={message.body} />
-                                        </div>
-                                    </div>
+                            <div style={`margin-left: ${message.indent}rem;`} class="grid {message.sender.name === me?.name ? 'grid-cols-[1fr_auto]' : 'grid-cols-[auto_1fr]'} gap-2">
+                                {#if message.sender.name !== me?.name}
                                     <Tooltip text={message.sender.name} class="w-10 h-10">
                                         <Avatar user={message.sender} />
                                     </Tooltip>
-                                </div>
-                            {:else}
-                                <div class="grid grid-cols-[auto_1fr] gap-2">
-                                    <Tooltip text={message.sender.name} class="w-10 h-10">
-                                        <Avatar user={message.sender} />
-                                    </Tooltip>
-                                    <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
-                                        <header class="flex justify-between items-center">
-                                            <p class="font-bold">{message.title}</p>
-                                            <small class="opacity-50">{message.date.toRelative()}</small>
-                                        </header>
-                                        <div>
-                                            {#if message.attachments.length}
-                                                <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
-                                                    {#each message.attachments as attachment}
-                                                        <Badge href={attachment.link}>{attachment.name}</Badge>
-                                                    {/each}
-                                                </div>
-                                            {/if}
-                                            <SvelteMarkdown source={message.body} />
-                                            {#if message.edits.length}
-                                                {#each message.edits as edit}
-                                                    <p class="text-sm text-gray-400">{edit}</p>
+                                {/if}
+                                <div
+                                    on:click={() => {
+                                        replyTo = message;
+                                    }}
+                                    on:keydown={() => {}}
+                                    class="cursor-pointer rounded-md p-4 space-y-2 {message.sender.name === me?.name ? 'rounded-tr-none bg-[#c9fcd0] dark:bg-[#8778f983]' : 'rounded-tl-none bg-white dark:bg-dark'}"
+                                >
+                                    <header class="flex justify-between items-center">
+                                        <p class="font-bold">{message.title}</p>
+                                        <small class="opacity-50">{message.date.toRelative()}</small>
+                                    </header>
+                                    <div>
+                                        {#if message.attachments.length}
+                                            <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
+                                                {#each message.attachments as attachment}
+                                                    <Badge href={attachment.link}>{attachment.name}</Badge>
                                                 {/each}
-                                            {/if}
-                                        </div>
+                                            </div>
+                                        {/if}
+                                        <SvelteMarkdown source={message.body} />
                                     </div>
                                 </div>
-                            {/if}
+                                {#if message.sender.name === me?.name}
+                                    <Tooltip text={message.sender.name} class="w-10 h-10">
+                                        <Avatar user={message.sender} />
+                                    </Tooltip>
+                                {/if}
+                            </div>
                         {/each}
                     {/if}
                 </div>
             </section>
             <section class="w-full p-4 !mt-0">
-                <div class="grid grid-cols-[1fr_auto] overflow-hidden rounded-md bg-white dark:bg-dark">
-                    <textarea disabled class="bg-transparent border-0 ring-0 py-2 px-3" name="message" id="message" placeholder="Skriv en besked..." rows="1" />
-                    <button class="flex items-center content-between px-4">
+                {#if replyTo}
+                    <div class="bg-lighter dark:bg-darker px-3 py-1 rounded-t-lg flex flex-row items-center justify-between not-prose">
+                        <p class="text-sm">Svarer <span class="font-bold">{replyTo.sender.name}</span></p>
+                        <button
+                            on:click={() => {
+                                replyTo = undefined;
+                                replyContent = "";
+                            }}
+                            class="flex items-center justify-center"
+                        >
+                            <Plus class="rotate-45" />
+                        </button>
+                    </div>
+                {/if}
+                <div class="grid grid-cols-[1fr_auto] overflow-hidden rounded-md {replyTo ? 'rounded-t-none' : ''} bg-white dark:bg-dark">
+                    <input bind:value={replyContent} on:keydown={maybeReply} disabled={!fullMessage || !replyTo} class="bg-transparent border-0 ring-0 leading-5 py-3 px-3 disabled:cursor-not-allowed" name="message" id="message" placeholder={replyTo ? "Skriv din besked..." : "Vælg en besked..."} />
+                    <button disabled={!fullMessage || !replyTo} on:click={sendReply} class="flex items-center content-between px-4 hover:bg-light-hover dark:hover:bg-dark-hover disabled:cursor-not-allowed">
                         <Send />
                     </button>
                 </div>
