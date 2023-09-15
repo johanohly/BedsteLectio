@@ -29,7 +29,7 @@
 </script>
 
 <IntersectionObserver {element} on:intersect={fetchImage} once>
-  <div bind:this={element} class="flex h-10 w-10 items-center justify-center rounded-full overflow-hidden bg-dark-hover dark:bg-light-hover">
+  <div bind:this={element} class="flex h-10 w-10 items-center justify-center rounded-full overflow-hidden {!$fallback.hidden ? 'bg-dark-hover dark:bg-light-hover' : ''}">
     <img alt="Avatar" use:melt={$image} />
     <span class="text-2xl font-medium text-white dark:text-black" use:melt={$fallback}>{getInitials(user.name)}</span>
   </div>

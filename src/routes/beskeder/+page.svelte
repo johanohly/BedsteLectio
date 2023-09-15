@@ -164,7 +164,7 @@
                     </Tooltip>
                 {/if}
             </div>
-            <div class="relative my-2 rounded-lg bg-white">
+            <div class="relative my-2">
                 <div class="absolute h-10 inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                     <Search class="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 </div>
