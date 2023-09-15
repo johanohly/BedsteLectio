@@ -105,23 +105,51 @@
         states: { open },
     } = createCollapsible();
 
-    let element: HTMLDivElement;
+    let container: HTMLDivElement;
     let height = 0;
     $: if (height > 0) {
-        element.style.height = `${height - 57}px`;
+        container.style.height = `${height - 57}px`;
     }
 
+    const removeAllOccurences = (element: Element, className: string | string[]) => {
+        if (Array.isArray(className)) {
+            className.forEach((name) => {
+                if (element.classList.contains(name)) {
+                    element.classList.remove(name);
+                }
+            });
+        } else {
+            if (element.classList.contains(className)) {
+                element.classList.remove(className);
+            }
+        }
+    };
+    const addIfMissing = (element: Element, className: string | string[]) => {
+        if (Array.isArray(className)) {
+            className.forEach((name) => {
+                if (!element.classList.contains(name)) {
+                    element.classList.add(name);
+                }
+            });
+        } else {
+            if (!element.classList.contains(className)) {
+                element.classList.add(className);
+            }
+        }
+    };
     let sidebar: HTMLDivElement;
-    // {selectedMessage ? 'hidden lg:w-1/3 xl:w-[40rem] 2xl:w-[60rem]' : 'w-full'}
-    $: if (sidebar) {
+    $: if (container && sidebar) {
         if (selectedMessage) {
-            sidebar.classList.remove("w-full");
-            sidebar.classList.add("hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]");
+            removeAllOccurences(container, "page-container");
+            removeAllOccurences(container, "!pt-0");
+            removeAllOccurences(sidebar, "w-full");
+            addIfMissing(sidebar, ["hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]"]);
         } else {
             setTimeout(() => {
-                sidebar.classList.remove("hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]");
-                sidebar.classList.add("w-full");
-            }, 500);
+                addIfMissing(container, ["page-container", "!pt-0"]);
+                removeAllOccurences(sidebar, ["hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]"]);
+                addIfMissing(sidebar, "w-full");
+            }, 1000);
         }
     }
 </script>
@@ -136,7 +164,7 @@
 
 <svelte:window bind:innerHeight={height} />
 
-<div bind:this={element} class="{!selectedMessage ? 'page-container !pt-0' : ''} w-full flex flex-col lg:flex-row">
+<div bind:this={container} class="page-contaier !pt-0 w-full flex flex-col lg:flex-row">
     <div bind:this={sidebar} style="transition: width 1000ms ease;" class="lg:flex flex-col">
         <header use:melt={$root} class="border-b dark:border-white/10 p-4">
             <div class="flex items-center">
