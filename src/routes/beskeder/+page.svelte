@@ -10,7 +10,7 @@
     import { decodeUserID } from "$lib/utilities/cookie";
     import { ChevronDown, ChevronUp, Minus, Plus, RotateCcw, Search, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
-    import { fade, slide } from "svelte/transition";
+    import { fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
     import { createCollapsible, melt } from "@melt-ui/svelte";
     import { test } from "fuzzy";
@@ -74,6 +74,7 @@
 
     let dataMessage: RawFullMessage | undefined = undefined;
     let fullMessage: FullMessage | undefined = undefined;
+    let messageLoading: boolean;
     $: if (dataMessage && dataMessage.beskeder) {
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
@@ -115,14 +116,14 @@
 <RequestData bind:data bind:loading path="beskeder2" />
 {#key selectedMessage}
     {#if selectedMessage}
-        <RequestData bind:data={dataMessage} path={`besked?id=${selectedMessage}`} />
+        <RequestData bind:data={dataMessage} bind:loading={messageLoading} path={`besked?id=${selectedMessage}`} />
     {/if}
 {/key}
 
 <svelte:window bind:innerHeight={height} />
 
 <div bind:this={element} class="w-full flex flex-row">
-    <div class="{fullMessage ? 'hidden w-[28rem] xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
+    <div class="{selectedMessage ? 'hidden w-1/3 xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
         <header use:melt={$root} class="border-b dark:border-white/10 p-4">
             <div class="flex items-center">
                 <button use:melt={$trigger} disabled={loading} class="flex items-center p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
@@ -202,6 +203,7 @@
                             <div
                                 class="relative flex flex-row items-center p-4 cursor-pointer rounded-md hover:bg-light-hover dark:hover:bg-dark-hover {selectedMessage === message.id ? 'bg-light dark:bg-dark' : ''}"
                                 on:click={() => {
+                                    if (selectedMessage == message.id) return;
                                     dataMessage = undefined;
                                     fullMessage = undefined;
                                     selectedMessage = message.id;
@@ -273,78 +275,84 @@
             </div>
         </div>
     </div>
-    {#if fullMessage && students}
-        <div class="flex flex-col w-full h-full space-y-4" transition:fade={{ duration: 500 }}>
+    {#if selectedMessage}
+        <div class="flex flex-col w-full h-full space-y-4" transition:fly={{ duration: 500, x: "100vw" }}>
             <section class="p-4 pb-0">
                 <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center justify-between">
-                    <h2 class="my-0">{fullMessage.messages[0].title}</h2>
-                    <div
-                        class="cursor-pointer"
-                        on:click={() => {
-                            dataMessage = undefined;
-                            fullMessage = undefined;
-                            selectedMessage = undefined;
-                        }}
-                        on:keydown={() => {}}
-                    >
-                        <Plus class="rotate-45" />
-                    </div>
+                    {#if fullMessage}
+                        <h2 class="my-0">{fullMessage.messages[0].title}</h2>
+                        <div
+                            class="cursor-pointer"
+                            on:click={() => {
+                                dataMessage = undefined;
+                                fullMessage = undefined;
+                                selectedMessage = undefined;
+                            }}
+                            on:keydown={() => {}}
+                        >
+                            <Plus class="rotate-45" />
+                        </div>
+                    {:else}
+                        <Skeleton class="h-8 w-1/2" />
+                    {/if}
                 </div>
             </section>
             <section class="h-full overflow-y-hidden p-4 py-0 not-prose">
                 <div class="h-full overflow-y-auto space-y-4">
-                    {#each fullMessage.messages as message}
-                        {#if message.sender.name === me?.name}
-                            <div class="grid grid-cols-[1fr_auto] gap-2">
-                                <div class="rounded-md p-4 rounded-tr-none space-y-2 bg-[#c9fcd0] dark:bg-[#8778f983]">
-                                    <header class="flex justify-between items-center">
-                                        <p class="font-bold">{message.title}</p>
-                                        <small class="opacity-50">{message.date.toRelative()}</small>
-                                    </header>
-                                    <div>
-                                        {#if message.attachments.length}
-                                            <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
-                                                {#each message.attachments as attachment}
-                                                    <Badge href={attachment.link}>{attachment.name}</Badge>
+                    {#if fullMessage}
+                        {#each fullMessage.messages as message}
+                            {#if message.sender.name === me?.name}
+                                <div class="grid grid-cols-[1fr_auto] gap-2">
+                                    <div class="rounded-md p-4 rounded-tr-none space-y-2 bg-[#c9fcd0] dark:bg-[#8778f983]">
+                                        <header class="flex justify-between items-center">
+                                            <p class="font-bold">{message.title}</p>
+                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                        </header>
+                                        <div>
+                                            {#if message.attachments.length}
+                                                <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
+                                                    {#each message.attachments as attachment}
+                                                        <Badge href={attachment.link}>{attachment.name}</Badge>
+                                                    {/each}
+                                                </div>
+                                            {/if}
+                                            <SvelteMarkdown source={message.body} />
+                                        </div>
+                                    </div>
+                                    <Tooltip text={message.sender.name} class="w-10 h-10">
+                                        <Avatar user={message.sender} />
+                                    </Tooltip>
+                                </div>
+                            {:else}
+                                <div class="grid grid-cols-[auto_1fr] gap-2">
+                                    <Tooltip text={message.sender.name} class="w-10 h-10">
+                                        <Avatar user={message.sender} />
+                                    </Tooltip>
+                                    <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
+                                        <header class="flex justify-between items-center">
+                                            <p class="font-bold">{message.title}</p>
+                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                        </header>
+                                        <div>
+                                            {#if message.attachments.length}
+                                                <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
+                                                    {#each message.attachments as attachment}
+                                                        <Badge href={attachment.link}>{attachment.name}</Badge>
+                                                    {/each}
+                                                </div>
+                                            {/if}
+                                            <SvelteMarkdown source={message.body} />
+                                            {#if message.edits.length}
+                                                {#each message.edits as edit}
+                                                    <p class="text-sm text-gray-400">{edit}</p>
                                                 {/each}
-                                            </div>
-                                        {/if}
-                                        <SvelteMarkdown source={message.body} />
+                                            {/if}
+                                        </div>
                                     </div>
                                 </div>
-                                <Tooltip text={message.sender.name} class="w-10 h-10">
-                                    <Avatar user={message.sender} />
-                                </Tooltip>
-                            </div>
-                        {:else}
-                            <div class="grid grid-cols-[auto_1fr] gap-2">
-                                <Tooltip text={message.sender.name} class="w-10 h-10">
-                                    <Avatar user={message.sender} />
-                                </Tooltip>
-                                <div class="rounded-md p-4 rounded-tl-none space-y-2 bg-white dark:bg-dark">
-                                    <header class="flex justify-between items-center">
-                                        <p class="font-bold">{message.title}</p>
-                                        <small class="opacity-50">{message.date.toRelative()}</small>
-                                    </header>
-                                    <div>
-                                        {#if message.attachments.length}
-                                            <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
-                                                {#each message.attachments as attachment}
-                                                    <Badge href={attachment.link}>{attachment.name}</Badge>
-                                                {/each}
-                                            </div>
-                                        {/if}
-                                        <SvelteMarkdown source={message.body} />
-                                        {#if message.edits.length}
-                                            {#each message.edits as edit}
-                                                <p class="text-sm text-gray-400">{edit}</p>
-                                            {/each}
-                                        {/if}
-                                    </div>
-                                </div>
-                            </div>
-                        {/if}
-                    {/each}
+                            {/if}
+                        {/each}
+                    {/if}
                 </div>
             </section>
             <section class="w-full p-4 !mt-0">
