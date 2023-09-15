@@ -110,6 +110,20 @@
     $: if (height > 0) {
         element.style.height = `${height - 57}px`;
     }
+
+    let sidebar: HTMLDivElement;
+    // {selectedMessage ? 'hidden lg:w-1/3 xl:w-[40rem] 2xl:w-[60rem]' : 'w-full'}
+    $: if (sidebar) {
+        if (selectedMessage) {
+            sidebar.classList.remove("w-full");
+            sidebar.classList.add("hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]");
+        } else {
+            setTimeout(() => {
+                sidebar.classList.remove("hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]");
+                sidebar.classList.add("w-full");
+            }, 500);
+        }
+    }
 </script>
 
 <RequestData bind:data={dataStudents} path="informationer" />
@@ -122,8 +136,8 @@
 
 <svelte:window bind:innerHeight={height} />
 
-<div bind:this={element} class="w-full flex flex-row">
-    <div class="{selectedMessage ? 'hidden w-1/3 xl:w-[40rem]' : 'w-full'} lg:flex flex-col border-r dark:border-white/10">
+<div bind:this={element} class="{!selectedMessage ? 'page-container !pt-0' : ''} w-full flex flex-col lg:flex-row">
+    <div bind:this={sidebar} style="transition: width 1000ms ease;" class="lg:flex flex-col">
         <header use:melt={$root} class="border-b dark:border-white/10 p-4">
             <div class="flex items-center">
                 <button use:melt={$trigger} disabled={loading} class="flex items-center p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
@@ -276,7 +290,7 @@
         </div>
     </div>
     {#if selectedMessage}
-        <div class="flex flex-col w-full h-full space-y-4" transition:fly={{ duration: 500, x: "100vw" }}>
+        <div class="flex flex-col w-full h-full space-y-4 border-l dark:border-white/10" transition:fly={{ duration: 1000, x: "100vw" }}>
             <section class="p-4 pb-0">
                 <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center justify-between">
                     {#if fullMessage}
