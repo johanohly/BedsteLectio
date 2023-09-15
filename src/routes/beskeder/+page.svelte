@@ -139,14 +139,14 @@
     };
     let sidebar: HTMLDivElement;
     $: if (container && sidebar) {
+        console.log(selectedMessage);
         if (selectedMessage) {
-            removeAllOccurences(container, "page-container");
-            removeAllOccurences(container, "!pt-0");
+            removeAllOccurences(container, ["lg:container", "lg:mx-auto", "lg:!pt-0"]);
             removeAllOccurences(sidebar, "w-full");
             addIfMissing(sidebar, ["hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]"]);
         } else {
             setTimeout(() => {
-                addIfMissing(container, ["page-container", "!pt-0"]);
+                addIfMissing(container, ["lg:container", "lg:mx-auto", "lg:!pt-0"]);
                 removeAllOccurences(sidebar, ["hidden", "lg:w-1/3", "xl:w-[40rem]", "2xl:w-[60rem]"]);
                 addIfMissing(sidebar, "w-full");
             }, 1000);
@@ -164,8 +164,8 @@
 
 <svelte:window bind:innerHeight={height} />
 
-<div bind:this={container} class="page-contaier !pt-0 w-full flex flex-col lg:flex-row">
-    <div bind:this={sidebar} style="transition: width 1000ms ease;" class="lg:flex flex-col">
+<div bind:this={container} class="lg:container lg:mx-auto lg:!pt-0 w-full flex flex-col lg:flex-row">
+    <div bind:this={sidebar} style="transition: width 1000ms ease;" class="w-full lg:flex flex-col">
         <header use:melt={$root} class="border-b dark:border-white/10 p-4">
             <div class="flex items-center">
                 <button use:melt={$trigger} disabled={loading} class="flex items-center p-2 rounded-md hover:bg-light-hover dark:hover:bg-dark">
