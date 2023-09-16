@@ -13,6 +13,7 @@
             dateFormat: "Z+02:00",
             time_24hr: true,
             maxDate: "today",
+            disableMobile: "true",
             altInput: true,
             altFormat: "d.m.y H:i",
             formatDate(date, format, locale) {
