@@ -40,6 +40,7 @@
   "dependencies": {
     "@melt-ui/svelte": "^0.50.0",
     "@tailwindcss/typography": "^0.5.9",
+    "@vercel/analytics": "^1.0.2",
     "apexcharts": "^3.41.1",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
