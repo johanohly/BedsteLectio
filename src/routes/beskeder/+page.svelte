@@ -258,6 +258,7 @@
                             on:click={() => {
                                 searchTerm = "";
                                 searchFilter = "All";
+                                searchGroup.set(undefined);
                                 searchFrom = "";
                                 searchTo = "";
                             }}
@@ -348,6 +349,7 @@
                                         on:click={() => {
                                             searchTerm = "";
                                             searchFilter = "All";
+                                            searchGroup.set(undefined);
                                             searchFrom = "";
                                             searchTo = "";
                                         }}
