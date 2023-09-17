@@ -32,7 +32,7 @@
   $: filteredSchools = filter(searchTerm, Object.keys(schools), {
     post: "</strong>",
     pre: "<strong>",
-  }).slice(0, 10);
+  });
 </script>
 
 <button
@@ -66,7 +66,7 @@
         Søg efter din skole i søgefeltet nedenfor.
       </p>
       <Input bind:value={searchTerm} class="mb-5" id="school-select-input" />
-      <div class="space-y-2">
+      <div class="overflow-y-auto max-h-[50rem] space-y-2">
         {#each filteredSchools as school}
           <button
             class="w-full rounded-md border border-slate-200 bg-neutral-50 text-slate-900 dark:border-slate-800 dark:bg-neutral-950 dark:text-slate-100 px-3

@@ -7,7 +7,7 @@
   import { Button } from "$components/ui/button";
   import { Card, CardContent, CardHeader } from "$components/ui/card";
   import { Chart } from "$components/ui/chart";
-  import { Select } from "$components/ui/select";
+  import { Dropdown } from "$components/ui/dropdown";
   import * as Table from "$lib/components/ui/table";
   import { authStore } from "$lib/stores";
   import { constructInterval } from "$lib/utilities";
@@ -23,23 +23,13 @@
 
   let selectedAbsenceType: "calculated" | "yearly" = "calculated";
 
-  let rawAbsence: Writable<
-    [
-      string,
-      { calculated: string; yearly: string },
-      { calculated: string; yearly: string }
-    ][]
-  > = writable([]);
+  let rawAbsence: Writable<[string, { calculated: string; yearly: string }, { calculated: string; yearly: string }][]> = writable([]);
 
   let absence: Writable<[string, string, string][]> = writable([]);
   $: rawAbsence.subscribe((value) => {
     absence.set(
       value.map((item) => {
-        return [
-          item[0],
-          item[1][selectedAbsenceType],
-          item[2][selectedAbsenceType],
-        ];
+        return [item[0], item[1][selectedAbsenceType], item[2][selectedAbsenceType]];
       })
     );
   });
@@ -85,19 +75,16 @@
       }
     });
 
-    [
-      ...data.moduler.oversigt,
-      ...data.moduler.manglende_fraværsårsager,
-    ].forEach((item) => {
+    [...data.moduler.oversigt, ...data.moduler.manglende_fraværsårsager].forEach((item) => {
       let reason = item.årsagsnote;
       if (reason != undefined) {
         if (reason == "") {
           reason = item.årsag;
         } else {
-          reason = `${reason} (${item.årsag})`
+          reason = `${reason} (${item.årsag})`;
         }
       } else {
-        reason = "NOTGIVEN_" + item.aktivitet.absid
+        reason = "NOTGIVEN_" + item.aktivitet.absid;
       }
       absenceReasons.update((old) => {
         return [
@@ -113,10 +100,7 @@
       });
     });
 
-    const absentLessons = [
-      ...data.moduler.oversigt,
-      ...data.moduler.manglende_fraværsårsager,
-    ];
+    const absentLessons = [...data.moduler.oversigt, ...data.moduler.manglende_fraværsårsager];
     const lessonsPerClass = absentLessons.reduce((acc, item) => {
       if (acc[item.aktivitet.hold]) {
         acc[item.aktivitet.hold] += 1;
@@ -262,13 +246,7 @@
       },
     }),
   ]);
-  const {
-    headerRows: absenceHeaderRows,
-    pageRows: absencePageRows,
-    pluginStates: absencePluginStates,
-    tableAttrs: absenceTableAttrs,
-    tableBodyAttrs: absenceTableBodyAttrs,
-  } = absenceTable.createViewModel(absenceColumns);
+  const { headerRows: absenceHeaderRows, pageRows: absencePageRows, pluginStates: absencePluginStates, tableAttrs: absenceTableAttrs, tableBodyAttrs: absenceTableBodyAttrs } = absenceTable.createViewModel(absenceColumns);
   const { sortKeys: absenceSortKeys } = absencePluginStates.sort;
 
   const absenceReasonTable = createTable(absenceReasons, {
@@ -291,8 +269,7 @@
     }),
 
     absenceReasonTable.column({
-      accessor: (item) =>
-        item.date.toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
+      accessor: (item) => item.date.toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
       header: "Dato",
       id: "date",
       plugins: {
@@ -325,13 +302,7 @@
       id: "reason",
     }),
   ]);
-  const {
-    headerRows: absenceReasonHeaderRows,
-    pageRows: absenceReasonPageRows,
-    pluginStates: absenceReasonPluginStates,
-    tableAttrs: absenceReasonTableAttrs,
-    tableBodyAttrs: absenceReasonTableBodyAttrs,
-  } = absenceReasonTable.createViewModel(absenceReasonColumns);
+  const { headerRows: absenceReasonHeaderRows, pageRows: absenceReasonPageRows, pluginStates: absenceReasonPluginStates, tableAttrs: absenceReasonTableAttrs, tableBodyAttrs: absenceReasonTableBodyAttrs } = absenceReasonTable.createViewModel(absenceReasonColumns);
   const { sortKeys: absenceReasonSortKeys } = absenceReasonPluginStates.sort;
 </script>
 
@@ -341,30 +312,21 @@
   loading
 {:else}
   <div class="page-container">
-    <div
-      class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between"
-    >
+    <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
       <h1 class="!mb-0">Fravær</h1>
-      <Select
-        bind:value={selectedAbsenceType}
-        options={{ "For året": "yearly", Opgjort: "calculated" }}
-        placeholder="Opgjort"
-      />
+      <Dropdown bind:value={selectedAbsenceType} options={{ "For året": "yearly", Opgjort: "calculated" }} placeholder="Opgjort" />
     </div>
     <div class="flex gap-4">
       <Card class="w-full">
         <CardHeader class="pb-0">Opgjort</CardHeader>
-        <CardContent class="text-4xl font-bold">{calculatedAbsence}</CardContent
-        >
+        <CardContent class="text-4xl font-bold">{calculatedAbsence}</CardContent>
       </Card>
       <Card class="w-full">
         <CardHeader class="pb-0">For året</CardHeader>
         <CardContent class="text-4xl font-bold">{yearlyAbsence}</CardContent>
       </Card>
     </div>
-    <div
-      class="flex flex-col md:flex-row justify-evenly gap-4 p-4 bg-white dark:bg-dark rounded-md"
-    >
+    <div class="flex flex-col md:flex-row justify-evenly gap-4 p-4 bg-white dark:bg-dark rounded-md">
       {#key $modeCurrent}
         <Chart bind:options={pyramidChart} />
         <Chart bind:options={monthlyChart} />
@@ -374,10 +336,7 @@
       {#if data.moduler.manglende_fraværsårsager.length}
         <div class="mb-[1em] flex">
           <h2 class="m-0">Fraværsårsager</h2>
-          <Badge class="ml-2" variant="destructive"
-            >Manglende fraværsårsager: {data.moduler.manglende_fraværsårsager
-              .length}</Badge
-          >
+          <Badge class="ml-2" variant="destructive">Manglende fraværsårsager: {data.moduler.manglende_fraværsårsager.length}</Badge>
         </div>
       {:else}
         <h2 class="mt-0">Årsager</h2>
@@ -388,12 +347,7 @@
             <Subscribe rowAttrs={headerRow.attrs()}>
               <Table.Row>
                 {#each headerRow.cells as cell (cell.id)}
-                  <Subscribe
-                    attrs={cell.attrs()}
-                    let:attrs
-                    let:props
-                    props={cell.props()}
-                  >
+                  <Subscribe attrs={cell.attrs()} let:attrs let:props props={cell.props()}>
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
                         <Button on:click={props.sort.toggle} variant="ghost">
@@ -427,15 +381,7 @@
                     <Table.Cell {...attrs}>
                       {#if cell.id === "reason"}
                         {#if cell.value.startsWith("NOTGIVEN_")}
-                          <Badge
-                            href={`https://www.lectio.dk/lectio/${
-                              $authStore.school
-                            }/fravaer_aarsag.aspx?elevid=${decodeUserID(
-                              $authStore.cookie
-                            )}&id=${cell.value.split("_")[1]}&atype=aa`}
-                            target="_blank"
-                            variant="destructive">Angiv fraværsårsag</Badge
-                          >
+                          <Badge href={`https://www.lectio.dk/lectio/${$authStore.school}/fravaer_aarsag.aspx?elevid=${decodeUserID($authStore.cookie)}&id=${cell.value.split("_")[1]}&atype=aa`} target="_blank" variant="destructive">Angiv fraværsårsag</Badge>
                         {:else}
                           <Render of={cell.render()} />
                         {/if}
@@ -459,12 +405,7 @@
             <Subscribe rowAttrs={headerRow.attrs()}>
               <Table.Row>
                 {#each headerRow.cells as cell (cell.id)}
-                  <Subscribe
-                    attrs={cell.attrs()}
-                    let:attrs
-                    let:props
-                    props={cell.props()}
-                  >
+                  <Subscribe attrs={cell.attrs()} let:attrs let:props props={cell.props()}>
                     <Table.Head {...attrs}>
                       {#if !props.sort.disabled}
                         <Button on:click={props.sort.toggle} variant="ghost">

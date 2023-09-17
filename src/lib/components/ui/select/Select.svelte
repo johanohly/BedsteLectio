@@ -1,53 +1,73 @@
 <script lang="ts">
-  import { createSelect, melt } from "@melt-ui/svelte";
-  import { ChevronsUpDown } from "lucide-svelte";
-  import { fly } from "svelte/transition";
+    import { createCombobox, melt } from "@melt-ui/svelte";
+    import { Check, ChevronDown, ChevronUp } from "lucide-svelte";
+    import { fly } from "svelte/transition";
 
-  export let options: object;
-  export let placeholder: string;
-  export let value: number | string;
+    const {
+        elements: { menu, input, option },
+        states: { open, inputValue, selected, touchedInput },
+        helpers: { isSelected },
+    } = createCombobox({
+        forceVisible: true,
+    });
 
-  const {
-    elements: { menu, option, trigger },
-    states: { open, value: rootValue, valueLabel },
-  } = createSelect({
-    defaultValue: value,
-    forceVisible: true,
-  });
-  rootValue.subscribe((v) => {
-    value = v;
-  });
+    export let items: string[] = [];
+    export let placeholder = "Vælg en mulighed";
+    export const value = selected;
+
+    $: filteredItems = $touchedInput
+        ? items.filter((value) => {
+              const normalizedInput = $inputValue.toLowerCase();
+              return value.toLowerCase().includes(normalizedInput);
+          })
+        : items;
 </script>
 
-<div class="flex flex-col gap-1">
-  <button
-    class="flex h-12 min-w-[220px] items-center justify-between rounded-md border border-slate-200 bg-neutral-50 text-slate-900 dark:border-slate-800 dark:bg-neutral-950 dark:text-slate-100 px-3
-    py-2 text-magnum-700 transition-opacity hover:opacity-90"
-    use:melt={$trigger}
-    {...$$restProps}
-  >
-    {$valueLabel || placeholder}
-    <ChevronsUpDown class="square-5" />
-  </button>
-  {#if $open}
-    <div
-      class="z-10 flex max-h-[360px] flex-col
-      overflow-y-auto rounded-md bg-neutral-50 text-slate-900 dark:bg-neutral-950 dark:text-slate-100
-      p-1 focus:!ring-0"
-      transition:fly={{ duration: 100, y: -5 }}
-      use:melt={$menu}
-    >
-      {#each Object.entries(options) as [key, value]}
-        <div
-          class="relative cursor-pointer rounded-md py-1 pl-4 pr-4 text-slate-900 dark:text-slate-100
-              focus:z-10 focus:text-primary-700
-            data-[highlighted]:bg-[#e3ffe7] data-[selected]:bg-[#abfcb7]
-            dark:data-[highlighted]:bg-[#8778f9be] dark:data-[selected]:bg-[#8678F9]"
-          use:melt={$option({ label: key, value: value })}
-        >
-          {key}
-        </div>
-      {/each}
+<div class="relative">
+    <input use:melt={$input} class="bg-white dark:bg-dark rounded-lg h-10 p-2" {placeholder} />
+    <div class="absolute right-2 top-1/2 z-10 -translate-y-1/2">
+        {#if $open}
+            <ChevronUp class="square-4" />
+        {:else}
+            <ChevronDown class="square-4" />
+        {/if}
     </div>
-  {/if}
 </div>
+{#if $open}
+    <ul class="z-10 flex max-h-[300px] flex-col overflow-hidden rounded-lg" use:melt={$menu} transition:fly={{ duration: 150, y: -5 }}>
+        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+        <div class="flex max-h-full flex-col gap-0 overflow-y-auto bg-white dark:bg-dark px-2 py-2 text-slate-900 dark:text-slate-100" tabindex="0">
+            {#each filteredItems as item, index (index)}
+                <li
+                    use:melt={$option({
+                        value: item,
+                        label: item,
+                    })}
+                    class="relative cursor-pointer scroll-my-2 rounded-md py-2 pl-4 pr-4
+                    data-[highlighted]:bg-[#e3ffe7] dark:data-[highlighted]:bg-[#8778f9be]"
+                >
+                    {#if $isSelected(item)}
+                        <div class="check absolute left-2 top-1/2 z-10 text-magnum-900">
+                            <Check class="square-4" />
+                        </div>
+                    {/if}
+                    <span class="pl-4 font-medium">{item}</span>
+                </li>
+            {:else}
+                <li
+                    class="relative cursor-pointer rounded-md py-1 pl-8 pr-4
+          data-[highlighted]:bg-[#e3ffe7] dark:data-[highlighted]:bg-[#8778f9be]"
+                >
+                    Ingen resultater
+                </li>
+            {/each}
+        </div>
+    </ul>
+{/if}
+
+<style lang="postcss">
+    .check {
+        @apply absolute left-2 top-1/2;
+        translate: 0 calc(-50% + 1px);
+    }
+</style>

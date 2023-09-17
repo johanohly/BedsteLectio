@@ -8,19 +8,22 @@
     import { Tooltip } from "$components/ui/tooltip";
     import { authStore } from "$lib/stores";
     import { decodeUserID } from "$lib/utilities/cookie";
-    import { ChevronDown, ChevronUp, Minus, Plus, RotateCcw, Search, Send } from "lucide-svelte";
+    import { ChevronDown, ChevronUp, ExternalLink, Minus, Pencil, Plus, RotateCcw, Search, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
     import { fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { createCollapsible, melt } from "@melt-ui/svelte";
+    import { createCollapsible, melt, type ComboboxOption, type ComboboxStates } from "@melt-ui/svelte";
     import { test } from "fuzzy";
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
     import { Button } from "$components/ui/button";
     import { addToast } from "$components/toaster";
+    import { Select } from "$components/ui/select";
+    import type { Subscriber, Unsubscriber, Updater, Writable } from "svelte/store";
 
     let students: { id: string; name: string }[] | undefined = undefined;
-    let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string } };
+    let groups: string[] | undefined = undefined;
+    let dataStudents: { elever: { [key: string]: string }; lærere: { [key: string]: string }; hold_og_grupper: { [key: string]: string } };
     $: if (dataStudents) {
         students = Object.entries({ ...dataStudents.elever, ...dataStudents.lærere } ?? {}).map(([name, id]) => {
             const formatted = name.split(" (")[0].split(" -")[0];
@@ -29,6 +32,7 @@
                 name: formatted,
             };
         });
+        groups = Object.entries(dataStudents.hold_og_grupper ?? {}).map(([name, id]) => name);
     }
     $: me = students?.find((student) => student.id == `S${decodeUserID($authStore.cookie)}`);
 
@@ -52,14 +56,19 @@
 
     let searchTerm = "";
     let searchFilter: "All" | "Received" | "Sent" = "All";
+    let searchGroup: ComboboxStates["selected"];
     let searchFrom = "";
     let searchTo = "";
-    $: searchResetable = searchTerm != "" || searchFilter != "All" || searchFrom != "" || searchTo != "";
+    $: searchResetable = searchTerm != "" || searchFilter != "All" || searchFrom != "" || searchTo != "" || (typeof $searchGroup !== "undefined" && !Array.isArray($searchGroup) && $searchGroup.label);
     $: filteredMessages = messages
         ? messages.filter((message) => {
               if (searchFilter != "All") {
                   if (message.sender == me?.name && searchFilter == "Received") return false;
                   if (message.sender != me?.name && searchFilter == "Sent") return false;
+              }
+              if (typeof $searchGroup !== "undefined" && !Array.isArray($searchGroup) && $searchGroup.label) {
+                  // idfk
+                  if (!message.receivers.includes($searchGroup.label)) return false;
               }
               if (searchFrom) {
                   if (DateTime.fromISO(searchFrom).plus({ hours: 2 }) > message.date) return false;
@@ -77,9 +86,17 @@
     let fullMessage: FullMessage | undefined = undefined;
     let messageLoading: boolean;
     $: if (dataMessage && dataMessage.beskeder) {
-        console.log(dataMessage);
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
+                const edits = message.besked.match(/^.*Redigeret af.*$/gm) ?? [];
+                const clientParts = message.besked.match(/Sendt fra.*\[(.*)\]\((.*)\)|\[Sendt fra (.*)\]\((.*)\)/);
+                const client = clientParts
+                    ? {
+                          name: clientParts[1] ?? clientParts[3],
+                          link: clientParts[2] ?? clientParts[4],
+                      }
+                    : undefined;
+
                 return {
                     attachments: message.vedhæftninger
                         ? message.vedhæftninger.map((attachment) => {
@@ -89,11 +106,15 @@
                               };
                           })
                         : [],
-                    body: message.besked.replaceAll("@", "@<!-- -->").replaceAll(/^.*Redigeret af.*$/gm, ""),
                     date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
                         locale: "da",
                     }),
-                    edits: message.besked.match(/^.*Redigeret af.*$/gm) ?? [],
+                    edits,
+                    client,
+                    body: message.besked
+                        .replaceAll("@", "@<!-- -->")
+                        .replaceAll(/^.*Redigeret af.*$/gm, "")
+                        .replace(/Sendt fra.*\[(.*)\]\((.*)\)|\[Sendt fra (.*)\]\((.*)\)/, ""),
                     sender: { id: message.bruger.id, name: message.bruger.navn.split(" (")[0].split(" -")[0] },
                     title: message.titel,
                     id: message.id,
@@ -110,7 +131,6 @@
         if (!fullMessage) return;
         if (!replyTo) return;
         if (!replyContent) return;
-        console.log(fullMessage, replyTo);
         const res = await fetch("https://api.betterlectio.dk/besvar_besked", {
             method: "POST",
             headers: {
@@ -279,15 +299,16 @@
                         </div>
                         <div class="flex flex-row max-sm:justify-between">
                             <div class="mr-2">
-                                <Datetime bind:value={searchFrom} />
+                                <Datetime bind:value={searchFrom} purpose="fra" />
                             </div>
                             <div class="flex items-center justify-center">
                                 <Minus />
                             </div>
                             <div class="ml-2">
-                                <Datetime bind:value={searchTo} />
+                                <Datetime bind:value={searchTo} purpose="til" />
                             </div>
                         </div>
+                        <Select bind:value={searchGroup} items={groups} placeholder="Vælg gruppe eller hold" />
                     </div>
                 </div>
             {/if}
@@ -378,24 +399,31 @@
     {#if selectedMessage}
         <div class="flex flex-col w-full h-full space-y-4 border-l dark:border-white/10" transition:fly={{ duration: 1000, x: "100vw" }}>
             <section class="p-4 pb-0">
-                <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center justify-between">
+                <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center">
                     {#if fullMessage}
-                        <h2 class="my-0">{fullMessage.messages[0].title}</h2>
-                        <div
-                            class="cursor-pointer"
-                            on:click={() => {
-                                dataMessage = undefined;
-                                fullMessage = undefined;
-                                selectedMessage = undefined;
-                                replyTo = undefined;
-                                replyContent = "";
-                            }}
-                            on:keydown={() => {}}
-                        >
-                            <Plus class="rotate-45" />
+                        <Avatar user={fullMessage.messages[0].sender} />
+                        <div class="flex flex-col ml-3">
+                            <span class="font-semibold leading-5">{fullMessage.messages[0].title}</span>
+                            <span class="text-xs text-gray-400">Modtagere: {fullMessage.receivers}</span>
+                        </div>
+                        <div class="ml-auto">
+                            <div
+                                class="flex items-center justify-center bg-gray-100 dark:bg-gray-500 hover:bg-gray-200 dark:hover:bg-gray-400 text-gray-500 dark:text-gray-100 rounded-full h-10 w-10 cursor-pointer"
+                                on:click={() => {
+                                    dataMessage = undefined;
+                                    fullMessage = undefined;
+                                    selectedMessage = undefined;
+                                    replyTo = undefined;
+                                    replyContent = "";
+                                }}
+                                on:keydown={() => {}}
+                            >
+                                <Plus class="rotate-45" />
+                            </div>
                         </div>
                     {:else}
-                        <Skeleton class="h-8 w-1/2" />
+                        <Skeleton class="h-10 w-10 rounded-full" />
+                        <Skeleton class="h-10 w-1/2 ml-3" />
                     {/if}
                 </div>
             </section>
@@ -414,21 +442,35 @@
                                         replyTo = message;
                                     }}
                                     on:keydown={() => {}}
-                                    class="cursor-pointer rounded-md p-4 space-y-2 {message.sender.name === me?.name ? 'rounded-tr-none bg-[#c9fcd0] dark:bg-[#8778f983]' : 'rounded-tl-none bg-white dark:bg-dark'}"
+                                    class="hover:brightness-95 dark:hover:opacity-90 rounded-md p-4 space-y-2 {message.sender.name === me?.name ? 'rounded-tr-none bg-[#c9fcd0] dark:bg-[#8778f983]' : 'rounded-tl-none bg-white dark:bg-dark'}"
                                 >
-                                    <header class="flex justify-between items-center">
+                                    <header class="flex flex-col md:flex-row md:items-center justify-between">
                                         <p class="font-bold">{message.title}</p>
                                         <small class="opacity-50">{message.date.toRelative()}</small>
                                     </header>
                                     <div>
                                         {#if message.attachments.length}
-                                            <div class="flex flex-col max-xl:space-y-2 xl:flex-row xl:space-x-2">
+                                            <div class="flex flex-wrap flex-row">
                                                 {#each message.attachments as attachment}
-                                                    <Badge href={attachment.link}>{attachment.name}</Badge>
+                                                    <Badge class="mr-1 mb-1" href={attachment.link}>{attachment.name}</Badge>
                                                 {/each}
                                             </div>
                                         {/if}
                                         <SvelteMarkdown source={message.body} />
+                                        {#if message.edits.length}
+                                            {#each message.edits as edit}
+                                                <div class="flex items-center text-gray-400">
+                                                    <p class="text-sm">{edit}</p>
+                                                    <Pencil class="ml-1 h-4 w-4" />
+                                                </div>
+                                            {/each}
+                                        {/if}
+                                        {#if message.client}
+                                            <div class="flex items-center text-gray-400">
+                                                <a target="_blank" href={message.client.link} class="text-sm">Sendt fra {message.client.name}</a>
+                                                <ExternalLink class="ml-1 h-4 w-4" />
+                                            </div>
+                                        {/if}
                                     </div>
                                 </div>
                                 {#if message.sender.name === me?.name}

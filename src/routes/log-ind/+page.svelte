@@ -103,7 +103,6 @@
       <div class="grid gap-2">
         <Label for="school">Skole</Label>
         <SchoolSelect bind:value={school} {schools} />
-        <!-- <Select options={schools} placeholder="Vælg din skole" bind:value={school} /> -->
       </div>
       <div class="mt-4 flex items-center justify-between space-x-2">
         <Label class="flex flex-col space-y-1" for="save-school">

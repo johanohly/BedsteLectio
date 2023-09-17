@@ -25,6 +25,7 @@ export type FullMessage = {
         body: string;
         date: DateTime;
         edits: string[];
+        client?: { name: string, link: string };
         sender: { id: string, name: string };
         title: string;
         id: string;

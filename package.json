@@ -38,7 +38,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@melt-ui/svelte": "^0.31.0",
+    "@melt-ui/svelte": "^0.50.0",
     "@tailwindcss/typography": "^0.5.9",
     "apexcharts": "^3.41.1",
     "class-variance-authority": "^0.6.0",
