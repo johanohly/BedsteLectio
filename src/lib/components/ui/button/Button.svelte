@@ -12,6 +12,7 @@
   let className: null | string | undefined = undefined;
   export { className as class };
   export let href: HTMLAnchorAttributes["href"] = undefined;
+  export let target: HTMLAnchorAttributes["target"] = undefined;
   export let type: HTMLButtonAttributes["type"] = undefined;
   export let variant: VariantProps<typeof buttonVariants>["variant"] =
     "default";
@@ -21,6 +22,7 @@
 <svelte:element
   class={cn(buttonVariants({ className, size, variant }))}
   {href}
+  {target}
   this={href ? "a" : "button"}
   type={href ? undefined : type}
   {...$$restProps}

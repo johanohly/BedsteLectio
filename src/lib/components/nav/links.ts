@@ -26,6 +26,11 @@ export const navItems = [
     },
     {
         external: false,
+        href: '/personer',
+        title: 'Personer'
+    },
+    {
+        external: false,
         href: '/fri',
         title: 'Fri'
     }
