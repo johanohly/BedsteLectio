@@ -9,13 +9,13 @@
 
   const {
     elements: { menu, option, trigger },
-    states: { open, value: rootValue, valueLabel },
+    states: { open, selectedLabel, selected },
   } = createSelect({
-    defaultValue: value,
+    defaultSelected: { value },
     forceVisible: true,
   });
-  rootValue.subscribe((v) => {
-    value = v;
+  selected.subscribe((v) => {
+    if (v) value = v.value;
   });
 </script>
 
@@ -26,7 +26,7 @@
     use:melt={$trigger}
     {...$$restProps}
   >
-    {$valueLabel || placeholder}
+    {$selectedLabel || placeholder}
     <ChevronsUpDown class="square-5" />
   </button>
   {#if $open}
