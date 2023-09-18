@@ -13,6 +13,23 @@
   import { Check, ChevronsUpDown, Plus, X } from "lucide-svelte";
   import { DateTime } from "luxon";
 
+  function blacklist(lesson: RawLesson) {
+    // TODO: Check notes for "frivillig" string (very rare)
+    if (!lesson.navn) {
+      return true;
+    }
+
+    const name = lesson.navn.toLowerCase();
+
+    if (["obligatorisk"].some((x) => name.includes(x))) {
+      return true;
+    }
+    if (["café", "cafe", "klub", "club", "fri", "konkurrence", "mesterskab", "workshop", "kemi ol", "kemi-ol"].some((x) => name.includes(x))) {
+      return false;
+    }
+    return true;
+  }
+
   const {
     elements: { close, content, description, overlay, portalled, title, trigger },
     states: { open },
@@ -51,8 +68,8 @@
   $: meData = me ? data[`skema?id=${me.id}`] : undefined;
   $: studentData = selectedStudent ? data[`skema?id=${selectedStudent.id}`] : undefined;
   $: if (meData && studentData) {
-    const meIntervals = meData.moduler.map((modul) => constructInterval(modul.tidspunkt));
-    const studentIntervals = studentData.moduler.map((modul) => constructInterval(modul.tidspunkt));
+    const meIntervals = meData.moduler.filter(blacklist).map((modul) => constructInterval(modul.tidspunkt));
+    const studentIntervals = studentData.moduler.filter(blacklist).map((modul) => constructInterval(modul.tidspunkt));
     for (const rawDay of meData.ugeDage) {
       const [monthDay, month] = rawDay.replaceAll(/\(|\)/gm, "").split(" ")[1].split("/");
       const day = DateTime.local().set({ day: +monthDay, month: +month });
