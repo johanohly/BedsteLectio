@@ -95,8 +95,8 @@
 
 <div class="page-container w-full">
     <h1>Personer</h1>
-    <Input class="py-4 max-w-sm" placeholder="Søg efter navn eller klasse..." type="text" bind:value={$filterValue} />
-    <div class="rounded-md border">
+    <input class="bg-white dark:bg-dark text-sm rounded-lg block h-10 p-2.5 dark:placeholder:text-[#3b3b3b] focus:ring-blue-500 focus:border-blue-500 w-full max-w-md" placeholder="Søg efter navn eller klasse..." type="text" bind:value={$filterValue} />
+    <div class="p-4 rounded-md bg-white dark:bg-dark">
         <Table.Root {...$tableAttrs}>
             <Table.Header>
                 {#each $headerRows as headerRow}
@@ -132,7 +132,7 @@
                                 <Subscribe attrs={cell.attrs()} let:attrs>
                                     <Table.Cell class={cell.id === "calendar" ? "flex justify-end" : ""} {...attrs}>
                                         {#if cell.id === "id"}
-                                            <Avatar user={{ id: cell.value.split("-")[0], name: cell.value.split("-")[1] }} />
+                                            <Avatar popout user={{ id: cell.value.split("-")[0], name: cell.value.split("-")[1] }} />
                                         {:else if cell.id === "calendar"}
                                             <Button class="justify-end" href={`/skema?id=${cell.value}`} target="_blank">Se Skema</Button>
                                         {:else}
@@ -149,9 +149,9 @@
     </div>
     <div class="!mt-0 flex items-center justify-end space-x-2 py-4">
         <div class="flex-1 text-sm text-muted-foreground">
-            {$pageIndex + 1} of {$pageCount}.
+            Side {$pageIndex + 1} af {$pageCount}
         </div>
-        <Button variant="outline" size="sm" on:click={() => ($pageIndex = $pageIndex - 1)} disabled={!$hasPreviousPage}>Previous</Button>
-        <Button variant="outline" size="sm" disabled={!$hasNextPage} on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button>
+        <Button variant="outline" size="sm" on:click={() => ($pageIndex = $pageIndex - 1)} disabled={!$hasPreviousPage}>Tidligere</Button>
+        <Button variant="outline" size="sm" disabled={!$hasNextPage} on:click={() => ($pageIndex = $pageIndex + 1)}>Næste</Button>
     </div>
 </div>
