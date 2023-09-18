@@ -221,7 +221,7 @@
           loading
         {:else if messages.length > 0}
           {#each messages as message}
-            <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href={`https://www.lectio.dk/lectio/${$authStore.school}/beskeder2.aspx?type=showthread&id=${message.id}&elevid=${decodeUserID($authStore.cookie)}`} target="_blank">
+            <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href={`/beskeder?id=${message.id}`}>
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
                   {message.title}

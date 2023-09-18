@@ -15,6 +15,7 @@
       description: "Der skete en fejl på serveren.",
       title: "Serverfejl",
     },
+    error: false,
   };
 
   export let loading = true;
@@ -28,6 +29,7 @@
     });
     if (!response.ok) {
       if (response.status == 500 && onServerError.active) {
+        onServerError.error = true;
         addToast({ data: onServerError.toast });
         return goto(onServerError.path);
       }

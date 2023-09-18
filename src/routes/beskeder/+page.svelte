@@ -12,14 +12,16 @@
     import { DateTime } from "luxon";
     import { fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { createCollapsible, melt, type ComboboxOption, type ComboboxStates } from "@melt-ui/svelte";
+    import { createCollapsible, melt, type ComboboxStates } from "@melt-ui/svelte";
     import { test } from "fuzzy";
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
     import { Button } from "$components/ui/button";
     import { addToast } from "$components/toaster";
     import { Select } from "$components/ui/select";
-    import type { Subscriber, Unsubscriber, Updater, Writable } from "svelte/store";
+    import { onMount } from "svelte";
+    import { page } from "$app/stores";
+    import { goto } from "$app/navigation";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let groups: string[] | undefined = undefined;
@@ -81,7 +83,19 @@
         : [];
 
     let selectedMessage: string | undefined = undefined;
+    onMount(() => {
+        const params = $page.url.searchParams;
+        const messageId = params.get("id");
+        if (messageId !== null && messageId != selectedMessage) {
+            selectedMessage = messageId;
+            return goto(`/beskeder`);
+        }
+    });
+    $: if (selectedMessage && messageError.error) {
+        selectedMessage = undefined;
+    }
 
+    let messageError = { error: false, active: true, path: "/beskeder", toast: { title: "Beskeden findes ikke", description: "Den angivne besked kunne ikke findes, alle beskeder vises.", color: "bg-red-500" } };
     let dataMessage: RawFullMessage | undefined = undefined;
     let fullMessage: FullMessage | undefined = undefined;
     let messageLoading: boolean;
@@ -234,7 +248,7 @@
 <RequestData bind:data bind:loading path="beskeder2" />
 {#key selectedMessage}
     {#if selectedMessage}
-        <RequestData bind:data={dataMessage} bind:loading={messageLoading} path={`besked?id=${selectedMessage}`} />
+        <RequestData bind:data={dataMessage} bind:loading={messageLoading} bind:onServerError={messageError} path={`besked?id=${selectedMessage}`} />
     {/if}
 {/key}
 

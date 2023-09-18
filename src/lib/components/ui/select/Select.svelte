@@ -24,7 +24,7 @@
 </script>
 
 <div class="relative">
-    <input use:melt={$input} class="bg-white dark:bg-dark rounded-lg h-10 p-2" {placeholder} />
+    <input use:melt={$input} class="w-full bg-white dark:bg-dark rounded-lg h-10 p-2" {placeholder} />
     <div class="absolute right-2 top-1/2 z-10 -translate-y-1/2">
         {#if $open}
             <ChevronUp class="square-4" />
