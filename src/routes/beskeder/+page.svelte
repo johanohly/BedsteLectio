@@ -420,7 +420,9 @@
                         <Avatar user={fullMessage.messages[0].sender} />
                         <div class="flex flex-col ml-3">
                             <span class="font-semibold leading-5">{fullMessage.messages[0].title}</span>
-                            <span class="text-xs text-gray-400">Modtagere: {fullMessage.receivers}</span>
+                            <Tooltip text={fullMessage.receivers}>
+                                <span class="block max-w-[16rem] md:max-w-lg lg:max-w-xl text-xs text-gray-400 truncate">Modtagere: {fullMessage.receivers}</span>
+                            </Tooltip>
                         </div>
                         <div class="ml-auto">
                             <div
