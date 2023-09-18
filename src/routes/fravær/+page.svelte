@@ -101,7 +101,7 @@
     });
 
     const absentLessons = [...data.moduler.oversigt, ...data.moduler.manglende_fraværsårsager];
-    const lessonsPerClass = absentLessons.reduce((acc, item) => {
+    const rawLessonsPerClass = absentLessons.reduce((acc, item) => {
       if (acc[item.aktivitet.hold]) {
         acc[item.aktivitet.hold] += 1;
       } else {
@@ -109,6 +109,7 @@
       }
       return acc;
     }, {});
+    const lessonsPerClass = Object.fromEntries(Object.entries(rawLessonsPerClass).sort(([, a], [, b]) => a - b));
     pyramidChart = {
       chart: {
         type: "bar",
