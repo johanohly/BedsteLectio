@@ -12,7 +12,7 @@
     import { DateTime } from "luxon";
     import { fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { createCollapsible, melt, type ComboboxStates, type ComboboxOption } from "@melt-ui/svelte";
+    import { createCollapsible, melt, type ComboboxOption } from "@melt-ui/svelte";
     import { test } from "fuzzy";
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
@@ -70,7 +70,6 @@
                   if (message.sender != me?.name && searchFilter == "Sent") return false;
               }
               if ($searchGroup && $searchGroup.label) {
-                  // idfk
                   if (!message.receivers.includes($searchGroup.label)) return false;
               }
               if (searchFrom) {

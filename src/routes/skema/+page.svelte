@@ -2,35 +2,24 @@
   import type { RawLesson } from "$lib/types/lesson";
 
   import { authStore } from "$lib/stores";
-  import {
-    constructInterval,
-    contrast,
-    hslToRgb,
-    stringToColor,
-  } from "$lib/utilities";
+  import { constructInterval, stringToColor } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
   import luxonPlugin from "@fullcalendar/luxon3";
   import timeGridPlugin from "@fullcalendar/timegrid";
+  import tippy from "tippy.js";
+  import "$lib/tippy.css";
+  import DOMPurify from "dompurify";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
 
-  const getEvents: EventSourceFunc = function (
-    fetchInfo,
-    successCallback,
-    failureCallback
-  ) {
+  const getEvents: EventSourceFunc = function (fetchInfo, successCallback, failureCallback) {
     const start = DateTime.fromJSDate(fetchInfo.start);
-    fetch(
-      `https://api.betterlectio.dk/skema?id=S${decodeUserID(
-        $authStore.cookie
-      )}&uge=${start.weekNumber}&år=${start.year}`,
-      {
-        headers: {
-          "lectio-cookie": $authStore.cookie,
-        },
-      }
-    ).then((response) => {
+    fetch(`https://api.betterlectio.dk/skema?id=S${decodeUserID($authStore.cookie)}&uge=${start.weekNumber}&år=${start.year}`, {
+      headers: {
+        "lectio-cookie": $authStore.cookie,
+      },
+    }).then((response) => {
       if (response.ok) {
         response.json().then((data: { moduler: RawLesson[] }) => {
           const events = data.moduler.map((lesson) => {
@@ -40,19 +29,14 @@
 
             const color = stringToColor(lesson.hold ?? "", 100, 90);
             const textColor = stringToColor(lesson.hold ?? "", 100, 30);
-            const rgb = hslToRgb(color.h, color.s, color.l);
-            const textRgb = hslToRgb(textColor.h, textColor.s, textColor.l);
-            const ccontrast = contrast(
-              [textRgb.b, textRgb.g, textRgb.r],
-              [rgb.b, rgb.g, rgb.r]
-            );
-            console.log(lesson.hold, ccontrast);
+            console.log(lesson);
 
             return {
               color: color.string,
               end,
               extendedProps: {
                 cancelled: lesson.status === "aflyst",
+                description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
               },
               id: lesson.absid,
               start,
@@ -78,9 +62,7 @@
       contentHeight: "auto",
       dayHeaderContent: function (renderProps) {
         const date = DateTime.fromJSDate(renderProps.date).setLocale("da");
-        const todayClasses = renderProps.isToday
-          ? "w-8 h-8 rounded-full bg-[#adffb9] dark:bg-[#8678F9]"
-          : "";
+        const todayClasses = renderProps.isToday ? "w-8 h-8 rounded-full bg-[#adffb9] dark:bg-[#8678F9]" : "";
         const weekday = date.weekdayShort?.replace(".", "")?.toTitleCase();
         return {
           html: `<div class='h-12 flex items-center justify-center py-3'><span class='flex items-baseline font-normal leading-6'>${weekday}<span class='flex items-center justify-center ml-[0.375rem] font-semibold text-black dark:text-white ${todayClasses}'>${date.day}</span></span></div>`,
@@ -88,8 +70,13 @@
       },
       dayHeaderFormat: { weekday: "long" },
       eventDidMount: (arg) => {
-        arg.event.extendedProps.cancelled &&
-          arg.el.classList.add("event-cancelled");
+        console.log(arg.event.extendedProps.description);
+        tippy(arg.el, {
+          content: DOMPurify.sanitize(arg.event.extendedProps.description, { USE_PROFILES: { html: true } }),
+          placement: "top",
+          allowHTML: true,
+        });
+        if (arg.event.extendedProps.cancelled) arg.el.classList.add("event-cancelled");
       },
       eventSources: [
         {
@@ -128,11 +115,6 @@
   <h1 class="mb-0">Skema</h1>
   <div bind:this={calendarEl} class="!mt-0 not-prose" />
   <div class="not-prose block !mt-4">
-    <a
-      class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-      href="/skema/sammenlign"
-    >
-      Se, hvornår dine venner har fri og sammenlign mødetider.
-    </a>
+    <a class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300" href="/skema/sammenlign"> Se, hvornår dine venner har fri og sammenlign mødetider. </a>
   </div>
 </div>
