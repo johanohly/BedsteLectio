@@ -12,7 +12,7 @@
     import { DateTime } from "luxon";
     import { fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
-    import { createCollapsible, melt, type ComboboxStates } from "@melt-ui/svelte";
+    import { createCollapsible, melt, type ComboboxStates, type ComboboxOption } from "@melt-ui/svelte";
     import { test } from "fuzzy";
     import { Tab } from "$components/ui/tab";
     import { Datetime } from "$components/ui/datetime";
@@ -22,6 +22,7 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
+    import type { Writable } from "svelte/store";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let groups: string[] | undefined = undefined;
@@ -58,7 +59,7 @@
 
     let searchTerm = "";
     let searchFilter: "All" | "Received" | "Sent" = "All";
-    let searchGroup: ComboboxStates["selected"];
+    let searchGroup: Writable<ComboboxOption<unknown> | undefined>;
     let searchFrom = "";
     let searchTo = "";
     $: searchResetable = searchTerm != "" || searchFilter != "All" || searchFrom != "" || searchTo != "" || (typeof $searchGroup !== "undefined" && !Array.isArray($searchGroup) && $searchGroup.label);
@@ -68,7 +69,7 @@
                   if (message.sender == me?.name && searchFilter == "Received") return false;
                   if (message.sender != me?.name && searchFilter == "Sent") return false;
               }
-              if (typeof $searchGroup !== "undefined" && !Array.isArray($searchGroup) && $searchGroup.label) {
+              if ($searchGroup && $searchGroup.label) {
                   // idfk
                   if (!message.receivers.includes($searchGroup.label)) return false;
               }
