@@ -18,5 +18,5 @@ export type FileTree = {
     type: "file" | "folder";
     name: string;
     open: boolean;
-    children?: FileTree[]
+    children?: FileTree[];
 }
