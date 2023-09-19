@@ -134,7 +134,7 @@
                                         {#if cell.id === "id"}
                                             <Avatar popout user={{ id: cell.value.split("-")[0], name: cell.value.split("-")[1] }} />
                                         {:else if cell.id === "calendar"}
-                                            <Button class="justify-end" href={`/skema?id=${cell.value}`} target="_blank">Se Skema</Button>
+                                            <Button class="justify-end" href={`/skema?id=${cell.value}`}>Se Skema</Button>
                                         {:else}
                                             <Render of={cell.render()} />
                                         {/if}
