@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { createTable, Subscribe, Render, createRender } from "svelte-headless-table";
-    import { addSortBy, addPagination, addTableFilter, addSelectedRows, addHiddenColumns } from "svelte-headless-table/plugins";
+    import { createTable, Subscribe, Render } from "svelte-headless-table";
+    import { addSortBy, addPagination, addTableFilter } from "svelte-headless-table/plugins";
     import * as Table from "$lib/components/ui/table";
     import { RequestData } from "$components";
     import { Button } from "$components/ui/button";
-    import { Input } from "$components/ui/input";
-    import { readable, writable, type Writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import { cn } from "$lib/utils";
     import { ArrowUpDown } from "lucide-svelte";
     import Avatar from "$components/ui/avatar/Avatar.svelte";
@@ -47,7 +46,7 @@
     }
 
     const table = createTable(entries, {
-        sort: addSortBy({ disableMultiSort: true, toggleOrder: ['desc', 'asc'] }),
+        sort: addSortBy({ disableMultiSort: true, toggleOrder: ["desc", "asc"] }),
         page: addPagination(),
         filter: addTableFilter({
             fn: ({ filterValue, value }) => filter(filterValue, [value]).length > 0,
