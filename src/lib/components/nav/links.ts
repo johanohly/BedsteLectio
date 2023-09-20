@@ -16,13 +16,18 @@ export const navItems = [
     },
     {
         external: false,
-        href: '/beskeder',
-        title: 'Beskeder'
+        href: '/fravær',
+        title: 'Fravær'
     },
     {
         external: false,
-        href: '/fravær',
-        title: 'Fravær'
+        href: '/dokumenter',
+        title: 'Dokumenter'
+    },
+    {
+        external: false,
+        href: '/beskeder',
+        title: 'Beskeder'
     },
     {
         external: false,
