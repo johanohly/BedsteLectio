@@ -35,7 +35,9 @@
 
     let folderLoading = false;
     let folderData: { indhold: RawDocumentItem[]; titel: string };
+    let folderTitle: string;
     $: if (!folderLoading && folderData?.indhold?.length) {
+        folderTitle = folderData.titel;
         items = folderData.indhold.map((item) => {
             if (item.type === "dokument") {
                 return {
@@ -68,12 +70,14 @@
 
 <div class="page-container">
     {#if (!initialLoading || !folderLoading) && items.length}
+        <h1>{folderTitle ? folderTitle : "Dokumenter"}</h1>
         <div class="bg-white dark:bg-dark border-[1px] rounded-md">
             {#each items as item, i}
                 {#if item.type === "folder"}
                     <div
                         on:click={() => {
                             if (item.id === "..") {
+                                folderTitle = "";
                                 items = JSON.parse(JSON.stringify(initialItems));
                             } else {
                                 items = [];
