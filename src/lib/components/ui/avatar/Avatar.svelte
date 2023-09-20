@@ -36,7 +36,7 @@
     on:click={() => {
       if (popout) poppedOut = !poppedOut;
     }}
-    class="flex {popout ? 'cursor-pointer' : ''} {poppedOut ? 'h-32 w-32' : 'h-10 w-10'} items-center justify-center rounded-full overflow-hidden {!$fallback.hidden ? 'bg-dark-hover dark:bg-light-hover' : ''}"
+    class="flex flex-shrink-0 {popout ? 'cursor-pointer' : ''} {poppedOut ? 'h-32 w-32' : 'h-10 w-10'} items-center justify-center rounded-full overflow-hidden {!$fallback.hidden ? 'bg-dark-hover dark:bg-light-hover' : ''}"
   >
     <img class="!m-0" alt="Avatar" use:melt={$image} />
     <span class="text-2xl font-medium text-white dark:text-black" use:melt={$fallback}>{getInitials(user.name)}</span>

@@ -1,0 +1,140 @@
+import { File, FileSpreadsheet, FileArchive, FileAudio, FileVideo, FileBox, FileCode, FileImage, FileText, FilePieChart, Combine, LayoutTemplate, FileJson, FileKey } from "lucide-svelte"
+
+const fileIcons = {
+    default: File,
+
+    pdf: FileText,
+    doc: FileText,
+    docx: FileText,
+
+    // Word template file
+    dotx: LayoutTemplate,
+
+    ppt: FilePieChart,
+    pptx: FilePieChart,
+
+    jpg: FileImage,
+    jpeg: FileImage,
+    png: FileImage,
+    gif: FileImage,
+    svg: FileImage,
+    bmp: FileImage,
+    tiff: FileImage,
+    webp: FileImage,
+    ico: FileImage,
+
+    mp4: FileVideo,
+    webm: FileVideo,
+    ogg: FileVideo,
+    avi: FileVideo,
+    mov: FileVideo,
+    mkv: FileVideo,
+    flv: FileVideo,
+    wmv: FileVideo,
+    mpeg: FileVideo,
+
+    xls: FileSpreadsheet,
+    xlsx: FileSpreadsheet,
+
+    zip: FileArchive,
+    rar: FileArchive,
+    gz: FileArchive,
+    tar: FileArchive,
+    "7z": FileArchive,
+
+    mp3: FileAudio,
+    wav: FileAudio,
+
+    obj: FileBox,
+    stl: FileBox,
+    glb: FileBox,
+    gltf: FileBox,
+    fbx: FileBox,
+
+    // Livewire
+    lvw: Combine,
+    pcb: Combine,
+
+    js: FileCode,
+    ts: FileCode,
+    jsx: FileCode,
+    tsx: FileCode,
+    py: FileCode,
+    c: FileCode,
+    cpp: FileCode,
+    h: FileCode,
+    hpp: FileCode,
+    cs: FileCode,
+    java: FileCode,
+    php: FileCode,
+    html: FileCode,
+    css: FileCode,
+    sql: FileCode,
+    sh: FileCode,
+    bat: FileCode,
+    ps1: FileCode,
+    psd1: FileCode,
+    psm1: FileCode,
+    ps1xml: FileCode,
+    pssc: FileCode,
+    psrc: FileCode,
+    cdxml: FileCode,
+    xaml: FileCode,
+    xml: FileCode,
+    csv: FileCode,
+    txt: FileCode,
+    md: FileCode,
+    yml: FileCode,
+    yaml: FileCode,
+    ini: FileCode,
+    cfg: FileCode,
+    conf: FileCode,
+    config: FileCode,
+    env: FileCode,
+    gitignore: FileCode,
+    gitattributes: FileCode,
+    gitmodules: FileCode,
+    gitkeep: FileCode,
+    gitconfig: FileCode,
+    git: FileCode,
+    npmignore: FileCode,
+    npmrc: FileCode,
+    babelrc: FileCode,
+    eslintrc: FileCode,
+    eslintignore: FileCode,
+    prettierrc: FileCode,
+    prettierignore: FileCode,
+    stylelintrc: FileCode,
+    stylelintignore: FileCode,
+    dockerignore: FileCode,
+    dockerfile: FileCode,
+    toml: FileCode,
+    lock: FileCode,
+    lockfile: FileCode,
+    envrc: FileCode,
+
+    json: FileJson,
+    jsonc: FileJson,
+
+    key: FileKey,
+    pub: FileKey,
+    pem: FileKey,
+    p12: FileKey,
+    pfx: FileKey,
+    asc: FileKey,
+    gpg: FileKey,
+    crt: FileKey,
+    cer: FileKey,
+    der: FileKey,
+    csr: FileKey,
+    rsa: FileKey,
+    ppk: FileKey,
+}
+
+export const getFileIcon = (fileType: string) => {
+    if (fileType in fileIcons) {
+        return fileIcons[fileType]
+    } else {
+        return fileIcons.default
+    }
+}

@@ -14,9 +14,28 @@ export type SimpleDocument = {
     title: string;
 }
 
-export type FileTree = {
-    type: "file" | "folder";
+export type RawDocumentItem = {
+    type: "dokument";
+    navn: string;
+    id: string;
+    ændret_af: string;
+    dato: string;
+} | {
+    type: "folder";
+    navn: string;
+    id: string;
+}
+
+export type DocumentItem = {
+    type: "file";
     name: string;
-    open: boolean;
-    children?: FileTree[];
+    id: string;
+    author: string;
+    date: string;
+    fileType: string;
+    link: string
+} | {
+    type: "folder";
+    name: string;
+    id: string;
 }
