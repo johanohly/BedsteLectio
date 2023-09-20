@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Document, RawDocument } from "$lib/types/documents";
+  import type { RawSimpleDocument, SimpleDocument } from "$lib/types/documents";
   import type { Homework, RawHomework } from "$lib/types/homework";
   import type { Lesson, RawLesson } from "$lib/types/lesson";
   import type { RawSimpleMessage, SimpleMessage } from "$lib/types/messages";
@@ -12,7 +12,6 @@
   import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
   import { constructInterval } from "$lib/utilities";
-  import { decodeUserID } from "$lib/utilities/cookie";
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
@@ -22,7 +21,7 @@
     aktuelt: RawNews[];
     kommunikation: {
       beskeder: RawSimpleMessage[];
-      dokumenter: RawDocument[];
+      dokumenter: RawSimpleDocument[];
     };
     skema: RawLesson[];
   };
@@ -33,7 +32,7 @@
   let news: News[] = [];
   let homework: Homework[] = [];
   let messages: SimpleMessage[] = [];
-  let documents: Document[] = [];
+  let documents: SimpleDocument[] = [];
   $: if (!loading && data) {
     const tempLessons: Lesson[] = data.skema.map((lesson) => {
       return {
