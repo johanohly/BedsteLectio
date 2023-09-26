@@ -3,7 +3,7 @@
     import { authStore } from "$lib/stores";
     import type { DocumentItem, RawDocumentItem } from "$lib/types/documents";
     import { getFileIcon } from "$lib/utilities";
-    import { Folder } from "lucide-svelte";
+    import { Folder, Undo2 } from "lucide-svelte";
 
     let items: DocumentItem[] = [];
 
@@ -84,16 +84,15 @@
                                 folderId = item.id;
                             }
                         }}
-                        on:keydown={(e) => {
-                            if (e.key === "Enter") {
-                                items = [];
-                                folderId = item.id;
-                            }
-                        }}
+                        on:keydown={() => {}}
                         class="cursor-pointer bg-white dark:bg-dark hover:bg-light dark:hover:bg-dark-hover relative flex p-4 py-2 {i != 0 ? (i != items.length - 1 ? 'border-t-[1px]' : 'border-t-[1px] rounded-b-md') : 'rounded-t-md'}"
                     >
                         <div class="mr-4 flex">
-                            <Folder class="self-end w-6 h-6 flex-shrink-0" />
+                            {#if item.name === ".."}
+                                <Undo2 class="self-end w-6 h-6 flex-shrink-0" />
+                            {:else}
+                                <Folder class="self-end w-6 h-6 flex-shrink-0" />
+                            {/if}
                         </div>
                         <div class="mr-4 min-w-0 flex-[auto]">
                             <span class="overflow-hidden overflow-ellipsis whitespace-nowrap block max-w-full">{item.name}</span>
@@ -110,7 +109,7 @@
                         <div class="mr-4 min-w-0 flex-[auto] hidden md:block w-6 md:w-10">
                             <span class="overflow-hidden overflow-ellipsis whitespace-nowrap block max-w-full text-gray-500">{item.author}</span>
                         </div>
-                        <div class="w-[100px] text-right text-gray-500">
+                        <div class="w-[150px] text-right text-gray-500">
                             <span class="whitespace-nowrap">
                                 {item.date}
                             </span>

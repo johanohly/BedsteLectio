@@ -1,4 +1,4 @@
-export const navItems = [
+export const mainNavItems = [
     {
         external: false,
         href: '/skema',
@@ -28,15 +28,23 @@ export const navItems = [
         external: false,
         href: '/beskeder',
         title: 'Beskeder'
-    },
+    }
+]
+
+export const subNavItems = [
     {
         external: false,
-        href: '/personer',
+        href: '/andet/personer',
         title: 'Personer'
     },
     {
         external: false,
-        href: '/fri',
+        href: '/andet/fri',
         title: 'Fri'
+    },
+    {
+        external: false,
+        href: '/skema/sammenlign',
+        title: 'Sammenlign Skema'
     }
 ]
