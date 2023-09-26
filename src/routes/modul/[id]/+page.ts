@@ -18,5 +18,3 @@ export const load: PageLoad = async ({ params }) => {
         id: +params.id
     }
 };
-
-export const ssr = false;
