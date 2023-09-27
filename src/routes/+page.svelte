@@ -240,7 +240,12 @@
       </div>
     </div>
     <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
-      <h1>Dokumenter</h1>
+      <div class="mb-[0.8888889em] flex items-center justify-between">
+        <h1 class="mb-0">Dokumenter</h1>
+        <a href="/dokumenter">
+          <ArrowRight />
+        </a>
+      </div>
       <div class="block overflow-y-auto">
         {#if loading}
           loading
