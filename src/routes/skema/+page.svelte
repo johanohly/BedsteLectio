@@ -105,7 +105,7 @@
     searchId = $page.url.searchParams.get("id") ?? "";
     const meId = `S${decodeUserID($authStore.cookie)}`;
     if (searchId) {
-      if (searchId.length == 12 && (searchId.startsWith("S") || searchId.startsWith("T") || searchId.startsWith("H")) && !isNaN(Number(searchId.slice(1)))) {
+      if (searchId.length == 12 && (searchId.startsWith("S") || searchId.startsWith("T") || searchId.startsWith("H") || searchId.startsWith("R")) && !isNaN(Number(searchId.slice(1)))) {
         userId = searchId;
       } else {
         addToast({
@@ -117,7 +117,7 @@
         });
         userId = meId;
       }
-      goto(`/skema`);
+      goto(`/skema`, { replaceState: true });
     } else {
       userId = meId;
     }
