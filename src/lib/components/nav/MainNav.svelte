@@ -20,26 +20,28 @@
     <School />
     <span class="hidden font-bold sm:inline-block">BedsteLectio</span>
   </a>
-  <nav class="flex items-center space-x-6 text-sm font-medium">
-    {#each mainNavItems as navItem}
-      <a class={cn("transition-colors hover:text-foreground/80", $page.url.pathname === navItem.href ? "text-foreground" : "text-foreground/60")} href={navItem.href} rel={navItem.external ? "noreferrer" : undefined} target={navItem.external ? "_blank" : undefined}>
-        {navItem.title}
-      </a>
-    {/each}
-    <button
-      class={cn(
-        "transition-colors hover:text-foreground/80 not-prose",
-        subNavItems
-          .map((item) => {
-            return item.href;
-          })
-          .includes($page.url.pathname)
-          ? "text-foreground"
-          : "text-foreground/60"
-      )}
-      use:melt={$trigger}>Andet</button
-    >
-  </nav>
+  {#if $page.url.pathname !== "/log-ind"}
+    <nav class="flex items-center space-x-6 text-sm font-medium">
+      {#each mainNavItems as navItem}
+        <a class={cn("transition-colors hover:text-foreground/80", $page.url.pathname === navItem.href ? "text-foreground" : "text-foreground/60")} href={navItem.href} rel={navItem.external ? "noreferrer" : undefined} target={navItem.external ? "_blank" : undefined}>
+          {navItem.title}
+        </a>
+      {/each}
+      <button
+        class={cn(
+          "transition-colors hover:text-foreground/80 not-prose",
+          subNavItems
+            .map((item) => {
+              return item.href;
+            })
+            .includes($page.url.pathname)
+            ? "text-foreground"
+            : "text-foreground/60"
+        )}
+        use:melt={$trigger}>Andet</button
+      >
+    </nav>
+  {/if}
 </div>
 
 {#if $open}
