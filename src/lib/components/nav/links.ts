@@ -39,6 +39,11 @@ export const subNavItems = [
     },
     {
         external: false,
+        href: '/andet/lokaler',
+        title: 'Lokaler'
+    },
+    {
+        external: false,
         href: '/andet/fri',
         title: 'Fri'
     },
