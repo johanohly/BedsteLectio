@@ -82,7 +82,7 @@
         }),
     ]);
 
-    const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, rows } = table.createViewModel(columns);
+    const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = table.createViewModel(columns);
 
     const { sortKeys } = pluginStates.sort;
 
