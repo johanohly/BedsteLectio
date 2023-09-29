@@ -9,7 +9,7 @@
   import { Avatar } from "./ui/avatar";
   import { goto } from "$app/navigation";
   import { addToast } from "./toaster";
-    import { page } from "$app/stores";
+  import { page } from "$app/stores";
 
   const {
     elements: { arrow, item, menu, trigger },
