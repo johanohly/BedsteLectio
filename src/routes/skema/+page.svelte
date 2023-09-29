@@ -67,9 +67,16 @@
       }
 
       response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
-        const matches = nameRegex.exec(data.overskrift);
-        if (matches) {
-          userName = matches[1];
+        console.log(data);
+        if (userId.startsWith("S")) {
+          const matches = nameRegex.exec(data.overskrift);
+          if (matches) {
+            userName = matches[1];
+          } else {
+            userName = data.overskrift;
+          }
+        } else {
+          userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
         }
         const events = data.moduler.map((lesson) => {
           const interval = constructInterval(lesson.tidspunkt);
