@@ -96,7 +96,7 @@
             id: lesson.absid,
             start,
             textColor: textColor.string,
-            title: lesson.navn != null ? lesson.navn : lesson.hold ?? "",
+            title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
             url: `/modul/${lesson.absid}`,
           };
         });
