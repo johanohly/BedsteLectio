@@ -45,6 +45,19 @@
             ]
         },
         {
+            "name": "Næste Lokale",
+            "short_name": "Næste Lokale",
+            "description": "Find dit næste lokale.",
+            "url": "/andet/lokale",
+            "icons": [
+                {
+                    "src": "room.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
             "name": "Lektier",
             "short_name": "Lektier",
             "description": "Få en oversigt over dine lektier.",

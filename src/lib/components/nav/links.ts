@@ -45,7 +45,7 @@ export const subNavItems = [
     {
         external: false,
         href: '/andet/lokale',
-        title: 'Lokale'
+        title: 'Næste Lokale'
     },
     {
         external: false,
