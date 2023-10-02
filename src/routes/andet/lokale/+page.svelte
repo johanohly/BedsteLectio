@@ -31,7 +31,7 @@
 
 {#if nextRoom}
     <div class="flex flex-col items-center justify-center">
-        <span class="font-mono" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoom.title}</span>
+        <span class="w-[90vw] font-mono whitespace-nowrap overflow-hidden overflow-ellipsis" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoom.title}</span>
         <span class="font-mono leading-none" style={`font-size: ${nextRoom.fontSize}vw`}>{nextRoom.room}</span>
         <span class="font-mono" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoom.time.toRelative()}</span>
     </div>
