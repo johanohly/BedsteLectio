@@ -157,7 +157,7 @@
     </div>
     <div class="lg:col-span-1 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <h1 class="mb-0">Aktuelt</h1>
-      <div class="block overflow-y-auto">
+      <div class="block overflow-y-auto not-prose">
         {#if loading}
           <Skeleton class="mt-[1.25em] w-3/4 h-[1em]" />
           <Skeleton class="mt-[1em] w-full h-[1em]" />
@@ -169,9 +169,14 @@
           <Skeleton class="mt-[1em] w-full h-[1em]" />
           <Skeleton class="mt-[1em] w-full h-[1em]" />
         {:else if news.length > 0}
-          {#each news as item}
-            <SvelteMarkdown source={item.description} />
-          {/each}
+          <div class="space-y-2">
+            {#each news as item, i}
+              <SvelteMarkdown source={item.description} />
+              {#if i != news.length - 1}
+                <hr class="!my-4 dark:border-t-gray-600/50" />
+              {/if}
+            {/each}
+          </div>
         {:else}
           <p class="text-center">Ingen aktuelle nyheder.</p>
         {/if}
