@@ -28,7 +28,7 @@
   let hwLoading = true;
   let hwData: RawHomework[];
 
-  let lessons: { day: string; lessons: Lesson[]; selected: boolean }[] = [];
+  let lessons: { [key: string]: Lesson[] } = {};
   let news: News[] = [];
   let homework: Homework[] = [];
   let messages: SimpleMessage[] = [];
@@ -49,16 +49,8 @@
     for (let i = 0; i < tempLessons.length; i++) {
       const lesson = tempLessons[i];
       const day = lesson.interval.start?.hasSame(DateTime.now(), "day") ? "I dag" : (lesson.interval.start?.hasSame(DateTime.now().plus({ days: 1 }), "day") ? "I morgen" : lesson.interval.start?.toFormat("EEEE d/M").toTitleCase()) ?? "N/A";
-      const dayIndex = lessons.findIndex((item) => item.day === day);
-      if (dayIndex === -1) {
-        lessons.push({
-          day,
-          lessons: [lesson],
-          selected: i == 0,
-        });
-      } else {
-        lessons[dayIndex].lessons.push(lesson);
-      }
+      if (!lessons[day]) lessons[day] = [];
+      lessons[day].push(lesson);
     }
 
     news = data.aktuelt.map((item) => {
@@ -107,14 +99,7 @@
   }
 
   let selectedTab: Writable<string>;
-  $: if (lessons.length > 0) {
-    const currentIndex = lessons.findIndex((item) => item.day == $selectedTab);
-    const selectedIndex = lessons.findIndex((item) => item.selected);
-    if (currentIndex !== selectedIndex) {
-      lessons[currentIndex].selected = true;
-      lessons[selectedIndex].selected = false;
-    }
-  }
+  $: filteredLessons = lessons[$selectedTab] ?? [];
 </script>
 
 <RequestData bind:data bind:loading path="forside" />
@@ -142,11 +127,11 @@
         <Skeleton class="mb-2 w-1/4 h-[0.875em] rounded-xl" />
         <Skeleton class="mt-[1.25em] mb-[0.5em] w-3/4 h-[1em] rounded-xl" />
         <Skeleton class="w-3/4 h-[1em] rounded-xl" />
-      {:else if lessons.length > 0}
-        <Tabs bind:selectedTab defaultActive={lessons[0].day} tabs={lessons.map((item) => item.day)} />
+      {:else if lessons != {}}
+        <Tabs bind:selectedTab defaultActive={Object.keys(lessons)[0]} tabs={Object.keys(lessons)} />
         <div class="overflow-y-auto">
           <Timeline class="ml-3">
-            {#each lessons.filter((day) => day.selected)[0].lessons as lesson}
+            {#each filteredLessons as lesson}
               <TimelineItem class="mb-10" description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
             {/each}
           </Timeline>
