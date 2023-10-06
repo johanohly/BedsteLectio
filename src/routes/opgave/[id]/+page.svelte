@@ -11,6 +11,7 @@
   import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
+    import { relativeTime } from "$lib/utilities";
 
   export let data: PageData;
 
@@ -114,7 +115,7 @@
       <h2 class="!mb-0">Afleveringer</h2>
       <p>
         Afleveringsfrist {assignment.date > DateTime.now() ? "er" : "var"}
-        {assignment.date.toLocaleString(DateTime.DATETIME_MED)} ({assignment.date.toRelative()})
+        {assignment.date.toLocaleString(DateTime.DATETIME_MED)} (<span use:relativeTime={assignment.date.toJSDate()} />)
       </p>
       {#if assignment.documents.length > 0}
         {#each assignment.documents as document}

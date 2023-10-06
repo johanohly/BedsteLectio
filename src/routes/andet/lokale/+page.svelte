@@ -2,7 +2,7 @@
     import { RequestData } from "$components";
     import { authStore } from "$lib/stores";
     import type { RawLesson } from "$lib/types/lesson";
-    import { constructInterval } from "$lib/utilities";
+    import { constructInterval, relativeTime } from "$lib/utilities";
     import { decodeUserID } from "$lib/utilities/cookie";
     import { DateTime } from "luxon";
 
@@ -50,7 +50,7 @@
         {/each}
     </ul>
     {#if nextRoomData}
-        <span class="font-mono" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoomData.time.toRelative()}</span>
+        <span use:relativeTime={nextRoomData.time.toJSDate()} class="font-mono" style={`font-size: ${nextRoom.fontSize / 6}vw`} />
     {/if}
 </div>
 

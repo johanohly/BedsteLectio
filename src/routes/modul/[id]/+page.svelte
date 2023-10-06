@@ -4,7 +4,7 @@
   import { RequestData } from "$components";
   import { Skeleton } from "$components/ui/skeleton";
   import { authStore } from "$lib/stores";
-  import { constructInterval } from "$lib/utilities";
+  import { constructInterval, relativeTime } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { ExternalLink } from "lucide-svelte";
   import { DateTime } from "luxon";
@@ -77,7 +77,7 @@
 
       <h3 class="!mt-1 !mb-0">Modul</h3>
       <p class="!mt-0 !mb-0">
-        Tidspunkt: {module.lesson.interval.toLocaleString(DateTime.DATETIME_FULL)} ({module.lesson.interval.start?.toRelative()})
+        Tidspunkt: {module.lesson.interval.toLocaleString(DateTime.DATETIME_FULL)} (<span use:relativeTime={(module.lesson.interval.start ?? DateTime.now()).toJSDate()} />)
         <br />
         Lokale: {module.lesson.room}
         <br />

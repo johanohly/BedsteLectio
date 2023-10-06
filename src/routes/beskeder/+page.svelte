@@ -23,6 +23,7 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
+    import { relativeTime } from "$lib/utilities";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let groups: string[] | undefined = undefined;
@@ -346,7 +347,7 @@
                                 }}
                                 on:keydown={() => {}}
                             >
-                                <div class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4">{message.date.toRelative()}</div>
+                                <div use:relativeTime={message.date.toJSDate()} class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4" />
                                 <Avatar user={{ id: students.find((student) => student.name == message.sender)?.id ?? "123", name: message.sender }} />
                                 <div class="flex flex-col flex-grow ml-3">
                                     <div class="text-sm font-medium">{message.sender}</div>
@@ -450,7 +451,8 @@
                     {#if fullMessage}
                         {#each fullMessage.messages as message}
                             {#if message.sender.name === me?.name}
-                                <div style={`margin-left: calc(3rem + ${message.indent}rem);`} class="grid grid-cols-[1fr_auto] gap-2"> <!-- 3 rem = 0.5 rem for gap-2 + 2.5 rem for missing avatar -->
+                                <div style={`margin-left: calc(3rem + ${message.indent}rem);`} class="grid grid-cols-[1fr_auto] gap-2">
+                                    <!-- 3 rem = 0.5 rem for gap-2 + 2.5 rem for missing avatar -->
                                     <div
                                         on:click={() => {
                                             replyTo = message;
@@ -460,7 +462,7 @@
                                     >
                                         <header class="flex flex-col md:flex-row md:items-center justify-between">
                                             <p class="font-bold">{message.title}</p>
-                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                            <small class="opacity-50" use:relativeTime={message.date.toJSDate()} />
                                         </header>
                                         <div>
                                             {#if message.attachments.length}
@@ -505,7 +507,7 @@
                                     >
                                         <header class="flex flex-col md:flex-row md:items-center justify-between">
                                             <p class="font-bold">{message.title}</p>
-                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                            <small class="opacity-50" use:relativeTime={message.date.toJSDate()} />
                                         </header>
                                         <div>
                                             {#if message.attachments.length}

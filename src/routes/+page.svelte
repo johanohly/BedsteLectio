@@ -11,7 +11,7 @@
   import Tabs from "$components/ui/tabs/Tabs.svelte";
   import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
-  import { constructInterval } from "$lib/utilities";
+  import { constructInterval, relativeTime } from "$lib/utilities";
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
@@ -187,9 +187,7 @@
                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {hwItem.homework}
                 </p>
-                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                  {hwItem.lesson.interval.start?.toRelative()}
-                </p>
+                <p use:relativeTime={(hwItem.lesson.interval.start ?? DateTime.now()).toJSDate()} class="text-sm text-gray-500 truncate dark:text-gray-400" />
               </div>
             </a>
           {/each}

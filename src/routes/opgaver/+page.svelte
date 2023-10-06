@@ -19,6 +19,7 @@
   import { filter } from "fuzzy";
   import { Search } from "lucide-svelte";
   import { DateTime } from "luxon";
+    import { relativeTime } from "$lib/utilities";
 
   let loading = true;
   let data: RawSimpleAssignment[];
@@ -122,7 +123,7 @@
                   <CardDescription>{assignment.description}</CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Badge>{assignment.date.toRelative()}</Badge>
+                  <Badge><span use:relativeTime={assignment.date.toJSDate()} /></Badge>
                 </CardFooter>
               </Card>
             </a>
