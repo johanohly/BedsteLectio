@@ -449,54 +449,91 @@
                 <div class="h-full overflow-y-auto space-y-4">
                     {#if fullMessage}
                         {#each fullMessage.messages as message}
-                            <div style={`margin-left: ${message.indent}rem;`} class="grid {message.sender.name === me?.name ? 'grid-cols-[1fr_auto]' : 'grid-cols-[auto_1fr]'} gap-2">
-                                {#if message.sender.name !== me?.name}
+                            {#if message.sender.name === me?.name}
+                                <div style={`margin-left: calc(3rem + ${message.indent}rem);`} class="grid grid-cols-[1fr_auto] gap-2"> <!-- 3 rem = 0.5 rem for gap-2 + 2.5 rem for missing avatar -->
+                                    <div
+                                        on:click={() => {
+                                            replyTo = message;
+                                        }}
+                                        on:keydown={() => {}}
+                                        class="hover:brightness-95 dark:hover:opacity-90 rounded-md p-4 space-y-2 rounded-tr-none bg-[#c9fcd0] dark:bg-[#8778f983]"
+                                    >
+                                        <header class="flex flex-col md:flex-row md:items-center justify-between">
+                                            <p class="font-bold">{message.title}</p>
+                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                        </header>
+                                        <div>
+                                            {#if message.attachments.length}
+                                                <div class="flex flex-wrap flex-row">
+                                                    {#each message.attachments as attachment}
+                                                        <Badge class="mr-1 mb-1" href={attachment.link}>{attachment.name}</Badge>
+                                                    {/each}
+                                                </div>
+                                            {/if}
+                                            <SvelteMarkdown source={message.body} />
+                                            {#if message.edits.length}
+                                                {#each message.edits as edit}
+                                                    <div class="flex items-center text-gray-400">
+                                                        <p class="text-sm">{edit}</p>
+                                                        <Pencil class="ml-1 h-4 w-4" />
+                                                    </div>
+                                                {/each}
+                                            {/if}
+                                            {#if message.client}
+                                                <div class="flex items-center text-gray-400">
+                                                    <a target="_blank" href={message.client.link} class="text-sm">Sendt fra {message.client.name}</a>
+                                                    <ExternalLink class="ml-1 h-4 w-4" />
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
                                     <Tooltip text={message.sender.name} class="w-10 h-10">
                                         <Avatar user={message.sender} />
                                     </Tooltip>
-                                {/if}
-                                <div
-                                    on:click={() => {
-                                        replyTo = message;
-                                    }}
-                                    on:keydown={() => {}}
-                                    class="hover:brightness-95 dark:hover:opacity-90 rounded-md p-4 space-y-2 {message.sender.name === me?.name ? 'rounded-tr-none bg-[#c9fcd0] dark:bg-[#8778f983]' : 'rounded-tl-none bg-white dark:bg-dark'}"
-                                >
-                                    <header class="flex flex-col md:flex-row md:items-center justify-between">
-                                        <p class="font-bold">{message.title}</p>
-                                        <small class="opacity-50">{message.date.toRelative()}</small>
-                                    </header>
-                                    <div>
-                                        {#if message.attachments.length}
-                                            <div class="flex flex-wrap flex-row">
-                                                {#each message.attachments as attachment}
-                                                    <Badge class="mr-1 mb-1" href={attachment.link}>{attachment.name}</Badge>
-                                                {/each}
-                                            </div>
-                                        {/if}
-                                        <SvelteMarkdown source={message.body} />
-                                        {#if message.edits.length}
-                                            {#each message.edits as edit}
-                                                <div class="flex items-center text-gray-400">
-                                                    <p class="text-sm">{edit}</p>
-                                                    <Pencil class="ml-1 h-4 w-4" />
+                                </div>
+                            {:else}
+                                <div style={`margin-left: ${message.indent}rem;`} class="grid grid-cols-[auto_1fr] gap-2">
+                                    <Tooltip text={message.sender.name} class="w-10 h-10">
+                                        <Avatar user={message.sender} />
+                                    </Tooltip>
+                                    <div
+                                        on:click={() => {
+                                            replyTo = message;
+                                        }}
+                                        on:keydown={() => {}}
+                                        class="hover:brightness-95 dark:hover:opacity-90 rounded-md p-4 space-y-2 rounded-tl-none bg-white dark:bg-dark"
+                                    >
+                                        <header class="flex flex-col md:flex-row md:items-center justify-between">
+                                            <p class="font-bold">{message.title}</p>
+                                            <small class="opacity-50">{message.date.toRelative()}</small>
+                                        </header>
+                                        <div>
+                                            {#if message.attachments.length}
+                                                <div class="flex flex-wrap flex-row">
+                                                    {#each message.attachments as attachment}
+                                                        <Badge class="mr-1 mb-1" href={attachment.link}>{attachment.name}</Badge>
+                                                    {/each}
                                                 </div>
-                                            {/each}
-                                        {/if}
-                                        {#if message.client}
-                                            <div class="flex items-center text-gray-400">
-                                                <a target="_blank" href={message.client.link} class="text-sm">Sendt fra {message.client.name}</a>
-                                                <ExternalLink class="ml-1 h-4 w-4" />
-                                            </div>
-                                        {/if}
+                                            {/if}
+                                            <SvelteMarkdown source={message.body} />
+                                            {#if message.edits.length}
+                                                {#each message.edits as edit}
+                                                    <div class="flex items-center text-gray-400">
+                                                        <p class="text-sm">{edit}</p>
+                                                        <Pencil class="ml-1 h-4 w-4" />
+                                                    </div>
+                                                {/each}
+                                            {/if}
+                                            {#if message.client}
+                                                <div class="flex items-center text-gray-400">
+                                                    <a target="_blank" href={message.client.link} class="text-sm">Sendt fra {message.client.name}</a>
+                                                    <ExternalLink class="ml-1 h-4 w-4" />
+                                                </div>
+                                            {/if}
+                                        </div>
                                     </div>
                                 </div>
-                                {#if message.sender.name === me?.name}
-                                    <Tooltip text={message.sender.name} class="w-10 h-10">
-                                        <Avatar user={message.sender} />
-                                    </Tooltip>
-                                {/if}
-                            </div>
+                            {/if}
                         {/each}
                     {/if}
                 </div>
