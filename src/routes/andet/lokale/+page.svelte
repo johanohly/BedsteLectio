@@ -33,7 +33,7 @@
 
 <div class="flex flex-col items-center justify-center not-prose">
     {#if nextRoomData}
-        <span class="w-[90vw] font-mono whitespace-nowrap overflow-hidden overflow-ellipsis" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoomData.title}</span>
+        <span class="text-center w-[90vw] font-mono whitespace-nowrap overflow-hidden overflow-ellipsis" style={`font-size: ${nextRoom.fontSize / 6}vw`}>{nextRoomData.title}</span>
     {/if}
     <!-- <span class="font-mono leading-none" style={`font-size: ${nextRoom.fontSize}vw`}>{nextRoom.room}</span> -->
     <ul class="text-container">
