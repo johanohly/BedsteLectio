@@ -4,3 +4,4 @@ export { getInitials } from "./initials";
 export { constructInterval } from "./interval";
 export { localStorageStore } from "./localStorageStore";
 export { getFileIcon } from "./fileIcons";
+export { relativeTime } from "./relativeTime";
