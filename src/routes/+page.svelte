@@ -127,12 +127,12 @@
         <Skeleton class="mb-2 w-1/4 h-[0.875em] rounded-xl" />
         <Skeleton class="mt-[1.25em] mb-[0.5em] w-3/4 h-[1em] rounded-xl" />
         <Skeleton class="w-3/4 h-[1em] rounded-xl" />
-      {:else if lessons != {}}
+      {:else if lessons}
         <Tabs bind:selectedTab defaultActive={Object.keys(lessons)[0]} tabs={Object.keys(lessons)} />
         <div class="overflow-y-auto">
           <Timeline class="ml-3">
             {#each filteredLessons as lesson}
-              <TimelineItem class="mb-10" color={stringToColor(lesson.class, 100, 90).string} textColor={stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
+              <TimelineItem cancelled={lesson.status == "aflyst"} class="mb-10" color={stringToColor(lesson.class, 100, 90).string} textColor={stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
             {/each}
           </Timeline>
         </div>

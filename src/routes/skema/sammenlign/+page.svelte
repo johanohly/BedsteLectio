@@ -131,7 +131,7 @@
       </button>
     </div>
   </div>
-  {#if results != {}}
+  {#if results}
     <div class="w-full flex flex-col md:flex-row justify-between max-md:space-y-4 md:space-x-4">
       {#each Object.entries(results) as [weekday, result]}
         <div class="w-full flex flex-col p-4 bg-white dark:bg-dark rounded-md">
