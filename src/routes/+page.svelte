@@ -11,7 +11,7 @@
   import Tabs from "$components/ui/tabs/Tabs.svelte";
   import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
-  import { constructInterval, relativeTime } from "$lib/utilities";
+  import { constructInterval, relativeTime, stringToColor } from "$lib/utilities";
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
@@ -132,7 +132,7 @@
         <div class="overflow-y-auto">
           <Timeline class="ml-3">
             {#each filteredLessons as lesson}
-              <TimelineItem class="mb-10" description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
+              <TimelineItem class="mb-10" color={stringToColor(lesson.class, 100, 90).string} textColor={stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
             {/each}
           </Timeline>
         </div>
