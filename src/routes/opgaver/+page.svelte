@@ -19,7 +19,7 @@
   import { filter } from "fuzzy";
   import { Search } from "lucide-svelte";
   import { DateTime } from "luxon";
-    import { relativeTime } from "$lib/utilities";
+    import { relativeTime, stringToColor } from "$lib/utilities";
 
   let loading = true;
   let data: RawSimpleAssignment[];
@@ -116,7 +116,9 @@
                 <CardHeader>
                   <CardTitle
                     >{assignment.title}<span
-                      class="hidden lg:block bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ml-3"
+                      style:--color={stringToColor(assignment.hold, 100, 90).string}
+                      style:--textColor={stringToColor(assignment.hold, 100, 30).string}
+                      class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3 dark:!bg-blue-900 dark:!text-blue-300"
                       >{assignment.hold}</span
                     ></CardTitle
                   >
@@ -137,3 +139,10 @@
     </div>
   </div>
 </div>
+
+<style>
+  .custom-color {
+    background-color: var(--color);
+    color: var(--textColor);
+  }
+</style>
