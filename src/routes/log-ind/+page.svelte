@@ -15,6 +15,7 @@
   import { SchoolSelect } from "$components/ui/schoolselect";
   import { Switch } from "$components/ui/switch";
   import { authStore } from "$lib/stores";
+    import { constructNonceURL } from "$lib/utilities";
   import { Loader } from "lucide-svelte";
   import { DateTime } from "luxon";
   import { onMount } from "svelte";
@@ -44,7 +45,7 @@
   let loading = false;
   async function login() {
     loading = true;
-    const response = await fetch("https://api.betterlectio.dk/auth", {
+    const response = await fetch(constructNonceURL("https://api.betterlectio.dk/auth"), {
       headers: {
         adgangskode: password,
         brugernavn: username,

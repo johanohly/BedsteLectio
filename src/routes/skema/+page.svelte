@@ -2,7 +2,7 @@
   import type { RawLesson } from "$lib/types/lesson";
 
   import { authStore } from "$lib/stores";
-  import { constructInterval, stringToColor } from "$lib/utilities";
+  import { constructInterval, constructNonceURL, stringToColor } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
   import luxonPlugin from "@fullcalendar/luxon3";
@@ -25,14 +25,14 @@
   const getEvents: EventSourceFunc = (fetchInfo, successCallback, failureCallback) => {
     const start = DateTime.fromJSDate(fetchInfo.start);
 
-    fetch(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`, {
+    fetch(constructNonceURL(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
       headers: {
         "lectio-cookie": $authStore.cookie,
       },
     }).then((response) => {
       if (!response.ok) {
         if ($authStore.username != "" && $authStore.password != "") {
-          fetch("https://api.betterlectio.dk/auth", {
+          fetch(constructNonceURL("https://api.betterlectio.dk/auth"), {
             headers: {
               adgangskode: $authStore.password,
               brugernavn: $authStore.username,
@@ -41,7 +41,7 @@
           }).then((response) => {
             if (response.ok) {
               $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
-              fetch(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`, {
+              fetch(constructNonceURL(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
                 headers: {
                   "lectio-cookie": $authStore.cookie,
                 },
@@ -67,7 +67,6 @@
       }
 
       response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
-        console.log(data);
         if (userId.startsWith("S")) {
           const matches = nameRegex.exec(data.overskrift);
           if (matches) {
