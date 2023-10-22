@@ -64,9 +64,10 @@ export type Assignment = {
 export type SimpleAssignment = {
     date: DateTime;
     description: string;
-    hold: string;
+    class: string;
     link: string;
     status: "Afleveret" | "Mangler" | "Venter";
+    awaits: "" | "Elev" | "Lærer";
     title: string;
 };
 
