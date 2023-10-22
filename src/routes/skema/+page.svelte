@@ -15,6 +15,8 @@
   import { page } from "$app/stores";
   import { addToast } from "$components/toaster";
   import { goto } from "$app/navigation";
+  import { Date } from "$components/ui/date";
+  import { CalendarDays } from "lucide-svelte";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
@@ -104,7 +106,7 @@
     });
   };
 
-  let loadingStatus = "loading";
+  let loading = true;
   let width: number;
   let calendarEl: HTMLElement;
   let calendar: Calendar;
@@ -155,11 +157,8 @@
           events: getEvents,
         },
       ],
-      eventSourceSuccess(eventsInput, response) {
-        loadingStatus = "loaded";
-      },
-      eventSourceFailure(error) {
-        loadingStatus = "error";
+      loading(isLoading) {
+        loading = isLoading;
       },
       headerToolbar: {
         left: "title",
@@ -185,16 +184,27 @@
       calendar && calendar.destroy();
     };
   });
+
+  let customDate: string;
+  $: if (customDate) {
+    const date = DateTime.fromISO(customDate);
+    if (date.isValid) {
+      calendar.gotoDate(date.toJSDate());
+    }
+  }
 </script>
 
 <svelte:window bind:innerWidth={width} />
 
 <div class="page-container">
-  <div class="flex space-x-4">
-    <h1 class="mb-0">Skema {userId === searchId ? `(${userName})` : ""}</h1>
-    {#if loadingStatus === "loading"}
-      <span class="loader" />
-    {/if}
+  <div class="flex items-center justify-between">
+    <div class="flex space-x-4">
+      <h1 class="mb-0">Skema {userId === searchId ? `(${userName})` : ""}</h1>
+      {#if loading}
+        <span class="loader" />
+      {/if}
+    </div>
+    <Date class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
   </div>
   <div bind:this={calendarEl} class="!mt-0 not-prose" />
   <div class="not-prose block !mt-4">
@@ -207,7 +217,7 @@
 
 <style>
   .loader {
-    border: 24px solid #fff;
+    border: 20px solid #fff;
     border-bottom-color: #adffb9;
     border-radius: 50%;
     display: inline-block;
@@ -216,7 +226,7 @@
     animation: rotation 1s linear infinite;
   }
   :is(.dark .loader) {
-    border: 24px solid #1e1e1e;
+    border: 20px solid #1e1e1e;
     border-bottom-color: #8678f9;
   }
 
