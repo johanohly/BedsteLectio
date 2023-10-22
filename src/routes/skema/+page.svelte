@@ -104,6 +104,7 @@
     });
   };
 
+  let loadingStatus = "loading";
   let width: number;
   let calendarEl: HTMLElement;
   let calendar: Calendar;
@@ -154,6 +155,12 @@
           events: getEvents,
         },
       ],
+      eventSourceSuccess(eventsInput, response) {
+        loadingStatus = "loaded";
+      },
+      eventSourceFailure(error) {
+        loadingStatus = "error";
+      },
       headerToolbar: {
         left: "title",
         right: "prev,next",
@@ -183,7 +190,12 @@
 <svelte:window bind:innerWidth={width} />
 
 <div class="page-container">
-  <h1 class="mb-0">Skema {userId === searchId ? `(${userName})` : ""}</h1>
+  <div class="flex space-x-4">
+    <h1 class="mb-0">Skema {userId === searchId ? `(${userName})` : ""}</h1>
+    {#if loadingStatus === "loading"}
+      <span class="loader" />
+    {/if}
+  </div>
   <div bind:this={calendarEl} class="!mt-0 not-prose" />
   <div class="not-prose block !mt-4">
     <a class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300" href="/skema/sammenlign"> Se, hvornår dine venner har fri og sammenlign mødetider. </a>
@@ -192,3 +204,28 @@
     <p class="mt-0 text-sm text-gray-500">Genindlæs siden for at se dit eget skema.</p>
   {/if}
 </div>
+
+<style>
+  .loader {
+    border: 24px solid #fff;
+    border-bottom-color: #adffb9;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  :is(.dark .loader) {
+    border: 24px solid #1e1e1e;
+    border-bottom-color: #8678f9;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
