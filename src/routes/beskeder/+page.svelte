@@ -10,7 +10,7 @@
     import { decodeUserID } from "$lib/utilities/cookie";
     import { ChevronDown, ChevronUp, ExternalLink, Minus, Pencil, Plus, RotateCcw, Search, Send } from "lucide-svelte";
     import { DateTime } from "luxon";
-    import { fly, slide } from "svelte/transition";
+    import { fade, fly, slide } from "svelte/transition";
     import SvelteMarkdown from "svelte-markdown";
     import { createCollapsible, melt, type ComboboxOption } from "@melt-ui/svelte";
     import { test } from "fuzzy";
@@ -243,6 +243,11 @@
             }, 1000);
         }
     }
+
+    let width = 0;
+    function flyOrFade(node: Element) {
+        return width > 1024 ? fly(node, { duration: 1000, x: "100vw" }) : fade(node, { duration: 1000 });
+    }
 </script>
 
 <RequestData bind:data={dataStudents} path="informationer" />
@@ -253,7 +258,7 @@
     {/if}
 {/key}
 
-<svelte:window on:keydown={onWindowKeydown} bind:innerHeight={height} />
+<svelte:window on:keydown={onWindowKeydown} bind:innerWidth={width} bind:innerHeight={height} />
 
 <div bind:this={container} class="lg:container lg:mx-auto lg:!pt-0 w-full flex flex-col lg:flex-row">
     <div bind:this={sidebar} style="transition: width 1000ms ease;" class="w-full lg:flex flex-col">
@@ -414,7 +419,7 @@
         </div>
     </div>
     {#if selectedMessage}
-        <div class="flex flex-col w-full h-full space-y-4 border-l dark:border-white/10" transition:fly={{ duration: 1000, x: "100vw" }}>
+        <div class="flex flex-col w-full h-full space-y-4 border-l dark:border-white/10" transition:flyOrFade>
             <section class="p-4 pb-0">
                 <div class="bg-white dark:bg-dark shadow-lg rounded-md py-4 px-6 flex items-center">
                     {#if fullMessage}
