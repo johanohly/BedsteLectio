@@ -13,6 +13,7 @@
     onMount(() => {
         picker = flatpickr(input, {
             positionElement: trigger,
+            disableMobile: true,
             dateFormat: "Z+02:00",
             formatDate(date, format, locale) {
                 return flatpickr.formatDate(date, format).replace("Z", "");
