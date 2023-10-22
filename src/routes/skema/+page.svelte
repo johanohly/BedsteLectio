@@ -162,7 +162,10 @@
       },
       headerToolbar: {
         left: "title",
-        right: "prev,next",
+        right: "today prev,next",
+      },
+      buttonText: {
+        today: "I dag",
       },
       initialView: width >= 768 ? "timeGridWeek" : "timeGridDay",
       locale: "da",
