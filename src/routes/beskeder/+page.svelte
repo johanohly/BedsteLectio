@@ -121,7 +121,7 @@
                               };
                           })
                         : [],
-                    date: DateTime.fromFormat(message.dato, "d/M-yyyy HH:mm", {
+                    date: DateTime.fromFormat(message.dato, "dd-MM-yyyy HH:mm:ss", {
                         locale: "da",
                     }),
                     edits,
