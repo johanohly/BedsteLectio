@@ -26,7 +26,7 @@ export type RawForm = {
     indhold: {
         svar: {
             type: null | "radio" | "checkbox" | "tekstfelt";
-            id: string;
+            id: null | string;
             muligheder: {
                 id: string;
                 tekst: string;
@@ -45,10 +45,11 @@ export type Form = {
     };
     anonymous: boolean;
     questions: {
+        hasOptions: boolean;
         type: null | "radio" | "checkbox" | "tekstfelt";
         title: string;
         description: string;
-        id: string;
+        id: null | string;
         options: {
             id: string;
             value: string;

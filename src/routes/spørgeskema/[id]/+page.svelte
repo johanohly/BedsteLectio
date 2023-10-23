@@ -20,6 +20,7 @@
       },
       anonymous: formData.anonym,
       questions: formData.indhold.map((q) => ({
+        hasOptions: q.svar.type !== null,
         type: q.svar.type,
         title: q.titel,
         description: q.tekst,
@@ -38,6 +39,8 @@
       body: JSON.stringify(response),
     });
   };
+
+  $: if (!loading && formData) console.log(formData.indhold[0]);
 </script>
 
 <RequestData bind:loading bind:data={formData} path={`spoergeskema?id=${data.id}`} />
@@ -50,7 +53,7 @@
     {#each form.questions as question}
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle class="mb-0">
             {question.title}
           </CardTitle>
           {#if question.description}
@@ -59,11 +62,45 @@
             </CardDescription>
           {/if}
         </CardHeader>
+        {#if question.hasOptions}
         <CardContent>
           {#if question.type === "tekstfelt"}
-            <textarea class="w-full border" placeholder="Skriv dit svar her..." bind:value={response[question.id]} />
+            <textarea class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Skriv dit svar her..." bind:value={response[question.id]} />
+          {:else if question.type === "radio"}
+            <form>
+              {#each question.options as option}
+                <label>
+                  <input class="accent-[#adffb9] dark:accent-[#8678f9]" type="radio" name={question.id} value={option.id} bind:group={response[question.id]} />
+                  {option.value}
+                  <br />
+                </label>
+              {/each}
+            </form>
+          {:else if question.type === "checkbox"}
+            {#each question.options as option}
+              <label>
+                <input
+                  on:change={(e) => {
+                    if (!e.target) return;
+                    // @ts-ignore
+                    if (e.target.checked) response[option.id] = "on";
+                    else {
+                      delete response[option.id];
+                      response = response;
+                    }
+                  }}
+                  class="accent-[#adffb9] dark:accent-[#8678f9]"
+                  type="checkbox"
+                  name={question.id}
+                  value={option.id}
+                />
+                {option.value}
+                <br />
+              </label>
+            {/each}
           {/if}
         </CardContent>
+        {/if}
       </Card>
     {/each}
   {/if}
