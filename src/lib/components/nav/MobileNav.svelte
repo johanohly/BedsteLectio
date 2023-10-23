@@ -57,7 +57,7 @@
                   .map((item) => {
                     return item.href;
                   })
-                  .includes($page.url.pathname)
+                  .includes(decodeURI($page.url.pathname))
                   ? "text-foreground"
                   : "text-foreground/60"
               )}

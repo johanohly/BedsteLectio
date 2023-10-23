@@ -13,7 +13,7 @@
 
 <a
   class={cn(
-    $page.url.pathname === href ? "text-foreground" : "text-foreground/60",
+    decodeURI($page.url.pathname) === href ? "text-foreground" : "text-foreground/60",
     className
   )}
   {href}
