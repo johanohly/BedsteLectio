@@ -92,7 +92,7 @@
           }) as assignment}
           <div class="not-prose">
             <a href={assignment.link}>
-              <Card animate={true} class="mb-4">
+              <Card class="mb-4">
                 <CardHeader>
                   <CardTitle>{assignment.title}<span style:--color={stringToColor(assignment.class, 100, 90).string} style:--textColor={stringToColor(assignment.class, 100, 30).string} class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3 dark:!bg-blue-900 dark:!text-blue-300">{assignment.class}</span></CardTitle>
                   <CardDescription>{assignment.description}</CardDescription>

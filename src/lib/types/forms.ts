@@ -1,13 +1,17 @@
 import type { DateTime } from "luxon";
 
-export type RawForm = {
-    dato: string;
+export type RawSimpleForm = {
+    titel: string;
+    anonym: "Ja" | "Nej";
+    ejer: string;
     id: string;
-    navn: string;
+    svarfrist: string;
 }
 
-export type Form = {
-    date: DateTime;
-    id: number;
+export type SimpleForm = {
     title: string;
+    deadline: DateTime;
+    anonymous: boolean;
+    owner: string;
+    id: string;
 }

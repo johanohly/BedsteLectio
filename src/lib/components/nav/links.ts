@@ -26,6 +26,11 @@ export const mainNavItems = [
     },
     {
         external: false,
+        href: '/spørgeskemaer',
+        title: 'Spørgeskemaer'
+    },
+    {
+        external: false,
         href: '/beskeder',
         title: 'Beskeder'
     }

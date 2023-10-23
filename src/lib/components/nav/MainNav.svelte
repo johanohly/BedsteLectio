@@ -15,7 +15,7 @@
   });
 </script>
 
-<div class="mr-4 hidden md:flex">
+<div class="mr-4 hidden lg:flex">
   <a class="mr-6 flex items-center space-x-2" href="/">
     <School />
     <span class="hidden font-bold sm:inline-block">BedsteLectio</span>
