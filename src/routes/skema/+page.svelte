@@ -7,6 +7,7 @@
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
   import luxonPlugin from "@fullcalendar/luxon3";
   import timeGridPlugin from "@fullcalendar/timegrid";
+  import daLocale from "@fullcalendar/core/locales/da";
   import tippy from "tippy.js";
   import "$lib/tippy.css";
   import DOMPurify from "dompurify";
@@ -110,6 +111,8 @@
   let width: number;
   let calendarEl: HTMLElement;
   let calendar: Calendar;
+  let showBackToWeekViewButton = false;
+
   onMount(() => {
     searchId = $page.url.searchParams.get("id") ?? "";
     const meId = `S${decodeUserID($authStore.cookie)}`;
@@ -164,17 +167,20 @@
         left: "title",
         right: "today prev,next",
       },
-      buttonText: {
-        today: "I dag",
-      },
       initialView: width >= 768 ? "timeGridWeek" : "timeGridDay",
-      locale: "da",
+      locale: daLocale,
       nowIndicator: true,
       plugins: [luxonPlugin, timeGridPlugin],
       slotDuration: "00:30:00",
       slotEventOverlap: false,
       slotMaxTime: "18:00",
       slotMinTime: "07:00",
+      navLinks: true,
+      navLinkDayClick(date, jsEvent) {
+        calendar.gotoDate(date);
+        calendar.changeView("timeGridDay");
+        showBackToWeekViewButton = true;
+      },
       titleFormat: "Uge W, yyyy",
       weekends: false,
       windowResize: function () {
@@ -207,7 +213,18 @@
         <span class="loader" />
       {/if}
     </div>
-    <Date class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
+    <div class="flex space-x-3">
+      {#if showBackToWeekViewButton}
+        <button
+          on:click={() => {
+            calendar.changeView("timeGridWeek");
+            showBackToWeekViewButton = false;
+          }}
+          class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700">Ugevisning</button
+        >
+      {/if}
+      <Date class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
+    </div>
   </div>
   <div bind:this={calendarEl} class="!mt-0 not-prose" />
   <div class="not-prose block !mt-4">
