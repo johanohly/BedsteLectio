@@ -45,7 +45,6 @@ export type Form = {
     };
     anonymous: boolean;
     questions: {
-        hasOptions: boolean;
         type: null | "radio" | "checkbox" | "tekstfelt";
         title: string;
         description: string;
