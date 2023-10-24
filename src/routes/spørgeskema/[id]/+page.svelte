@@ -8,7 +8,8 @@
   import type { Form, RawForm } from "$lib/types/forms";
   import { Loader2, Send } from "lucide-svelte";
   import type { PageData } from "./$types";
-    import { authStore } from "$lib/stores";
+  import { authStore } from "$lib/stores";
+  import { Tooltip } from "$components/ui/tooltip";
 
   export let data: PageData;
 
@@ -92,7 +93,7 @@
       <h1 class="!mb-0">{form.title}</h1>
       <button disabled={sending} on:click={sendResponse} class="flex items-center h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black">
         {#if sending}<Loader2 class="animate-spin mr-2 h-4 w-4" />{/if}
-        Indsend
+        Indsend ({form.anonymous ? "anonymt" : "ikke anonymt"})
         {#if !sending}<Send class="ml-2 h-4 w-4" />{/if}
       </button>
     </div>
