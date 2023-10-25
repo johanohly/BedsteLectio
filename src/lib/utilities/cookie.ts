@@ -1,4 +1,4 @@
-export const decodeUserID = (cookie: string) => {
+export const decodeUserID = (cookie: string): string => {
     try {
         const data = JSON.parse(window.atob(cookie));
         return data.filter((item) => item.name == "LastLoginElevId")[0].value
