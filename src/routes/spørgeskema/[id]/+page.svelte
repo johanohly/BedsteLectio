@@ -38,8 +38,6 @@
     };
   }
 
-  $: if (!loading && formData) console.log(formData);
-  $: console.log(response);
   let sending = false;
   const sendResponse = async () => {
     sending = true;

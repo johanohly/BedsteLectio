@@ -64,7 +64,6 @@ export function setModeCurrent(value: boolean) {
 
 /** Set the visible light/dark mode on page load. */
 export function setInitialClassState() {
-	console.log("setInitialClassState");
 	const elemHtmlClasses = document.documentElement.classList;
 	// Conditions
 	const condLocalStorageUserPrefs =

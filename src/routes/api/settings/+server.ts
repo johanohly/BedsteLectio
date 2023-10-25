@@ -20,7 +20,6 @@ export const GET: RequestHandler = async ({ request, locals }) => {
     const db = locals.db;
     const result = await db.select().from(settings).where(eq(settings.id, userId));
     if (result.length === 0) {
-        console.log("Creating new settings for user", userId)
         const insert = await db.insert(settings).values({ id: userId }).returning();
         return json(insert[0]);
     }

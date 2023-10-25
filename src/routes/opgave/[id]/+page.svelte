@@ -19,7 +19,6 @@
   let assignmentData: RawAssignment;
   let assignment: Assignment;
   $: if (!loading && assignmentData) {
-    console.log(assignmentData);
     assignment = {
       billedTime: assignmentData.oplysninger.elevtid,
       class: assignmentData.oplysninger.hold,

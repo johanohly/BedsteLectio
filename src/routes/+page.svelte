@@ -15,6 +15,7 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
+    import { onMount } from "svelte";
 
   let loading = true;
   let data: {

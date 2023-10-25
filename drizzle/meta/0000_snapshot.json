@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "eccdf8d1-fac4-46b5-a8a8-26875d961c5e",
+  "id": "30571c6c-f18e-4961-a410-481258750e8a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "settings": {
@@ -14,12 +14,12 @@
           "primaryKey": true,
           "notNull": true
         },
-        "convert_class_names": {
-          "name": "convert_class_names",
-          "type": "boolean",
+        "class_names": {
+          "name": "class_names",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false,
-          "default": false
+          "default": "'{}'::jsonb"
         },
         "custom_colors": {
           "name": "custom_colors",
