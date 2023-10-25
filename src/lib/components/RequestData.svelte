@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
 
   import { addToast } from "./toaster";
-    import { constructNonceURL } from "$lib/utilities";
+  import { constructNonceURL } from "$lib/utilities";
 
   export let redirectIfFail = "/log-ind";
   export let path: string;
@@ -23,7 +23,7 @@
   export let data: object = {};
 
   onMount(async () => {
-    let response = await fetch(constructNonceURL(`https://api.betterlectio.dk/${path}`), {
+    let response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
       headers: {
         "lectio-cookie": $authStore.cookie,
       },
@@ -35,7 +35,7 @@
         return goto(onServerError.path);
       }
       if ($authStore.username != "" && $authStore.password != "") {
-        response = await fetch(constructNonceURL("https://api.betterlectio.dk/auth"), {
+        response = await fetch(constructNonceURL("https://api.bedstelectio.tech/auth"), {
           headers: {
             adgangskode: $authStore.password,
             brugernavn: $authStore.username,
@@ -45,7 +45,7 @@
         if (response.ok) {
           console.log("Succesful auto-login");
           $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
-          response = await fetch(constructNonceURL(`https://api.betterlectio.dk/${path}`), {
+          response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
             headers: {
               "lectio-cookie": $authStore.cookie,
             },

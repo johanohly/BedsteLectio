@@ -154,7 +154,7 @@
                 color: "bg-yellow-500",
             },
         });
-        // const res = await fetch("https://api.betterlectio.dk/besvar_besked", {
+        // const res = await fetch("https://api.bedstelectio.tech/besvar_besked", {
         //     method: "POST",
         //     headers: {
         //         "lectio-cookie": $authStore.cookie,

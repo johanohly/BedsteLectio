@@ -28,14 +28,14 @@
   const getEvents: EventSourceFunc = (fetchInfo, successCallback, failureCallback) => {
     const start = DateTime.fromJSDate(fetchInfo.start);
 
-    fetch(constructNonceURL(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
+    fetch(constructNonceURL(`https://api.bedstelectio.tech/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
       headers: {
         "lectio-cookie": $authStore.cookie,
       },
     }).then((response) => {
       if (!response.ok) {
         if ($authStore.username != "" && $authStore.password != "") {
-          fetch(constructNonceURL("https://api.betterlectio.dk/auth"), {
+          fetch(constructNonceURL("https://api.bedstelectio.tech/auth"), {
             headers: {
               adgangskode: $authStore.password,
               brugernavn: $authStore.username,
@@ -44,7 +44,7 @@
           }).then((response) => {
             if (response.ok) {
               $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
-              fetch(constructNonceURL(`https://api.betterlectio.dk/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
+              fetch(constructNonceURL(`https://api.bedstelectio.tech/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
                 headers: {
                   "lectio-cookie": $authStore.cookie,
                 },

@@ -7,14 +7,11 @@
   let terminer: { selected: string; terminer: { [key: string]: string } };
 
   async function save() {
-    const res = await fetch(
-      `https://api.betterlectio.dk/aendre_termin?id=${terminer.selected}`,
-      {
-        headers: {
-          "lectio-cookie": $authStore.cookie,
-        },
-      }
-    );
+    const res = await fetch(`https://api.bedstelectio.tech/aendre_termin?id=${terminer.selected}`, {
+      headers: {
+        "lectio-cookie": $authStore.cookie,
+      },
+    });
     const data = await res.json();
     if (!res.ok || data.success == false) {
       return addToast({
@@ -46,10 +43,7 @@
       {#each Object.entries(terminer.terminer) as termin}
         {@const [key, value] = termin}
         <button
-          class="bg-light hover:bg-light-hover dark:bg-dark dark:hover:bg-dark-hover font-bold py-2 px-4 rounded {key ===
-          terminer.selected
-            ? '!bg-black dark:!bg-white text-white dark:text-black'
-            : ''}"
+          class="bg-light hover:bg-light-hover dark:bg-dark dark:hover:bg-dark-hover font-bold py-2 px-4 rounded {key === terminer.selected ? '!bg-black dark:!bg-white text-white dark:text-black' : ''}"
           on:click={() => {
             terminer.selected = key;
           }}
@@ -59,11 +53,7 @@
       {/each}
     </div>
     <div class="mt-4">
-      <button
-        class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black"
-        on:click={save}
-        >Gem</button
-      >
+      <button class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black" on:click={save}>Gem</button>
     </div>
   {:else}
     hehe

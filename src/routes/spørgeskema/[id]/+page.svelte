@@ -43,7 +43,7 @@
   let sending = false;
   const sendResponse = async () => {
     sending = true;
-    const resp = await fetch(`https://api.betterlectio.dk/besvar_spoergeskema?id=${data.id}`, {
+    const resp = await fetch(`https://api.bedstelectio.tech/besvar_spoergeskema?id=${data.id}`, {
       method: "POST",
       headers: {
         "lectio-cookie": $authStore.cookie,
