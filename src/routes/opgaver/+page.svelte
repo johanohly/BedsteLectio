@@ -29,6 +29,7 @@
       awaits: assignment.afventer,
       title: assignment.opgavetitel,
     }));
+    console.log(assignments)
   }
 
   let width = 0;
@@ -39,7 +40,7 @@
   $: if (searchTerm) {
     matchingAssignments = filter(
       searchTerm,
-      sortedAssignments.map((assignment) => `${assignment.title} ${assignment.hold}`),
+      sortedAssignments.map((assignment) => `${assignment.title} ${assignment.class}`),
       {}
     )
       .filter((result) => result.score > 0.5)
@@ -49,16 +50,17 @@
   }
   $: sortedAssignments = assignments.filter((opgave) => {
     if ($selectedTab == "Afventer Feedback") {
-      return opgave.status == "Afleveret" && opgave.awaits === "Lærer";
+      return opgave.status.includes("Afleveret") && opgave.awaits === "Lærer";
     }
     else if ($selectedTab == "Kommende") {
-      return opgave.status == "Venter";
+      return opgave.status.includes("Venter");
     } else if ($selectedTab == "Færdige") {
-      return opgave.status == "Afleveret";
+      return opgave.status.includes("Afleveret");
     } else if ($selectedTab == "Manglende") {
-      return opgave.status == "Mangler";
+      return opgave.status.includes("Mangler");
     }
   });
+  $: console.log(sortedAssignments)
 </script>
 
 <svelte:window bind:innerWidth={width} />
