@@ -29,7 +29,6 @@
       awaits: assignment.afventer,
       title: assignment.opgavetitel,
     }));
-    console.log(assignments)
   }
 
   let width = 0;
@@ -60,7 +59,6 @@
       return opgave.status.includes("Mangler");
     }
   });
-  $: console.log(sortedAssignments)
 </script>
 
 <svelte:window bind:innerWidth={width} />

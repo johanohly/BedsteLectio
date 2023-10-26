@@ -18,9 +18,11 @@
     },
     error: false,
   };
+  export let withSettings = false;
 
   export let loading = true;
-  export let data: object = {};
+  export let data = {};
+  export let settings: {} | undefined = {};
 
   onMount(async () => {
     let response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
@@ -70,6 +72,17 @@
       }
     }
     data = await response.json();
+
+    if (withSettings) {
+      response = await fetch("/api/settings", {
+        headers: {
+          "lectio-cookie": $authStore.cookie,
+        },
+      });
+      if (!response.ok) settings = undefined;
+      else settings = await response.json();
+    }
+
     loading = false;
   });
 </script>
