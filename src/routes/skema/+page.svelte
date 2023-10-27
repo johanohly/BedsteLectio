@@ -17,13 +17,14 @@
   import { addToast } from "$components/toaster";
   import { goto } from "$app/navigation";
   import { Date } from "$components/ui/date";
-  import { CalendarDays } from "lucide-svelte";
+  import { CalendarDays, Loader2 } from "lucide-svelte";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
   let userId: string;
   let searchId: string;
   let userName = "";
+  let customColors: { [key: string]: number } | undefined = undefined;
 
   const getEvents: EventSourceFunc = (fetchInfo, successCallback, failureCallback) => {
     const start = DateTime.fromJSDate(fetchInfo.start);
@@ -69,41 +70,96 @@
         }
       }
 
-      response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
-        if (userId.startsWith("S")) {
-          const matches = nameRegex.exec(data.overskrift);
-          if (matches) {
-            userName = matches[1];
+      if (customColors == undefined) {
+        console.log("fetch colors")
+        fetch("/api/settings", {
+          headers: {
+            "lectio-cookie": $authStore.cookie,
+          },
+        }).then((settingsResponse) => {
+          if (settingsResponse.ok) {
+            settingsResponse.json().then((data: { customColors: { [key: string]: number } }) => {
+              customColors = data.customColors;
+            });
           } else {
-            userName = data.overskrift;
+            customColors = {};
           }
-        } else {
-          userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
-        }
-        const events = data.moduler.map((lesson) => {
-          const interval = constructInterval(lesson.tidspunkt);
-          const start = interval.start?.toISO() ?? "string";
-          const end = interval.end?.toISO() ?? "string";
 
-          const color = stringToColor(lesson.hold ?? "", 100, 90);
-          const textColor = stringToColor(lesson.hold ?? "", 100, 30);
+          response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
+            if (userId.startsWith("S")) {
+              const matches = nameRegex.exec(data.overskrift);
+              if (matches) {
+                userName = matches[1];
+              } else {
+                userName = data.overskrift;
+              }
+            } else {
+              userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
+            }
+            const events = data.moduler.map((lesson) => {
+              const interval = constructInterval(lesson.tidspunkt);
+              const start = interval.start?.toISO() ?? "string";
+              const end = interval.end?.toISO() ?? "string";
 
-          return {
-            color: color.string,
-            end,
-            extendedProps: {
-              cancelled: lesson.status === "aflyst",
-              description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
-            },
-            id: lesson.absid,
-            start,
-            textColor: textColor.string,
-            title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
-            url: `/modul/${lesson.absid}`,
-          };
+              const customColor = customColors?.[lesson.hold ?? ""] ?? "";
+              const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
+              const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
+
+              return {
+                color: color,
+                textColor: textColor,
+                end,
+                extendedProps: {
+                  cancelled: lesson.status === "aflyst",
+                  description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
+                },
+                id: lesson.absid,
+                start,
+                title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
+                url: `/modul/${lesson.absid}`,
+              };
+            });
+            successCallback(events);
+          });
         });
-        successCallback(events);
-      });
+      } else {
+        response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
+          if (userId.startsWith("S")) {
+            const matches = nameRegex.exec(data.overskrift);
+            if (matches) {
+              userName = matches[1];
+            } else {
+              userName = data.overskrift;
+            }
+          } else {
+            userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
+          }
+          const events = data.moduler.map((lesson) => {
+            const interval = constructInterval(lesson.tidspunkt);
+            const start = interval.start?.toISO() ?? "string";
+            const end = interval.end?.toISO() ?? "string";
+
+            const customColor = customColors?.[lesson.hold ?? ""] ?? "";
+            const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
+            const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
+
+            return {
+              color: color,
+              textColor: textColor,
+              end,
+              extendedProps: {
+                cancelled: lesson.status === "aflyst",
+                description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
+              },
+              id: lesson.absid,
+              start,
+              title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
+              url: `/modul/${lesson.absid}`,
+            };
+          });
+          successCallback(events);
+        });
+      }
     });
   };
 
@@ -207,10 +263,10 @@
 
 <div class="page-container">
   <div class="flex items-center justify-between">
-    <div class="flex space-x-4">
+    <div class="flex items-center space-x-4">
       <h1 class="mb-0">Skema {userId === searchId ? `(${userName})` : ""}</h1>
       {#if loading}
-        <span class="loader" />
+        <Loader2 class="animate-spin" />
       {/if}
     </div>
     <div class="flex space-x-3">

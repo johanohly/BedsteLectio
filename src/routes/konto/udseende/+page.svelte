@@ -5,8 +5,6 @@
     import { authStore } from "$lib/stores";
     import { Loader2, X } from "lucide-svelte";
 
-    const HEX_REGEX = /^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$/;
-
     let loading = true;
     let data: { hold_og_grupper: { [key: string]: string }[] };
     let classes: { [key: string]: string }[];
@@ -30,7 +28,14 @@
         }
     }
 
-    $: validColors = customColors.every((entry) => entry.class != "" && entry.color.match(HEX_REGEX));
+    const isColorValid = (color: string) => {
+        if (!color) return false;
+
+        const number = +color;
+        if (isNaN(number) || number < 0 || number > 360) return false;
+        return true;
+    };
+    $: validColors = customColors.every((entry) => entry.class != "" && isColorValid(entry.color));
 
     let submittingColors = false;
     const submitColors = async () => {
@@ -86,7 +91,7 @@
                         <div class="flex space-x-2">
                             <div class="w-full flex space-x-2">
                                 <Select bind:value={color.class} items={Object.keys(classes)} placeholder="Vælg hold..." />
-                                <input bind:value={color.color} class="w-full h-11 outline-none border {color.color.match(HEX_REGEX) ? 'dark:border-gray-600 border-gray-400' : 'border-red-500'} rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" placeholder="Indsæt farve..." type="text" />
+                                <input type="number" min="0" max="360" bind:value={color.color} class="w-full h-11 outline-none border {isColorValid(color.color) ? 'dark:border-gray-600 border-gray-400' : 'border-red-500'} rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" placeholder="Indsæt farve..." />
                             </div>
                             <button
                                 on:click={() => {
@@ -100,7 +105,6 @@
                         on:click={() => {
                             customColors.push({ class: "", color: "" });
                             customColors = customColors;
-                            console.log(customColors);
                         }}
                         class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black">Tilføj</button
                     >
@@ -108,7 +112,7 @@
             {/if}
         </div>
         <footer class="flex bg-[inherit] min-h-[60px] px-6 border-t dark:border-t-gray-600 border-t-gray-400 rounded-b-[6px] items-center">
-            <p class="my-0 text-gray-500">Farver bliver representeret som hex koder.</p>
+            <p class="my-0 text-gray-500">Farver bliver representeret som lysstyrke i HSL farvesystemet.</p>
             <div class="flex items-center justify-end ml-auto">
                 <button on:click={submitColors} disabled={loading || settings == undefined || !validColors || submittingColors} class="h-8 px-3 rounded-[6px] bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black disabled:opacity-50 disabled:cursor-not-allowed">Gem</button>
             </div>
