@@ -5,14 +5,14 @@
 
     export let items: string[] = [];
     export let placeholder = "Vælg en mulighed";
-    export let value;
+    export let value: string;
 
     const {
         elements: { menu, input, option },
         states: { open, inputValue, selected, touchedInput },
         helpers: { isSelected },
     } = createCombobox({
-        defaultSelected: value,
+        defaultSelected: { label: value, value },
         forceVisible: true,
     });
 
@@ -27,7 +27,7 @@
 </script>
 
 <div class="w-full relative">
-    <input use:melt={$input} class="w-full mt-2 border dark:border-gray-600 border-gray-400 rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" {placeholder} />
+    <input use:melt={$input} class="w-full h-11 border dark:border-gray-600 border-gray-400 rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" {placeholder} />
     <div class="absolute right-2 top-1/2 z-10 -translate-y-1/2">
         {#if $open}
             <ChevronUp class="square-4" />
