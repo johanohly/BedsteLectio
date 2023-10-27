@@ -290,28 +290,3 @@
     <p class="mt-0 text-sm text-gray-500">Genindlæs siden for at se dit eget skema.</p>
   {/if}
 </div>
-
-<style>
-  .loader {
-    border: 20px solid #fff;
-    border-bottom-color: #adffb9;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-  }
-  :is(.dark .loader) {
-    border: 20px solid #1e1e1e;
-    border-bottom-color: #8678f9;
-  }
-
-  @keyframes rotation {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-</style>

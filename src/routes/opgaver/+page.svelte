@@ -17,6 +17,13 @@
   let assignments: SimpleAssignment[] = [];
   let sortedAssignments: SimpleAssignment[] = [];
 
+  let settings = {};
+  let customColors: { [key: string]: number } = {};
+  $: if (!loading) {
+    // @ts-ignore i CANNOT be asked
+    customColors = settings.customColors ? settings.customColors : {};
+  }
+
   $: if (!loading && data) {
     assignments = data.map((assignment) => ({
       date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
@@ -62,7 +69,7 @@
 </script>
 
 <svelte:window bind:innerWidth={width} />
-<RequestData bind:data bind:loading path="opgaver" />
+<RequestData bind:data bind:loading bind:settings withSettings path="opgaver" />
 
 <div class="!overflow-hidden page-container">
   <div class="max-h-[88vh] flex flex-col">
@@ -90,11 +97,12 @@
             const diff2 = Math.abs(b.date.toMillis() - now);
             return diff1 - diff2;
           }) as assignment}
+          {@const customColor = customColors?.[assignment.class] ?? ""}
           <div class="not-prose">
             <a href={assignment.link}>
               <Card class="mb-4">
                 <CardHeader>
-                  <CardTitle>{assignment.title}<span style:--color={stringToColor(assignment.class, 100, 90).string} style:--textColor={stringToColor(assignment.class, 100, 30).string} class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3 dark:!bg-blue-900 dark:!text-blue-300">{assignment.class}</span></CardTitle>
+                  <CardTitle>{assignment.title}<span style:--color={customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(assignment.class, 100, 90).string} style:--textColor={customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(assignment.class, 100, 30).string} class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3 dark:!bg-blue-900 dark:!text-blue-300">{assignment.class}</span></CardTitle>
                   <CardDescription>{assignment.description}</CardDescription>
                 </CardHeader>
                 <CardFooter>

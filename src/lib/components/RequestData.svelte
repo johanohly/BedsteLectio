@@ -22,7 +22,7 @@
 
   export let loading = true;
   export let data = {};
-  export let settings: {} | undefined = {};
+  export let settings: {} = {};
 
   onMount(async () => {
     let response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
@@ -79,7 +79,7 @@
           "lectio-cookie": $authStore.cookie,
         },
       });
-      if (!response.ok) settings = undefined;
+      if (!response.ok) settings = {};
       else settings = await response.json();
     }
 

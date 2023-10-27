@@ -15,7 +15,6 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
-    import { onMount } from "svelte";
 
   let loading = true;
   let data: {
@@ -28,6 +27,13 @@
   };
   let hwLoading = true;
   let hwData: RawHomework[];
+
+  let settings = {};
+  let customColors: { [key: string]: number } = {};
+  $: if (!loading) {
+    // @ts-ignore i CANNOT be asked
+    customColors = settings.customColors ? settings.customColors : {};
+  }
 
   let lessons: { [key: string]: Lesson[] } = {};
   let news: News[] = [];
@@ -103,7 +109,7 @@
   $: filteredLessons = lessons[$selectedTab] ?? [];
 </script>
 
-<RequestData bind:data bind:loading path="forside" />
+<RequestData bind:data bind:loading bind:settings withSettings path="forside" />
 <RequestData bind:data={hwData} bind:loading={hwLoading} path="lektier" />
 
 <div class="page-container">
@@ -134,7 +140,8 @@
           <Timeline class="ml-3">
             {#key filteredLessons}
               {#each filteredLessons as lesson}
-                <TimelineItem cancelled={lesson.status == "aflyst"} class="mb-10" color={stringToColor(lesson.class, 100, 90).string} textColor={stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
+                {@const customColor = customColors?.[lesson.class] ?? ""}
+                <TimelineItem cancelled={lesson.status == "aflyst"} class="mb-10" color={customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.class, 100, 90).string} textColor={customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
               {/each}
             {/key}
           </Timeline>
