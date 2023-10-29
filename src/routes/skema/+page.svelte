@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { RawLesson } from "$lib/types/lesson";
 
-  import { authStore } from "$lib/stores";
+  import { authStore, calendarStore } from "$lib/stores";
   import { constructInterval, constructNonceURL, stringToColor } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
@@ -18,6 +18,7 @@
   import { goto } from "$app/navigation";
   import { Date } from "$components/ui/date";
   import { CalendarDays, Loader2 } from "lucide-svelte";
+  import { get } from "svelte/store";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
@@ -71,7 +72,7 @@
       }
 
       if (customColors == undefined) {
-        console.log("fetch colors")
+        console.log("fetch colors");
         fetch("/api/settings", {
           headers: {
             "lectio-cookie": $authStore.cookie,
@@ -243,7 +244,16 @@
         calendar.changeView(width >= 768 ? "timeGridWeek" : "timeGridDay");
       },
     });
+
+    const date = get(calendarStore).date;
+    if (!(userId === searchId) && date) calendar.gotoDate(date);
     calendar.render();
+
+    calendar.on("datesSet", (info) => {
+      if (userId === searchId) return;
+      const date = info.view.currentStart;
+      calendarStore.set({ date: date.toISOString() });
+    });
 
     return () => {
       calendar && calendar.destroy();
