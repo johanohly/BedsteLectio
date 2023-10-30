@@ -15,25 +15,30 @@
   export let data: PageData;
 
   let loading = true;
+  let failed = false;
   let moduleData: RawModule;
   let module: Module;
   $: if (!loading && moduleData) {
-    module = {
-      homework: moduleData.lektier,
-      lesson: {
-        class: moduleData.aktivitet.hold ?? "",
-        id: moduleData.aktivitet.absid,
-        interval: constructInterval(moduleData.aktivitet.tidspunkt),
-        name: moduleData.aktivitet.navn ?? "",
-        note: moduleData.aktivitet.andet ?? "",
-        room: moduleData.aktivitet.lokale ?? "",
-        status: moduleData.aktivitet.status ?? "",
-        teacher: moduleData.aktivitet.lærer ?? "",
-      },
-      note: moduleData.note,
-      otherContent: moduleData.øvrigtIndhold,
-      presentation: moduleData.præsentation,
-    };
+    try {
+      module = {
+        homework: moduleData.lektier,
+        lesson: {
+          class: moduleData.aktivitet.hold ?? "",
+          id: moduleData.aktivitet.absid,
+          interval: constructInterval(moduleData.aktivitet.tidspunkt),
+          name: moduleData.aktivitet.navn ?? "",
+          note: moduleData.aktivitet.andet ?? "",
+          room: moduleData.aktivitet.lokale ?? "",
+          status: moduleData.aktivitet.status ?? "",
+          teacher: moduleData.aktivitet.lærer ?? "",
+        },
+        note: moduleData.note,
+        otherContent: moduleData.øvrigtIndhold,
+        presentation: moduleData.præsentation,
+      };
+    } catch (e) {
+      failed = true;
+    }
   }
 </script>
 
@@ -48,6 +53,7 @@
       description: "Dette modul findes ikke.",
       title: "Ukendt modul",
     },
+    error: false,
   }}
   path={`modul?absid=${data.id}`}
 />
@@ -64,6 +70,12 @@
     <Skeleton class="!mt-4 w-full rounded-[10px] h-[8em]" />
     <Skeleton class="!mt-4 w-full rounded-[10px] h-[8em]" />
     <Skeleton class="!mt-4 w-full rounded-[10px] h-[8em]" />
+  {:else if failed}
+    <div class="flex flex-col items-center">
+      <h1 class="!mb-0">Moduler kan ikke ses lige nu</h1>
+      <p class="!mt-0 !mb-0">Her er linket til lectio modulet.</p>
+      <a class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black" href={`https://www.lectio.dk/lectio/${$authStore.school}/aktivitet/aktivitetforside2.aspx?absid=${data.id}&elevid=${decodeUserID($authStore.cookie)}`} target="_blank">Lectio <ExternalLink class="ml-2 h-4 w-4" /></a>
+    </div>
   {:else}
     <section>
       <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
