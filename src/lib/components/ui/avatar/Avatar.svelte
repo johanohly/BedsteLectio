@@ -38,6 +38,7 @@
     on:click={() => {
       if (popout) poppedOut = !poppedOut;
     }}
+    on:keydown={() => {}}
     class="flex flex-shrink-0 {popout ? 'cursor-pointer' : ''} {poppedOut ? 'h-32 w-32' : size} items-center justify-center rounded-full overflow-hidden {!$fallback.hidden ? 'bg-dark-hover dark:bg-light-hover' : ''}"
   >
     <img class="!m-0" alt="Avatar" use:melt={$image} />

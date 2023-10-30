@@ -14,6 +14,7 @@
     }
 
     function handleClick(event: MouseEvent) {
+        if (!event.target) return;
         const rect = event.target.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const hue = Math.round((x / width) * 360);
@@ -49,6 +50,7 @@
                 <div
                     bind:clientWidth={width}
                     on:click={handleClick}
+                    on:keydown={() => {}}
                     class="w-full h-11 rounded-[6px]"
                     style="background: -webkit-linear-gradient(left, hsla(0, 100%, 90%, 1),hsla(10, 100%, 90%, 1),hsla(20, 100%, 90%, 1),hsla(30, 100%, 90%, 1),hsla(40, 100%, 90%, 1),hsla(50, 100%, 90%, 1),hsla(60, 100%, 90%, 1),hsla(70, 100%, 90%, 1),hsla(80, 100%, 90%, 1),hsla(90, 100%, 90%, 1),hsla(100, 100%, 90%, 1),hsla(110, 100%, 90%, 1),hsla(120, 100%, 90%, 1),hsla(130, 100%, 90%, 1),hsla(140, 100%, 90%, 1),hsla(150, 100%, 90%, 1),hsla(160, 100%, 90%, 1),hsla(170, 100%, 90%, 1),hsla(180, 100%, 90%, 1),hsla(190, 100%, 90%, 1),hsla(200, 100%, 90%, 1),hsla(210, 100%, 90%, 1),hsla(220, 100%, 90%, 1),hsla(230, 100%, 90%, 1),hsla(240, 100%, 90%, 1),hsla(250, 100%, 90%, 1),hsla(260, 100%, 90%, 1),hsla(270, 100%, 90%, 1),hsla(280, 100%, 90%, 1),hsla(290, 100%, 90%, 1),hsla(300, 100%, 90%, 1),hsla(310, 100%, 90%, 1),hsla(320, 100%, 90%, 1),hsla(330, 100%, 90%, 1),hsla(340, 100%, 90%, 1),hsla(350, 100%, 90%, 1),hsla(360, 100%, 90%, 1));; background: -moz-linear-gradient(left, hsla(0, 100%, 90%, 1),hsla(10, 100%, 90%, 1),hsla(20, 100%, 90%, 1),hsla(30, 100%, 90%, 1),hsla(40, 100%, 90%, 1),hsla(50, 100%, 90%, 1),hsla(60, 100%, 90%, 1),hsla(70, 100%, 90%, 1),hsla(80, 100%, 90%, 1),hsla(90, 100%, 90%, 1),hsla(100, 100%, 90%, 1),hsla(110, 100%, 90%, 1),hsla(120, 100%, 90%, 1),hsla(130, 100%, 90%, 1),hsla(140, 100%, 90%, 1),hsla(150, 100%, 90%, 1),hsla(160, 100%, 90%, 1),hsla(170, 100%, 90%, 1),hsla(180, 100%, 90%, 1),hsla(190, 100%, 90%, 1),hsla(200, 100%, 90%, 1),hsla(210, 100%, 90%, 1),hsla(220, 100%, 90%, 1),hsla(230, 100%, 90%, 1),hsla(240, 100%, 90%, 1),hsla(250, 100%, 90%, 1),hsla(260, 100%, 90%, 1),hsla(270, 100%, 90%, 1),hsla(280, 100%, 90%, 1),hsla(290, 100%, 90%, 1),hsla(300, 100%, 90%, 1),hsla(310, 100%, 90%, 1),hsla(320, 100%, 90%, 1),hsla(330, 100%, 90%, 1),hsla(340, 100%, 90%, 1),hsla(350, 100%, 90%, 1),hsla(360, 100%, 90%, 1));"
                 >
@@ -64,6 +66,7 @@
                                 on:click={() => {
                                     color = `${hue}`;
                                 }}
+                                on:keydown={() => {}}
                             />
                         </div>
                     {/each}
