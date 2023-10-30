@@ -2,6 +2,7 @@
     import { RequestData } from "$components";
     import { addToast } from "$components/toaster";
     import { Select } from "$components/ui/assignableselect";
+    import { ColorPicker, isColorValid } from "$components/ui/colorpicker";
     import { authStore } from "$lib/stores";
     import { Loader2, X } from "lucide-svelte";
 
@@ -28,13 +29,6 @@
         }
     }
 
-    const isColorValid = (color: string) => {
-        if (!color) return false;
-
-        const number = +color;
-        if (isNaN(number) || number < 0 || number > 360) return false;
-        return true;
-    };
     $: validColors = customColors.every((entry) => entry.class != "" && isColorValid(entry.color));
 
     let submittingColors = false;
@@ -91,7 +85,7 @@
                         <div class="flex space-x-2">
                             <div class="w-full flex space-x-2">
                                 <Select bind:value={color.class} items={Object.keys(classes)} placeholder="Vælg hold..." />
-                                <input type="number" min="0" max="360" bind:value={color.color} class="w-full h-11 outline-none border {isColorValid(color.color) ? 'dark:border-gray-600 border-gray-400' : 'border-red-500'} rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" placeholder="Indsæt farve..." />
+                                <ColorPicker bind:color={color.color} />
                             </div>
                             <button
                                 on:click={() => {
