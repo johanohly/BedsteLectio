@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bedstelectio.tech/seo/sitemap.xml
