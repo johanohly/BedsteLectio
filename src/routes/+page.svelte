@@ -91,7 +91,7 @@
 
   $: if (!hwLoading && hwData) {
     homework = hwData.map((item) => ({
-      homework: item.lektier.beskrivelse,
+      homework: item.lektier,
       lesson: {
         class: item.aktivitet.hold ?? "",
         id: item.aktivitet.absid,
@@ -191,12 +191,14 @@
           {#each homework as hwItem}
             <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href="/modul/{hwItem.lesson.id}" target="_blank">
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 truncate dark:text-white">
+                <p class="text-md font-semibold text-gray-900 truncate dark:text-white">
                   {hwItem.lesson.name != "" ? hwItem.lesson.name : hwItem.lesson.class}
                 </p>
-                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                <!-- <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {hwItem.homework}
-                </p>
+                </p> -->
+                <SvelteMarkdown source={hwItem.homework} />
+
                 <p use:relativeTime={(hwItem.lesson.interval.start ?? DateTime.now()).toJSDate()} class="text-sm text-gray-500 truncate dark:text-gray-400" />
               </div>
             </a>

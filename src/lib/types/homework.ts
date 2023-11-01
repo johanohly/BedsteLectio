@@ -2,11 +2,7 @@ import type { Lesson, RawLesson } from "./lesson";
 
 export type RawHomework = {
     aktivitet: RawLesson;
-    lektier: {
-        beskrivelse: string;
-        link: string;
-    };
-    note: string;
+    lektier: string;
 };
 
 export type Homework = {

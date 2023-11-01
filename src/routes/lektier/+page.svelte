@@ -6,13 +6,14 @@
   import { Skeleton } from "$components/ui/skeleton";
   import { constructInterval } from "$lib/utilities";
   import { DateTime } from "luxon";
+  import SvelteMarkdown from "svelte-markdown";
 
   let loading = true;
   let data: RawHomework[];
   let homework: { date: string; homework: Homework[] }[] = [];
   $: if (!loading && data) {
     const tempHomework = data.map((item) => ({
-      homework: item.lektier.beskrivelse,
+      homework: item.lektier,
       lesson: {
         class: item.aktivitet.hold ?? "",
         id: item.aktivitet.absid,
@@ -35,9 +36,7 @@
     }
     homework = dates.map((date) => ({
       date: formatDate(date ?? DateTime.fromMillis(0)),
-      homework: tempHomework.filter((item) =>
-        item.lesson.interval.start?.hasSame(date, "day")
-      ),
+      homework: tempHomework.filter((item) => item.lesson.interval.start?.hasSame(date, "day")),
     }));
   }
 
@@ -65,31 +64,17 @@
           <div class="not-prose mb-2">
             <a href="/modul/{hw.lesson.id}">
               <Card class="p-4">
-                <div
-                  class="flex flex-col flex-wrap items-stretch justify-start md:flex-row"
-                >
+                <div class="flex flex-col flex-wrap items-stretch justify-start md:flex-row">
                   <div class="flex flex-col flex-[0_0_33%]">
-                    <span
-                      class="text-black dark:text-white font-semibold leading-[1.6]"
-                      >{hw.lesson.name != ""
-                        ? hw.lesson.name
-                        : hw.lesson.class}</span
-                    >
-                    <span
-                      class="text-[#666666] dark:text-[#8a8a8a] leading-[1.6]"
-                      >{hw.lesson.interval.toLocaleString(
-                        DateTime.TIME_24_SIMPLE
-                      )}</span
-                    >
+                    <span class="text-black dark:text-white font-semibold leading-[1.6]">{hw.lesson.name != "" ? hw.lesson.name : hw.lesson.class}</span>
+                    <span class="text-[#666666] dark:text-[#8a8a8a] leading-[1.6]">{hw.lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)}</span>
                   </div>
                   <div class="flex flex-col flex-1 pt-4 md:pt-0">
-                    <span class="text-black dark:text-white font-medium"
-                      >{hw.homework}</span
-                    >
-                    <span
-                      class="text-[#666666] dark:text-[#8a8a8a] leading-[1.6]"
-                      >{hw.lesson.class} · {hw.lesson.teacher}</span
-                    >
+                    <div class="prose dark:prose-invert">
+                      <SvelteMarkdown source={hw.homework.replaceAll("\n", "<br>")} />
+                    </div>
+                    <!-- <span class="text-black dark:text-white font-medium">{hw.homework}</span> -->
+                    <span class="text-[#666666] dark:text-[#8a8a8a] leading-[1.6]">{hw.lesson.class} · {hw.lesson.teacher}</span>
                   </div>
                 </div>
               </Card>
