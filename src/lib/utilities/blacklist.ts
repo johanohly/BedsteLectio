@@ -17,7 +17,6 @@ export function nameBlacklisted(name: string) {
             "fri",
             "konkurrence",
             "mesterskab",
-            "workshop",
             "kemi ol",
             "kemi-ol"
         ].some((x) => name.includes(x))
