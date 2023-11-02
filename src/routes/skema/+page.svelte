@@ -17,7 +17,7 @@
   import { addToast } from "$components/toaster";
   import { goto } from "$app/navigation";
   import { Date } from "$components/ui/date";
-  import { CalendarDays, Loader2 } from "lucide-svelte";
+  import { CalendarDays, Filter, Loader2 } from "lucide-svelte";
   import { get } from "svelte/store";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
@@ -279,7 +279,7 @@
         <Loader2 class="animate-spin" />
       {/if}
     </div>
-    <div class="flex space-x-3">
+    <div class="flex space-x-1">
       {#if showBackToWeekViewButton}
         <button
           on:click={() => {
@@ -289,7 +289,12 @@
           class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700">Ugevisning</button
         >
       {/if}
-      <Date class="rounded h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
+      <div class="inline-flex">
+        <div class="flex items-center cursor-pointer rounded-l h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700">
+          <Filter />
+        </div>
+        <Date class="border-l rounded-r h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
+      </div>
     </div>
   </div>
   <div bind:this={calendarEl} class="!mt-0 not-prose" />
