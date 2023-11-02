@@ -2,7 +2,7 @@
   import type { RawLesson } from "$lib/types/lesson";
 
   import { authStore, calendarStore } from "$lib/stores";
-  import { constructInterval, constructNonceURL, stringToColor } from "$lib/utilities";
+  import { constructInterval, constructNonceURL, nameBlacklisted, stringToColor } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
   import luxonPlugin from "@fullcalendar/luxon3";
@@ -17,8 +17,12 @@
   import { addToast } from "$components/toaster";
   import { goto } from "$app/navigation";
   import { Date } from "$components/ui/date";
-  import { CalendarDays, Filter, Loader2 } from "lucide-svelte";
+  import { CalendarDays, Filter, Loader2, X } from "lucide-svelte";
   import { get } from "svelte/store";
+  import { createPopover, melt } from "@melt-ui/svelte";
+  import { fade } from "svelte/transition";
+  import { Label } from "$components/ui/label";
+  import { Switch } from "$components/ui/switch";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
@@ -252,7 +256,15 @@
     calendar.on("datesSet", (info) => {
       if (userId === searchId) return;
       const date = info.view.currentStart;
-      calendarStore.set({ date: date.toISOString() });
+      calendarStore.update((store) => ({ date: date.toISOString(), onlyMandatory: store.onlyMandatory }));
+    });
+
+    calendar.on("eventsSet", (events) => {
+      if ($calendarStore.onlyMandatory) {
+        events.forEach((event) => {
+          if (event.title && nameBlacklisted(event.title)) event.remove();
+        });
+      }
     });
 
     return () => {
@@ -267,6 +279,18 @@
       calendar.gotoDate(date.toJSDate());
     }
   }
+
+  $: if (calendar && $calendarStore.onlyMandatory) {
+    calendar.getEvents().forEach((event) => {
+      if (event.title && nameBlacklisted(event.title)) event.remove();
+    });
+  }
+  const {
+    elements: { trigger, content, arrow, close },
+    states: { open },
+  } = createPopover({
+    forceVisible: true,
+  });
 </script>
 
 <svelte:window bind:innerWidth={width} />
@@ -290,9 +314,9 @@
         >
       {/if}
       <div class="inline-flex">
-        <div class="flex items-center cursor-pointer rounded-l h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700">
+        <button use:melt={$trigger} class="flex items-center cursor-pointer rounded-l h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700">
           <Filter />
-        </div>
+        </button>
         <Date class="border-l rounded-r h-10 px-3 bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black border-gray-700" bind:value={customDate}><CalendarDays /></Date>
       </div>
     </div>
@@ -305,3 +329,17 @@
     <p class="mt-0 text-sm text-gray-500">Genindlæs siden for at se dit eget skema.</p>
   {/if}
 </div>
+
+{#if $open}
+  <div use:melt={$content} transition:fade={{ duration: 100 }} class="z-10 w-60 rounded-[4px] bg-white dark:bg-dark p-5 shadow-sm">
+    <div use:melt={$arrow} />
+    <Label class="flex flex-col space-y-1" for="only-mandatory">
+      <span>Kun Obligatoriske Fag</span>
+      <span class="font-normal leading-snug text-muted-foreground">Viser ikke lektiecaféer, klubber og konkurrencer mm.</span>
+    </Label>
+    <Switch bind:checked={$calendarStore.onlyMandatory} id="only-mandatory" />
+    <button class="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full p-0 text-sm font-medium" use:melt={$close}>
+      <X class="square-4" />
+    </button>
+  </div>
+{/if}

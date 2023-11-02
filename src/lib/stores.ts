@@ -10,6 +10,7 @@ export const authStore: Writable<{ cookie: string; lastLogin: null | string; pas
     username: "",
 });
 
-export const calendarStore: Writable<{ date: string; }> = localStorageStore("calendar", {
+export const calendarStore: Writable<{ date: string; onlyMandatory: boolean }> = localStorageStore("calendar", {
     date: new Date().toISOString(),
+    onlyMandatory: false,
 });

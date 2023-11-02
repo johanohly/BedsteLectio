@@ -3,41 +3,12 @@
 
   import { RequestData } from "$components";
   import { authStore } from "$lib/stores";
-  import { constructInterval } from "$lib/utilities";
+  import { constructInterval, nameBlacklisted } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import JSConfetti from "js-confetti";
   import { DateTime } from "luxon";
 
   const confetti = new JSConfetti();
-
-  function nameBlacklisted(name: string) {
-    // TODO: Check notes for "frivillig" string (very rare)
-    if (name == null) {
-      return false;
-    }
-    name = name.toLowerCase();
-
-    if (["obligatorisk"].some((x) => name.includes(x))) {
-      return false;
-    }
-    if (
-      [
-        "café",
-        "cafe",
-        "klub",
-        "club",
-        "fri",
-        "konkurrence",
-        "mesterskab",
-        "workshop",
-        "kemi ol",
-        "kemi-ol"
-      ].some((x) => name.includes(x))
-    ) {
-      return true;
-    }
-    return false;
-  }
 
   let hours = "00";
   let minutes = "00";

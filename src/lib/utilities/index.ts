@@ -1,4 +1,5 @@
 export { notEmpty } from "./array";
+export { nameBlacklisted } from "./blacklist";
 export { contrast, hslToRgb, rgbToHex, stringToColor } from "./color";
 export { getInitials } from "./initials";
 export { constructInterval } from "./interval";

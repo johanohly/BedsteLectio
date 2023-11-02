@@ -12,7 +12,9 @@
     elements: { input, root },
     options: { disabled: rootDisabled },
     states: { checked: rootChecked },
-  } = createSwitch();
+  } = createSwitch({
+    defaultChecked: checked,
+  });
   $: rootDisabled.set(disabled);
   $: rootChecked.set(checked);
   rootChecked.subscribe((v) => {
