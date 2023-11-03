@@ -1,7 +1,7 @@
 {
     "short_name": "BedsteLectio",
     "name": "BedsteLectio",
-    "description": "Lectio PWA.",
+    "description": "Den bedste lectio app.",
     "start_url": "/",
     "scope": "/",
     "orientation": "portrait",
