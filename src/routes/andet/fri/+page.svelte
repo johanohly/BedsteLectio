@@ -19,38 +19,30 @@
   let loading = true;
   let data: { moduler: RawLesson[] };
   $: if (!loading && data) {
-    let endLesson: string | undefined = undefined;
+    let lastLessonEnd = DateTime.local();
     for (let i = 0; i < data.moduler.length; i++) {
-      if (data.moduler[i].status != "aflyst") {
-        if (!nameBlacklisted(data.moduler[i].navn ?? "")) {
-          if (data.moduler[i].tidspunkt.includes(dt.toFormat("d/M-yyyy"))) {
-            endLesson = data.moduler[i].tidspunkt;
-          }
+      if (data.moduler[i].status != "aflyst" && !nameBlacklisted(data.moduler[i].navn ?? ("" && data.moduler[i].tidspunkt.includes(dt.toFormat("d/M-yyyy"))))) {
+        const { end } = constructInterval(data.moduler[i].tidspunkt);
+        if (end && lastLessonEnd < end) {
+          lastLessonEnd = end;
         }
       }
     }
-    if (endLesson) {
-      const end = constructInterval(endLesson).end;
-      if (end && end < dt) {
-        endTime = null;
-      } else {
-        endTime = end;
-      }
-    }
+    endTime = lastLessonEnd;
   }
 
   async function end() {
     await confetti.addConfetti({
-      confettiNumber: 500,
+      confettiNumber: 100,
       emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
     });
     await confetti.addConfetti({
-      confettiNumber: 500,
+      confettiNumber: 100,
       emojis: ["🧷", "🔧", "🧪", "💻", "📚", "✏"],
     });
   }
 
-  let intervalID: number;
+  let intervalID: NodeJS.Timeout;
   $: if (endTime !== null) {
     intervalID = setInterval(async () => {
       if (endTime) {
@@ -70,22 +62,14 @@
 
   let width = 24;
   $: fontSize = `${width / 6}px`;
-  $: marginLeft = `${(width) / 7}px`;
+  $: marginLeft = `${width / 7}px`;
 </script>
 
 <svelte:window bind:innerWidth={width} />
-<RequestData
-  bind:data
-  bind:loading
-  path={`skema?id=S${decodeUserID($authStore.cookie)}&uge=${dt.weekNumber}&år=${
-    dt.year
-  }`}
-/>
+<RequestData bind:data bind:loading path={`skema?id=S${decodeUserID($authStore.cookie)}&uge=${dt.weekNumber}&år=${dt.year}`} />
 
 <div class="">
-  <time class="clock-font pulsate" style="margin-left: {marginLeft}; font-size: {fontSize}"
-    >{hours}:{minutes}:{seconds}</time
-  >
+  <time class="clock-font pulsate" style="margin-left: {marginLeft}; font-size: {fontSize}">{hours}:{minutes}:{seconds}</time>
 </div>
 
 <style>
