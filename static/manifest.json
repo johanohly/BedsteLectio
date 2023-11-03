@@ -4,17 +4,45 @@
     "description": "Lectio PWA.",
     "start_url": "/",
     "scope": "/",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "favicon-light.png",
-            "sizes": "256x256",
+            "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "favicon-light.png",
-            "sizes": "256x256",
+            "src": "favicon-light-maskable.png",
+            "sizes": "384x384",
             "type": "image/png",
-            "purpose": "monochrome"
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/1.png",
+            "sizes": "1284x2778",
+            "type": "image/png"
+        },
+        {
+            "src": "screenshots/2.png",
+            "sizes": "1284x2778",
+            "type": "image/png"
+        },
+        {
+            "src": "screenshots/3.png",
+            "sizes": "1284x2778",
+            "type": "image/png"
+        },
+        {
+            "src": "screenshots/4.png",
+            "sizes": "1284x2778",
+            "type": "image/png"
+        },
+        {
+            "src": "screenshots/5.png",
+            "sizes": "1284x2778",
+            "type": "image/png"
         }
     ],
     "shortcuts": [
