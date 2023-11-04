@@ -4,6 +4,7 @@
     "description": "Den bedste lectio app.",
     "start_url": "/",
     "scope": "/",
+    "display": "fullscreen",
     "orientation": "portrait",
     "icons": [
         {
@@ -113,7 +114,6 @@
             ]
         }
     ],
-    "display": "standalone",
     "background_color": "#fff",
     "theme_color": "#adffb9"
 }
