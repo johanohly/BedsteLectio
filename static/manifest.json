@@ -1,11 +1,17 @@
 {
+    "id": "tech.bedstelectio.jth",
     "short_name": "BedsteLectio",
     "name": "BedsteLectio",
     "description": "Den bedste lectio app.",
+    "categories": [
+        "education"
+    ],
     "start_url": "/",
     "scope": "/",
     "display": "fullscreen",
     "orientation": "portrait",
+    "lang": "da",
+    "dir": "ltr",
     "icons": [
         {
             "src": "favicon-light.png",
