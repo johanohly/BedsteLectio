@@ -1,8 +1,14 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "tech.bedstelectio.jth",
-        "sha256_cert_fingerprints": ["48:44:E5:03:12:3F:35:6E:84:C1:06:BA:F8:87:B1:F9:4C:5A:5F:BA:4B:92:9B:CD:60:B5:E7:D5:B0:E7:FB:32"]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "tech.bedstelectio.jth",
+      "sha256_cert_fingerprints": [
+        "B3:7E:BD:AA:94:B9:64:06:B7:78:6C:52:5D:52:15:63:BC:AE:B7:81:F7:38:18:05:F2:AD:3F:A3:AE:D1:79:AD"
+      ]
+    }
+  }
+]
