@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "tech.bedstelectio.jth",
+        "sha256_cert_fingerprints": ["48:44:E5:03:12:3F:35:6E:84:C1:06:BA:F8:87:B1:F9:4C:5A:5F:BA:4B:92:9B:CD:60:B5:E7:D5:B0:E7:FB:32"]
+      }
+    }]
