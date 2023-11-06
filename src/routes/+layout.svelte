@@ -15,7 +15,7 @@
   import { Danish } from "flatpickr/dist/l10n/da.js";
   flatpickr.localize(Danish);
 
-  $: title = $page.url.pathname == "/" ? "BedsteLectio" : `${$page.url.pathname.split("/")[1].replace("-", " ").toTitleCase()} - BedsteLectio`;
+  $: title = $page.url.pathname == "/" ? "BedsteLectio" : `${$page.url.pathname.split("/").slice(-1)[0].replace("-", " ").toTitleCase()} - BedsteLectio`;
 
   function scrollHeadingIntoView(): void {
     if (!window.location.hash) return;
