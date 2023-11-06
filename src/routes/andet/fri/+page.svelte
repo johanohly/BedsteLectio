@@ -19,11 +19,11 @@
   let loading = true;
   let data: { moduler: RawLesson[] };
   $: if (!loading && data) {
-    let lastLessonEnd = DateTime.local();
+    let lastLessonEnd: DateTime | null = null;
     for (let i = 0; i < data.moduler.length; i++) {
-      if (data.moduler[i].status != "aflyst" && !nameBlacklisted(data.moduler[i].navn ?? ("" && data.moduler[i].tidspunkt.includes(dt.toFormat("d/M-yyyy"))))) {
+      if (data.moduler[i].status != "aflyst" && !nameBlacklisted(data.moduler[i].navn ?? "") && data.moduler[i].tidspunkt.includes(dt.toFormat("d/M-yyyy"))) {
         const { end } = constructInterval(data.moduler[i].tidspunkt);
-        if (end && lastLessonEnd < end) {
+        if (end && DateTime.local() < end && (lastLessonEnd === null || lastLessonEnd < end)) {
           lastLessonEnd = end;
         }
       }
