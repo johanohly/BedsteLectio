@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { SiteFooter } from "$components";
   import { addToast } from "$components/toaster";
   import { Button } from "$components/ui/button";
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "$components/ui/card";
@@ -111,3 +112,5 @@
     </CardFooter>
   </Card>
 </div>
+
+<SiteFooter />
