@@ -1,0 +1,316 @@
+repo_name: JohnnyJTH/BedsteLectio
+report_id: 2c0c75cc25c149ddef8fc7b6080f537c
+repo_type: Public
+timestamp: '2023-11-09T11:17:05+00:00'
+requested_by: JohnnyJTH
+provider: github
+branch: main
+detected_tools_count: 24
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source: Repo Metadata
+- name: SQL
+  description: It is a domain-specific language used in programming
+  website_url: https://en.wikipedia.org/wiki/SQL
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/2271/default_068d33483bba6b81ee13fbd4dc7aab9780896a54.png
+  detection_source: drizzle/0000_boring_deathbird.sql
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-10-25 19:57:37.000000000 Z
+- name: TypeScript
+  description: A superset of JavaScript that compiles to clean JavaScript output
+  website_url: http://www.typescriptlang.org
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1612/bynNY5dJ.jpg
+  detection_source: Repo Metadata
+- name: Autoprefixer
+  description: PostCSS plugin to parse CSS and add vendor prefixes to CSS rules
+  website_url: https://github.com/postcss/autoprefixer
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: CSS Pre-processors / Extensions
+  image_url: https://img.stackshare.io/service/2202/72d087642cfce6fef6f2dabec5bf49e8_400x400.png
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: Svelte
+  description: A UI framework that compiles into tiny standalone JavaScript modules
+  website_url: https://svelte.technology/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript UI Libraries
+  image_url: https://img.stackshare.io/service/6113/7exmJEg4_400x400.png
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-09-17 20:35:23.000000000 Z
+- name: PostgreSQL
+  description: A powerful, open source object-relational database system
+  website_url: http://www.postgresql.org/
+  open_source: true
+  hosted_saas: false
+  category: Data Stores
+  sub_category: Databases
+  image_url: https://img.stackshare.io/service/1028/ASOhU5xJ.png
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: ESLint
+  description: The fully pluggable JavaScript code quality tool
+  website_url: http://eslint.org/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Code Review
+  image_url: https://img.stackshare.io/service/3337/Q4L7Jncy.jpg
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
+- name: npm
+  description: The package manager for JavaScript.
+  website_url: https://www.npmjs.com/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: PonyDebugger
+  description: Remote network and data debugging for your native iOS app using Chrome
+    Developer Tools
+  website_url: https://github.com/square/PonyDebugger
+  open_source: true
+  hosted_saas: false
+  category: Mobile
+  sub_category: Mobile Runtime Inspector
+  image_url: https://img.stackshare.io/service/729/Logo.png
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: "@types/hammerjs"
+  description: TypeScript definitions for Hammer.js
+  package_url: https://www.npmjs.com/@types/hammerjs
+  version: 2.0.44
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17205/default_f32012d99e98300650172d76a20c554617f1031d.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-11-09 10:06:14.000000000 Z
+- name: "@types/pg"
+  description: TypeScript definitions for pg
+  package_url: https://www.npmjs.com/@types/pg
+  version: 8.10.7
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17947/default_fc5f66cf44024e173fd07c415d4f30ca58b4cbad.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-11-09 10:06:14.000000000 Z
+- name: "@typescript-eslint/eslint-plugin"
+  description: TypeScript plugin for ESLint
+  package_url: https://www.npmjs.com/@typescript-eslint/eslint-plugin
+  version: 5.45.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15982/default_8b5680d4e916298d08363c291a0d6e34c07ceb15.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-11-09 10:06:14.000000000 Z
+- name: "@typescript-eslint/parser"
+  description: An ESLint custom parser which leverages TypeScript ESTree
+  package_url: https://www.npmjs.com/@typescript-eslint/parser
+  version: 5.45.0
+  license: BSD-2-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15980/default_732016a20524708efe7a4c77497fe9bfeea19ba6.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-11-09 10:06:14.000000000 Z
+- name: flatpickr
+  description: A lightweight, powerful javascript datetime picker
+  package_url: https://www.npmjs.com/flatpickr
+  version: 4.6.13
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/18509/default_4bc4a0119551229373100e6d6a9dee9c56ba0734.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-09-14 09:52:16.000000000 Z
+- name: fuzzy
+  description: Small, standalone fuzzy search / fuzzy filter
+  package_url: https://www.npmjs.com/fuzzy
+  version: 0.1.3
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/18189/default_13969c5d2859d7d510fdef0e78c273ae025e9cc4.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-09-06 11:46:16.000000000 Z
+- name: hammerjs
+  description: A javascript library for multi-touch gestures
+  package_url: https://www.npmjs.com/hammerjs
+  version: 2.0.8
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16521/default_0a704f5fac0bffcf529c9a61658d0b9ddbf7504e.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-11-09 10:06:14.000000000 Z
+- name: ioredis
+  description: A robust
+  package_url: https://www.npmjs.com/ioredis
+  version: 5.3.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16522/default_4e3259350c525d1d859fa80a938000081d7c9db8.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-10-27 13:34:48.000000000 Z
+- name: luxon
+  description: Immutable date wrapper
+  package_url: https://www.npmjs.com/luxon
+  version: 3.3.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17375/default_c1932d441699b98abea6098c6f8f65e2acb4f5ed.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-09-06 11:46:16.000000000 Z
+- name: pg
+  description: PostgreSQL client - pure javascript &amp; libpq with the same API
+  package_url: https://www.npmjs.com/pg
+  version: 8.11.3
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16197/default_3d197518f6bb529bfcc1b685e2cefbdfe83ff108.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
+- name: postcss
+  description: Tool for transforming styles with JS plugins
+  package_url: https://www.npmjs.com/postcss
+  version: 8.4.23
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16012/default_7a88bebb451873cc63bd99007de5bd3bb8ef85de.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-09-06 11:46:16.000000000 Z
+  vulnerabilities:
+  - name: PostCSS line return parsing error
+    cve_id: CVE-2023-44270
+    cve_url: https://github.com/advisories/GHSA-7fh5-64p2-3v2j
+    detected_date: Oct 4
+    severity: moderate
+    first_patched: 8.4.31
+- name: tailwindcss
+  description: A utility-first CSS framework for rapidly building custom user interfaces
+  package_url: https://www.npmjs.com/tailwindcss
+  version: 3.3.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17398/default_2cd7ed1c123f2fca074a6f4b16c4e73d5bfe82be.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: JohnnyJTH
+  last_updated_on: 2023-09-18 12:26:14.000000000 Z
+- name: tslib
+  description: Runtime library for TypeScript helper functions
+  package_url: https://www.npmjs.com/tslib
+  version: 2.4.1
+  license: 0BSD
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15853/default_97d4687bd07ff1bb963fd566c84e7cbf7c73bbee.png
+  detection_source_url: package.json
+  detection_source: package.json
+  last_updated_by: Johnny JTH
+  last_updated_on: 2023-08-31 19:42:31.000000000 Z
