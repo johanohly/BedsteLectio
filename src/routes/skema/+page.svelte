@@ -9,6 +9,7 @@
   import timeGridPlugin from "@fullcalendar/timegrid";
   import daLocale from "@fullcalendar/core/locales/da";
   import tippy from "tippy.js";
+  import Hammer from "hammerjs";
   import "$lib/tippy.css";
   import DOMPurify from "dompurify";
   import { DateTime } from "luxon";
@@ -265,6 +266,14 @@
           if (event.title && nameBlacklisted(event.title)) event.remove();
         });
       }
+    });
+
+    const hammer = new Hammer(calendarEl);
+    hammer.on("swipeleft", () => {
+      calendar.next();
+    });
+    hammer.on("swiperight", () => {
+      calendar.prev();
     });
 
     return () => {
