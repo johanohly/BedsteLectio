@@ -14,43 +14,22 @@
     "dir": "ltr",
     "icons": [
         {
-            "src": "favicon-light.png",
+            "src": "favicon.png",
             "sizes": "256x256",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "favicon-light-fs.png",
+            "src": "favicon-fs.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "favicon-light-maskable.png",
+            "src": "favicon-maskable.png",
             "sizes": "96x96",
             "type": "image/png",
             "purpose": "maskable"
-        },
-        {
-            "src": "favicon-dark.png",
-            "sizes": "256x256",
-            "type": "image/png",
-            "purpose": "any",
-            "color_scheme": "dark"
-        },
-        {
-            "src": "favicon-dark-fs.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any",
-            "color_scheme": "dark"
-        },
-        {
-            "src": "favicon-dark-maskable.png",
-            "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "maskable",
-            "color_scheme": "dark"
         }
     ],
     "screenshots": [
@@ -121,13 +100,13 @@
             ]
         },
         {
-            "name": "Lektier",
-            "short_name": "Lektier",
-            "description": "Få en oversigt over dine lektier.",
-            "url": "/lektier",
+            "name": "Lokaler",
+            "short_name": "Lokaler",
+            "description": "Få en oversigt over de ledige lokaler.",
+            "url": "/andet/lokaler",
             "icons": [
                 {
-                    "src": "homework.png",
+                    "src": "rooms.png",
                     "sizes": "256x256",
                     "type": "image/png"
                 }
