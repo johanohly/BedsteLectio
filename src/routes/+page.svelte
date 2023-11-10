@@ -115,7 +115,7 @@
 <div class="page-container">
   <div class="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-4">
     <div class="lg:col-span-2 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
-      <div class="mb-[0.8888889em] flex items-center justify-between">
+      <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Skema</h1>
         <a href="/skema">
           <ArrowRight />
@@ -147,7 +147,7 @@
           </Timeline>
         </div>
       {:else}
-        <p class="text-center">Ingen kommende lektioner.</p>
+        <p>Ingen kommende lektioner.</p>
       {/if}
     </div>
     <div class="lg:col-span-1 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
@@ -173,12 +173,12 @@
             {/each}
           </div>
         {:else}
-          <p class="text-center">Ingen aktuelle nyheder.</p>
+          <p>Ingen aktuelle nyheder.</p>
         {/if}
       </div>
     </div>
     <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
-      <div class="mb-[0.8888889em] flex items-center justify-between">
+      <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Lektier</h1>
         <a href="/lektier">
           <ArrowRight />
@@ -204,12 +204,12 @@
             </a>
           {/each}
         {:else}
-          <p class="text-center">Ingen kommende lektier.</p>
+          <p>Ingen kommende lektier.</p>
         {/if}
       </div>
     </div>
     <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
-      <div class="mb-[0.8888889em] flex items-center justify-between">
+      <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Beskeder</h1>
         <a href="/beskeder">
           <ArrowRight />
@@ -235,12 +235,12 @@
             </a>
           {/each}
         {:else}
-          <p class="text-center">Ingen nye beskeder.</p>
+          <p>Ingen nye beskeder.</p>
         {/if}
       </div>
     </div>
     <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
-      <div class="mb-[0.8888889em] flex items-center justify-between">
+      <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Dokumenter</h1>
         <a href="/dokumenter">
           <ArrowRight />
@@ -266,7 +266,7 @@
             </a>
           {/each}
         {:else}
-          <p class="text-center">Ingen nye dokumenter.</p>
+          <p>Ingen nye dokumenter.</p>
         {/if}
       </div>
     </div>
