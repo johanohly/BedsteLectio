@@ -77,7 +77,6 @@
       }
 
       if (customColors == undefined) {
-        console.log("fetch colors");
         fetch("/api/settings", {
           headers: {
             "lectio-cookie": $authStore.cookie,

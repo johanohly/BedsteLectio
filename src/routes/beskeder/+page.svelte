@@ -147,44 +147,37 @@
         if (!replyTo) return;
         if (!replyContent) return;
 
-        addToast({
-            data: {
-                title: "Besked ikke sendt",
-                description: "Det er ikke muligt at sende beskeder lige nu.",
-                color: "bg-yellow-500",
+        const res = await fetch("https://api.bedstelectio.tech/besvar_besked", {
+            method: "POST",
+            headers: {
+                "lectio-cookie": $authStore.cookie,
+                "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+                message_id: selectedMessage,
+                id: replyTo.id,
+                titel: replyTo.title.includes("Re: ") ? replyTo.title : `Re: ${replyTo.title}`,
+                content: replyContent,
+            }),
         });
-        // const res = await fetch("https://api.bedstelectio.tech/besvar_besked", {
-        //     method: "POST",
-        //     headers: {
-        //         "lectio-cookie": $authStore.cookie,
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //         message_id: fullMessage.messages[0].id.replace("ANSWERMESSAGE_", ""),
-        //         id: replyTo.id,
-        //         titel: replyTo.title.includes("Re: ") ? replyTo.title : `Re: ${replyTo.title}`,
-        //         content: replyContent,
-        //     }),
-        // });
-        // if (res.status == 200) {
-        //     addToast({
-        //         data: {
-        //             title: "Besked sendt",
-        //             description: "Din besked blev sendt.",
-        //             color: "bg-green-500",
-        //         },
-        //     });
-        //     selectedMessage = selectedMessage + " ";
-        // } else {
-        //     addToast({
-        //         data: {
-        //             title: "Besked ikke sendt",
-        //             description: "Din besked kunne ikke blive sendt. Prøv igen senere.",
-        //             color: "bg-red-500",
-        //         },
-        //     });
-        // }
+        if (res.status == 200) {
+            addToast({
+                data: {
+                    title: "Besked sendt",
+                    description: "Din besked blev sendt.",
+                    color: "bg-green-500",
+                },
+            });
+            selectedMessage = selectedMessage + " ";
+        } else {
+            addToast({
+                data: {
+                    title: "Besked ikke sendt",
+                    description: "Din besked kunne ikke blive sendt. Prøv igen senere.",
+                    color: "bg-red-500",
+                },
+            });
+        }
         replyTo = undefined;
         replyContent = "";
     };

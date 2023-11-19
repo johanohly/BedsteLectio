@@ -9,7 +9,6 @@
   import { Loader2, Send } from "lucide-svelte";
   import type { PageData } from "./$types";
   import { authStore } from "$lib/stores";
-  import { Tooltip } from "$components/ui/tooltip";
 
   export let data: PageData;
 
@@ -41,6 +40,15 @@
   let sending = false;
   const sendResponse = async () => {
     sending = true;
+    await new Promise((r) => setTimeout(r, 2000));
+    sending = false;
+    return addToast({
+      data: {
+        title: "Svar ikke sendt!",
+        description: "Besvarelse af spørgeskemaer er ikke muligt for tiden.",
+        color: "bg-yellow-500",
+      }
+    })
     const resp = await fetch(`https://api.bedstelectio.tech/besvar_spoergeskema?id=${data.id}`, {
       method: "POST",
       headers: {
