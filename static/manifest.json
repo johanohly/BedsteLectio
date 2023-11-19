@@ -26,13 +26,13 @@
             "purpose": "any"
         },
         {
-            "src": "masked.png",
+            "src": "favicon-maskable.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "mono.png",
+            "src": "favicon-monochrome.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "monochrome"
