@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+    import { page } from "$app/stores";
   import { SiteFooter } from "$components";
   import { addToast } from "$components/toaster";
   import { Button } from "$components/ui/button";
@@ -23,6 +24,7 @@
 
   let schools: { [k: string]: number } = {};
   let school = 0;
+  let redirectTo = "/";
   onMount(async () => {
     const tempSchools = (await fetch("https://api.bedstelectio.tech/skoler").then((res) => res.json())) as { id: number; skole: string }[];
     schools = {};
@@ -30,6 +32,12 @@
       schools[item.skole] = +item.id;
     }
     school = $authStore.school;
+
+    const params = $page.url.searchParams;
+    if (params.has("redirect")) {
+      redirectTo = params.get("redirect") ?? "/";
+      goto("/log-ind");
+    }
   });
 
   let username = "";
@@ -53,7 +61,7 @@
       $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
       $authStore.lastLogin = DateTime.now().toISO();
       loading = false;
-      return goto("/");
+      return goto(redirectTo);
     }
     username = "";
     password = "";

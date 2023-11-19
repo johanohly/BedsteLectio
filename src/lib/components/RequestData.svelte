@@ -5,8 +5,8 @@
 
   import { addToast } from "./toaster";
   import { constructNonceURL } from "$lib/utilities";
+    import { page } from "$app/stores";
 
-  export let redirectIfFail = "/log-ind";
   export let path: string;
   export let onServerError = {
     active: false,
@@ -57,18 +57,18 @@
             $authStore.username = "";
             $authStore.password = "";
             $authStore.cookie = "";
-            return goto(redirectIfFail);
+            return goto(`/log-ind?redirect=${$page.url.pathname}`);
           }
         } else {
           console.error("Failed auto-login");
           $authStore.username = "";
           $authStore.password = "";
           $authStore.cookie = "";
-          return goto(redirectIfFail);
+          return goto(`/log-ind?redirect=${$page.url.pathname}`);
         }
       } else {
         $authStore.cookie = "";
-        return goto(redirectIfFail);
+        return goto(`/log-ind?redirect=${$page.url.pathname}`);
       }
     }
     data = await response.json();
