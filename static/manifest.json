@@ -26,10 +26,16 @@
             "purpose": "any"
         },
         {
-            "src": "favicon-maskable.png",
-            "sizes": "96x96",
+            "src": "masked.png",
+            "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        },
+        {
+            "src": "mono.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "monochrome"
         }
     ],
     "screenshots": [
