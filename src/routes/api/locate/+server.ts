@@ -1,7 +1,8 @@
-import { json } from "@sveltejs/kit";
+import { json, type RequestHandler } from "@sveltejs/kit";
 import { locations } from "./locations";
 import { distanceBetween } from "$lib/utilities";
-import type { RequestHandler } from "./$types";
+import type { ClosestSchool } from "$lib/types/location";
+
 
 export const GET: RequestHandler = async ({ request: { url } }) => {
     const params = new URL(url).searchParams;
@@ -10,10 +11,9 @@ export const GET: RequestHandler = async ({ request: { url } }) => {
     const lat = Number(params.get("lat"));
     const lng = Number(params.get("lng"));
 
-    let closest: null | { distance: number, name: string, id: number } = null;
+    let closest: ClosestSchool | null = null;
     locations.forEach((location) => {
-        const distance = distanceBetween({ lat, lng }, { lat: location.lng, lng: location.lng });
-        console.log(location.name, distance)
+        const distance = distanceBetween({ lat, lng }, { lat: location.lat, lng: location.lng });
         if (!closest || distance < closest.distance) closest = { distance, name: location.name, id: location.id };
     });
 

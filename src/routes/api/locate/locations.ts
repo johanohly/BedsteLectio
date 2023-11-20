@@ -8,7 +8,7 @@ export const locations = [
     {
         "id": 788,
         "name": "DTU",
-        "lat": 55.847360,
-        "lng": 12.428000
+        "lat": 55.785852,
+        "lng": 12.521126
     },
 ]

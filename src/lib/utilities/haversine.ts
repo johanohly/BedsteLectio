@@ -1,24 +1,19 @@
-export interface LatLng {
-    lat: number
-    lng: number
-}
+import type { LatLng } from "$lib/types/location";
 
-const { asin, cos, sin, sqrt, PI } = Math
-// equatorial mean radius of Earth (in meters)
-const R = 6378137
+const { atan2, cos, sin, sqrt, PI } = Math
 
-function squared (x: number): number { return x * x }
-function toRad (x: number): number { return x * PI / 180.0 }
-function hav (x: number): number {
-  return squared(sin(x / 2))
-}
 
-export function distanceBetween(a: LatLng, b: LatLng) {
-  const aLat = toRad(a.lat)
-  const bLat = toRad(b.lat)
-  const aLng = toRad(a.lng)
-  const bLng = toRad(b.lng)
+export const distanceBetween = (a: LatLng, b: LatLng) => {
+  const R = 6371e3; // meters
+  const φ1 = a.lat * PI / 180; // φ, λ in radians
+  const φ2 = b.lat * PI / 180;
+  const Δφ = (b.lat - a.lat) * PI / 180;
+  const Δλ = (b.lng - a.lng) * PI / 180;
 
-  const ht = hav(bLat - aLat) + cos(aLat) * cos(bLat) * hav(bLng - aLng)
-  return 2 * R * asin(sqrt(ht))
+  const x = sin(Δφ / 2) * sin(Δφ / 2) +
+    cos(φ1) * cos(φ2) *
+    sin(Δλ / 2) * sin(Δλ / 2);
+  const y = 2 * atan2(sqrt(x), sqrt(1 - x));
+
+  return R * y; // meters
 }

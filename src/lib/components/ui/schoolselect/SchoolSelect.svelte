@@ -6,9 +6,11 @@
   import { Input } from "../input";
   import { Button } from "../button";
   import { addToast } from "$components/toaster";
+  import type { ClosestSchool } from "$lib/types/location";
+    import { round } from "$lib/utilities";
 
   const {
-    elements: { close, content, description, overlay, portalled, title, trigger },
+    elements: { close, content, overlay, portalled, title, trigger },
     states: { open },
   } = createDialog();
 
@@ -23,6 +25,7 @@
   });
 
   let locating = false;
+  let closestSchool: string | null = null;
   const locate = async () => {
     locating = true;
     navigator.geolocation.getCurrentPosition(
@@ -30,8 +33,10 @@
         const resp = await fetch(`/api/locate?lat=${position.coords.latitude}&lng=${position.coords.longitude}`);
         if (!resp.ok) return addToast({ data: { title: "Fejl", description: "Kunne ikke finde nærmeste skole.", color: "bg-red-500" } });
 
-        const data = await resp.json();
+        const data = (await resp.json()) as ClosestSchool;
         value = data.id;
+        if (data.distance > 1000) closestSchool = `${round(data.distance / 1000, 2)}km`
+        else closestSchool = `${round(data.distance)}m`
         locating = false;
       },
       (error) => {
@@ -72,8 +77,8 @@
       use:melt={$content}
     >
       <h2 class="m-0 text-xl font-medium" use:melt={$title}>{valueKey ?? "Vælg Skole"}</h2>
-      <Button on:click={locate} disabled={locating} class="my-4"
-        >{#if locating}<Loader2 class="w-6 h-6 animate-spin mr-2" />{:else}<LocateIcon class="mr-2" />{/if}Find nærmeste skole</Button
+      <Button on:click={locate} disabled={locating || closestSchool} class="my-4"
+        >{#if locating}<Loader2 class="w-6 h-6 animate-spin mr-2" />{:else}<LocateIcon class="mr-2" />{/if}{closestSchool ? `${valueKey} er ${closestSchool} væk` : "Find nærmeste skole"}</Button
       >
       <Input bind:value={searchTerm} class="mb-5" placeholder="Søg efter skole..." />
       <div class="overflow-y-auto max-h-[40vw] lg:max-h-[25vw] space-y-2">
