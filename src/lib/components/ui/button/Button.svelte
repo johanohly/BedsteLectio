@@ -14,6 +14,7 @@
   export let href: HTMLAnchorAttributes["href"] = undefined;
   export let target: HTMLAnchorAttributes["target"] = undefined;
   export let type: HTMLButtonAttributes["type"] = undefined;
+  export let disabled: HTMLButtonAttributes["disabled"] = undefined;
   export let variant: VariantProps<typeof buttonVariants>["variant"] =
     "default";
   export let size: VariantProps<typeof buttonVariants>["size"] = "default";
@@ -25,6 +26,7 @@
   {target}
   this={href ? "a" : "button"}
   type={href ? undefined : type}
+  disabled={href ? undefined : disabled}
   {...$$restProps}
   on:change
   on:click

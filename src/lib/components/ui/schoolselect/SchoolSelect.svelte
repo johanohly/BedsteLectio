@@ -1,38 +1,51 @@
 <script lang="ts">
-  import { flyAndScale } from "$lib/utils"
+  import { flyAndScale } from "$lib/utils";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { filter } from "fuzzy"; import { ChevronsUpDown, X } from "lucide-svelte";
-
-  import Input from "../input/Input.svelte";
+  import { filter } from "fuzzy";
+  import { ChevronsUpDown, Loader2, LocateIcon, X } from "lucide-svelte";
+  import { Input } from "../input";
+  import { Button } from "../button";
+  import { addToast } from "$components/toaster";
 
   const {
-    elements: {
-      close,
-      content,
-      description,
-      overlay,
-      portalled,
-      title,
-      trigger,
-    },
+    elements: { close, content, description, overlay, portalled, title, trigger },
     states: { open },
   } = createDialog();
 
   export let schools: { [k: string]: number } = {};
   export let value = 0;
   $: valueKey = Object.keys(schools).find((key) => schools[key] === value);
-  $: if ($open) {
-    setTimeout(() => {
-      const input = document.getElementById("school-select-input");
-      if (input) input.focus();
-    }, 100);
-  }
 
   let searchTerm = "";
   $: filteredSchools = filter(searchTerm, Object.keys(schools), {
     post: "</strong>",
     pre: "<strong>",
   });
+
+  let locating = false;
+  const locate = async () => {
+    locating = true;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const resp = await fetch(`/api/locate?lat=${position.coords.latitude}&lng=${position.coords.longitude}`);
+        if (!resp.ok) return addToast({ data: { title: "Fejl", description: "Kunne ikke finde nærmeste skole.", color: "bg-red-500" } });
+
+        const data = await resp.json();
+        value = data.id;
+        locating = false;
+      },
+      (error) => {
+        addToast({
+          data: {
+            title: "Fejl",
+            description: error.message,
+            color: "bg-red-500",
+          },
+        });
+        locating = false;
+      }
+    );
+  };
 </script>
 
 <button
@@ -58,15 +71,12 @@
       }}
       use:melt={$content}
     >
-      <h2 class="m-0 text-xl font-medium" use:melt={$title}>Vælg Skole</h2>
-      <p
-        class="mb-5 mt-2 leading-normal text-muted-foreground"
-        use:melt={$description}
+      <h2 class="m-0 text-xl font-medium" use:melt={$title}>{valueKey ?? "Vælg Skole"}</h2>
+      <Button on:click={locate} disabled={locating} class="my-4"
+        >{#if locating}<Loader2 class="w-6 h-6 animate-spin mr-2" />{:else}<LocateIcon class="mr-2" />{/if}Find nærmeste skole</Button
       >
-        Søg efter din skole i søgefeltet nedenfor.
-      </p>
-      <Input bind:value={searchTerm} class="mb-5" id="school-select-input" />
-      <div class="overflow-y-auto max-h-[50rem] space-y-2">
+      <Input bind:value={searchTerm} class="mb-5" placeholder="Søg efter skole..." />
+      <div class="overflow-y-auto max-h-[40vw] lg:max-h-[25vw] space-y-2">
         {#each filteredSchools as school}
           <button
             class="w-full rounded-md border border-slate-200 bg-neutral-50 text-slate-900 dark:border-slate-800 dark:bg-neutral-950 dark:text-slate-100 px-3

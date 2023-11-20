@@ -7,6 +7,7 @@
 
   export let value: HTMLInputAttributes["value"] = undefined;
   export { className as class };
+  export let placeholder = "";
 
   let input: HTMLInputElement;
   let focused = false;
@@ -50,6 +51,7 @@
       "flex h-12 w-full rounded-md border border-slate-200 bg-neutral-50 text-slate-900 dark:border-slate-800 dark:bg-neutral-950 dark:text-slate-100 p-3.5 transition-colors duration-500 placeholder:select-none placeholder:text-neutral-500 focus:border-[#adffb9] dark:focus:border-[#8678F9] focus:outline-none",
       className
     )}
+    placeholder={placeholder}
     on:blur={handleBlur}
     on:focus={handleFocus}
     on:mouseenter={handleMouseEnter}
