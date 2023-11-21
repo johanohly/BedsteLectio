@@ -7,11 +7,13 @@
   import { mainNavItems, subNavItems } from "./links";
   import { page } from "$app/stores";
   import { cn } from "$lib/utils";
+    import { drawerOpen } from "./states";
 
   const {
     elements: { content, overlay, portalled, trigger },
-    states: { open },
-  } = createDialog();
+  } = createDialog({
+    open: drawerOpen
+  });
   const {
     elements: { root: colRoot, content: colContent, trigger: colTrigger },
     states: { open: colOpen },
@@ -24,7 +26,7 @@
 </button>
 
 <div use:melt={$portalled}>
-  {#if $open}
+  {#if $drawerOpen}
     <div class="fixed inset-0 z-50 bg-background/50" transition:fade={{ duration: 150 }} use:melt={$overlay} />
     <div
       class="fixed left-0 top-0 z-50 h-screen w-full max-w-[350px] bg-background p-6
@@ -36,7 +38,7 @@
       }}
       use:melt={$content}
     >
-      <MobileLink class="flex items-center !text-foreground" href="/" {open}>
+      <MobileLink class="flex items-center !text-foreground" href="/" open={drawerOpen}>
         <School class="mr-2 h-4 w-4" />
         <span class="font-bold">BedsteLectio</span>
       </MobileLink>
@@ -44,7 +46,7 @@
         <div class="flex flex-col space-y-3">
           {#each mainNavItems as navItem, index (navItem + index.toString())}
             {#if navItem.href}
-              <MobileLink href={navItem.href} {open}>
+              <MobileLink href={navItem.href} open={drawerOpen}>
                 {navItem.title}
               </MobileLink>
             {/if}
@@ -66,7 +68,7 @@
             {#if $colOpen}
               <div use:melt={$colContent} transition:slide class="flex flex-col space-y-3">
                 {#each subNavItems as navItem}
-                  <MobileLink href={navItem.href} {open}>
+                  <MobileLink href={navItem.href} open={drawerOpen}>
                     {navItem.title}
                   </MobileLink>
                 {/each}
