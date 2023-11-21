@@ -7,12 +7,12 @@
   import { mainNavItems, subNavItems } from "./links";
   import { page } from "$app/stores";
   import { cn } from "$lib/utils";
-    import { drawerOpen } from "./states";
+  import { drawerOpen } from "./states";
 
   const {
     elements: { content, overlay, portalled, trigger },
   } = createDialog({
-    open: drawerOpen
+    open: drawerOpen,
   });
   const {
     elements: { root: colRoot, content: colContent, trigger: colTrigger },
