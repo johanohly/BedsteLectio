@@ -11,8 +11,8 @@
   }
   $: if (options != null) {
     $modeCurrent
-      ? (options.theme.mode = "light")
-      : (options.theme.mode = "dark");
+      ? (options.theme = {mode: "light", palette: "palette1"})
+      : (options.theme = {mode: "dark", palette: "palette6"});
   }
 </script>
 
