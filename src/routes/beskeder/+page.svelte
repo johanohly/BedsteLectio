@@ -103,7 +103,7 @@
     $: if (dataMessage && dataMessage.beskeder) {
         fullMessage = {
             messages: dataMessage.beskeder.map((message) => {
-                const edits = message.besked.match(/^.*Redigeret af.*$/gm) ?? [];
+                const edits = (message.besked.match(/^.*Redigeret af.*$/gm) ?? []).map((edit: string) => edit.replace(/ .*,/, ""));
                 const clientParts = message.besked.match(/Sendt fra.*\[(.*)\]\((.*)\)|\[Sendt fra (.*)\]\((.*)\)/);
                 const client = clientParts
                     ? {
