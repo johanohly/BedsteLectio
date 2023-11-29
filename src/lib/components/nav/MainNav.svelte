@@ -47,7 +47,7 @@
 {#if $open}
   <div use:melt={$menu} transition:fly={{ duration: 150, y: -10 }} class="z-50 flex flex-col max-h-[300px] lg:max-h-none min-w-[220px] shadow-lg rounded-md bg-white dark:bg-dark p-2 !ring-0">
     {#each subNavItems as navItem}
-      <a use:melt={$item} class={cn("transition-colors py-1 px-4 rounded-md hover:bg-gray-300d dark:hover:bg-dark-hover hover:text-black dark:hover:text-white", decodeURI($page.url.pathname) === navItem.href ? "text-foreground" : "text-foreground/60")} href={navItem.href} rel={navItem.external ? "noreferrer" : undefined} target={navItem.external ? "_blank" : undefined}>
+      <a use:melt={$item} class={cn("transition-colors py-1 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-dark-hover hover:text-black dark:hover:text-white", decodeURI($page.url.pathname) === navItem.href ? "text-foreground" : "text-foreground/60")} href={navItem.href} rel={navItem.external ? "noreferrer" : undefined} target={navItem.external ? "_blank" : undefined}>
         {navItem.title}
       </a>
     {/each}
