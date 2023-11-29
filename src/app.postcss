@@ -113,15 +113,11 @@ body {
 }
 
 .fc-event {
-  @apply dark:!bg-dark-hover dark:border-2;
+  @apply dark:!bg-dark dark:border-2;
 }
 
 .event-cancelled {
-  @apply !border-[#ffccd8]
-}
-
-:is(.event-cancelled .fc-event-main) {
-  @apply !bg-[#ffccd8];
+  @apply border-2 !border-[#ff3f3f]
 }
 
 :is(.event-cancelled .fc-event-title) {
@@ -133,7 +129,7 @@ body {
 }
 
 :is(.event-cancelled .fc-event-title) {
-  @apply text-[#990024]
+  @apply text-[#ff3f3f]
 }
 
 .fc-event-time {
@@ -141,7 +137,7 @@ body {
 }
 
 :is(.event-cancelled .fc-event-time) {
-  @apply text-[#990024]
+  @apply text-[#ff3f3f]
 }
 
 .fc .fc-button {
@@ -177,6 +173,16 @@ body {
 
 .fc tr:first-child .fc-timegrid-slot-label {
   @apply hidden;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  @apply dark:border-gray-600
+}
+.fc-theme-standard td {
+  @apply dark:border-gray-600
+}
+.fc-theme-standard th {
+  @apply dark:border-gray-600
 }
 
 .apexcharts-svg {
