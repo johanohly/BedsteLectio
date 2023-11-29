@@ -33,6 +33,13 @@
     {#if loading}
       <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
       <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
+      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
       <Skeleton class="w-full h-36 rounded-[10px]" />
     {:else if filteredForms.length}
       {#each filteredForms as form}

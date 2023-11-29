@@ -115,7 +115,7 @@
 
 <div class="page-container">
   <div class="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-4">
-    <div class="lg:col-span-2 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
+    <div class="lg:col-span-2 h-[70vh] 2xl:h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Skema</h1>
         <a href="/skema">
@@ -151,7 +151,7 @@
         <p>Ingen kommende lektioner.</p>
       {/if}
     </div>
-    <div class="lg:col-span-1 max-h-[70vh] 2xl:max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
+    <div class="lg:col-span-1 h-[70vh] 2xl:h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <h1 class="mb-0">Aktuelt</h1>
       <div class="block overflow-y-auto not-prose">
         {#if loading}
@@ -178,7 +178,7 @@
         {/if}
       </div>
     </div>
-    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
+    <div class="lg:col-span-1 lg:row-start-2 h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Lektier</h1>
         <a href="/lektier">
@@ -209,7 +209,7 @@
         {/if}
       </div>
     </div>
-    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
+    <div class="lg:col-span-1 lg:row-start-2 h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Beskeder</h1>
         <a href="/beskeder">
@@ -240,7 +240,7 @@
         {/if}
       </div>
     </div>
-    <div class="lg:col-span-1 lg:row-start-2 max-h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
+    <div class="lg:col-span-1 lg:row-start-2 h-[50vh] flex flex-col bg-white dark:bg-dark rounded-2xl p-6">
       <div class="mb-[0.3em] flex items-center justify-between">
         <h1 class="mb-0">Dokumenter</h1>
         <a href="/dokumenter">
