@@ -1,18 +1,26 @@
 <script lang="ts">
   import { modeCurrent } from "$components/light-switch/light-switch";
   import ApexCharts from "apexcharts";
+  import { onMount } from "svelte";
 
+  export let chart: ApexCharts;
   let chartEl: HTMLElement;
   export let options: null | object;
 
-  $: if (chartEl && options != null) {
-    const chart = new ApexCharts(chartEl, options);
+  onMount(() => {
+    chart = new ApexCharts(chartEl, options);
     chart.render();
-  }
-  $: if (options != null) {
-    $modeCurrent
-      ? (options.theme = {mode: "light", palette: "palette1"})
-      : (options.theme = {mode: "dark", palette: "palette6"});
+
+    return () => {
+      chart.destroy();
+    };
+  });
+  $: if (chart) {
+    chart.updateOptions({
+      theme: {
+        mode: $modeCurrent ? "light" : "dark",
+      },
+    });
   }
 </script>
 
