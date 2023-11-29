@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { addToast } from "$components/toaster";
   import { Confirm } from "$components/ui/confirm";
   import { authStore } from "$lib/stores";
