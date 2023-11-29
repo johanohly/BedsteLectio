@@ -11,6 +11,7 @@
   import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
+    import { NewTabLink } from "$components/ui/newtablink";
 
   export let data: PageData;
 
@@ -99,25 +100,25 @@
     {#if module.note}
       <section>
         <h2 class="!mb-0">Note</h2>
-        <SvelteMarkdown source={module.note} />
+        <SvelteMarkdown source={module.note} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
     {#if module.homework}
       <section>
         <h2 class="!mb-0">Lektier</h2>
-        <SvelteMarkdown source={module.homework.replaceAll("\n", "<br>")} />
+        <SvelteMarkdown source={module.homework.replaceAll("\n", "<br>")} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
     {#if module.otherContent}
       <section>
         <h2 class="!mb-0">Øvrigt Indhold</h2>
-        <SvelteMarkdown source={module.otherContent.replaceAll(")", ")<br>")} />
+        <SvelteMarkdown source={module.otherContent.replaceAll(")", ")<br>")} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
     {#if module.presentation}
       <section>
         <h2 class="!mb-0">Præsentation</h2>
-        <SvelteMarkdown source={module.presentation} />
+        <SvelteMarkdown source={module.presentation} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
   {/if}

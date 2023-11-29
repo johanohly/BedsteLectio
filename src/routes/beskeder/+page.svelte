@@ -24,6 +24,7 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import { relativeTime } from "$lib/utilities";
+    import { NewTabLink } from "$components/ui/newtablink";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let groups: string[] | undefined = undefined;
@@ -479,7 +480,7 @@
                                                     {/each}
                                                 </div>
                                             {/if}
-                                            <SvelteMarkdown source={message.body} />
+                                            <SvelteMarkdown source={message.body} renderers={{ link: NewTabLink }} />
                                             {#if message.edits.length}
                                                 {#each message.edits as edit}
                                                     <div class="flex items-center text-gray-400">
@@ -524,7 +525,7 @@
                                                     {/each}
                                                 </div>
                                             {/if}
-                                            <SvelteMarkdown source={message.body} />
+                                            <SvelteMarkdown source={message.body} renderers={{ link: NewTabLink }} />
                                             {#if message.edits.length}
                                                 {#each message.edits as edit}
                                                     <div class="flex items-center text-gray-400">

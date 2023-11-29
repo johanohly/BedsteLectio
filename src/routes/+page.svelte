@@ -15,6 +15,7 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
+    import { NewTabLink } from "$components/ui/newtablink";
 
   let loading = true;
   let data: {
@@ -166,7 +167,7 @@
         {:else if news.length > 0}
           <div class="space-y-2">
             {#each news as item, i}
-              <SvelteMarkdown source={item.description} />
+              <SvelteMarkdown source={item.description} renderers={{ link: NewTabLink }} />
               {#if i != news.length - 1}
                 <hr class="!my-4 dark:border-t-gray-600/50" />
               {/if}
@@ -197,7 +198,7 @@
                 <!-- <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                   {hwItem.homework}
                 </p> -->
-                <SvelteMarkdown source={hwItem.homework} />
+                <SvelteMarkdown source={hwItem.homework} renderers={{ link: NewTabLink }} />
 
                 <p use:relativeTime={(hwItem.lesson.interval.start ?? DateTime.now()).toJSDate()} class="text-sm text-gray-500 truncate dark:text-gray-400" />
               </div>

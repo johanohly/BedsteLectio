@@ -12,6 +12,7 @@
 
   import type { PageData } from "./$types";
     import { relativeTime } from "$lib/utilities";
+    import { NewTabLink } from "$components/ui/newtablink";
 
   export let data: PageData;
 
@@ -91,7 +92,7 @@
       <p class="!mt-0 !mb-0">{assignment.description}</p>
       {#if assignment.details}
         <h3 class="!mt-1 !mb-0">Opgavebeskrivelse</h3>
-        <SvelteMarkdown source={assignment.details} />
+        <SvelteMarkdown source={assignment.details} renderers={{ link: NewTabLink }} />
       {/if}
       <h3 class="!mt-1 !mb-0">Status</h3>
       <p class="!mt-0 !mb-0">

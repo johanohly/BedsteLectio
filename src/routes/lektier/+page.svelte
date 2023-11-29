@@ -7,6 +7,7 @@
   import { constructInterval } from "$lib/utilities";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
+    import { NewTabLink } from "$components/ui/newtablink";
 
   let loading = true;
   let data: RawHomework[];
@@ -71,7 +72,7 @@
                   </div>
                   <div class="flex flex-col flex-1 pt-4 md:pt-0">
                     <div class="prose dark:prose-invert">
-                      <SvelteMarkdown source={hw.homework.replaceAll("\n", "<br>")} />
+                      <SvelteMarkdown source={hw.homework.replaceAll("\n", "<br>")} renderers={{ link: NewTabLink }} />
                     </div>
                     <!-- <span class="text-black dark:text-white font-medium">{hw.homework}</span> -->
                     <span class="text-[#666666] dark:text-[#8a8a8a] leading-[1.6]">{hw.lesson.class} · {hw.lesson.teacher}</span>
