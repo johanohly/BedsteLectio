@@ -2,7 +2,7 @@
     import { Card, CardContent, CardHeader, CardTitle } from "$components/ui/card";
 </script>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 lg:space-x-4">
+<div class="grid grid-cols-1 max-md:space-y-4 lg:grid-cols-2 lg:space-x-4">
     <Card>
         <CardHeader>
             <CardTitle>Privatlivspolitik</CardTitle>
