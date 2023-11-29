@@ -32,7 +32,7 @@
   let userName = "";
   let customColors: { [key: string]: number } | undefined = undefined;
 
-  const getEvents: EventSourceFunc = (fetchInfo, successCallback, failureCallback) => {
+  const getEvents: EventSourceFunc = (fetchInfo, successCallback) => {
     const start = DateTime.fromJSDate(fetchInfo.start);
 
     fetch(constructNonceURL(`https://api.bedstelectio.tech/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
@@ -237,7 +237,7 @@
       slotMaxTime: "18:00",
       slotMinTime: "07:00",
       navLinks: true,
-      navLinkDayClick(date, jsEvent) {
+      navLinkDayClick(date) {
         calendar.gotoDate(date);
         calendar.changeView("timeGridDay");
         showBackToWeekViewButton = true;

@@ -37,7 +37,7 @@
                 name: formatted,
             };
         });
-        groups = Object.entries(dataStudents.hold_og_grupper ?? {}).map(([name, id]) => name);
+        groups = Object.entries(dataStudents.hold_og_grupper ?? {}).map(([name]) => name);
     }
     $: me = students?.find((student) => student.id == `S${decodeUserID($authStore.cookie)}`);
 

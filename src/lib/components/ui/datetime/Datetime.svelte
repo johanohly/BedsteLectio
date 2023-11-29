@@ -15,7 +15,7 @@
             disableMobile: true,
             altInput: true,
             altFormat: "d.m.y",
-            formatDate(date, format, locale) {
+            formatDate(date, format) {
                 return flatpickr.formatDate(date, format).replace("Z", "");
             },
         });

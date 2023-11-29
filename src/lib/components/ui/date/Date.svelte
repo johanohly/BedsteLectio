@@ -15,7 +15,7 @@
             positionElement: trigger,
             disableMobile: true,
             dateFormat: "Z+02:00",
-            formatDate(date, format, locale) {
+            formatDate(date, format) {
                 return flatpickr.formatDate(date, format).replace("Z", "");
             },
         });

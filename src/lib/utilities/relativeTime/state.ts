@@ -7,13 +7,13 @@ interface UpdateState extends RenderState {
 }
 
 // keep track of each instance
-const instances = new Map<Object, UpdateState>()
+const instances = new Map<HTMLElement, UpdateState>()
 
 // we use a single timer for efficiency and to keep updates in sync
 let updateInterval: number | NodeJS.Timeout
 
 // register or update instance
-export function register(instance: Object, date: Date, callback: Callback) {
+export function register(instance: HTMLElement, date: Date, callback: Callback) {
     // get the formatter for the given locale, we do this here so we don't keep having to look it up on each tick
     const formatter = getFormatter()
 
@@ -38,7 +38,7 @@ export function register(instance: Object, date: Date, callback: Callback) {
     }
 }
 
-export function unregister(instance: Object) {
+export function unregister(instance: HTMLElement) {
     instances.delete(instance)
     if (instances.size === 0) {
         clearInterval(updateInterval)

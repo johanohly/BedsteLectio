@@ -22,7 +22,7 @@
 
   export let loading = true;
   export let data = {};
-  export let settings: {} = {};
+  export let settings: object = {};
 
   onMount(async () => {
     let response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
