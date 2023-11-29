@@ -69,6 +69,8 @@ export type SimpleAssignment = {
     status: "Afleveret" | "Mangler" | "Venter";
     awaits: "" | "Elev" | "Lærer";
     title: string;
+    color: string;
+    textColor: string;
 };
 
 export type RawSimpleAssignment = {

@@ -11,31 +11,39 @@
   import { Search } from "lucide-svelte";
   import { DateTime } from "luxon";
   import { relativeTime, stringToColor } from "$lib/utilities";
+  import type { Settings } from "$lib/types/settings";
 
   let loading = true;
   let data: RawSimpleAssignment[];
   let assignments: SimpleAssignment[] = [];
   let sortedAssignments: SimpleAssignment[] = [];
 
-  let settings = {};
-  let customColors: { [key: string]: number } = {};
+  let settings: Settings;
+  let customColors: Settings["customColors"];
+  let classNames: Settings["classNames"];
   $: if (!loading) {
-    // @ts-ignore i CANNOT be asked
-    customColors = settings.customColors ? settings.customColors : {};
+    customColors = settings.customColors;
+    classNames = settings.classNames;
   }
 
   $: if (!loading && data) {
-    assignments = data.map((assignment) => ({
-      date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
-        locale: "da",
-      }),
-      description: assignment.opgavenote,
-      class: assignment.hold,
-      link: `/opgave/${assignment.exerciseid}`,
-      status: assignment.status,
-      awaits: assignment.afventer,
-      title: assignment.opgavetitel,
-    }));
+    assignments = data.map((assignment) => {
+      const color = customColors?.[assignment.hold] ? `hsl(${customColors?.[assignment.hold]}, 100%, 90%)` : stringToColor(assignment.hold, 100, 90).string;
+      const textColor = customColors?.[assignment.hold] ? `hsl(${customColors?.[assignment.hold]}, 100%, 30%)` : stringToColor(assignment.hold, 100, 30).string;
+      return {
+        date: DateTime.fromFormat(assignment.frist, "d/M-yyyy HH:mm", {
+          locale: "da",
+        }),
+        description: assignment.opgavenote,
+        class: classNames?.[assignment.hold] ?? assignment.hold,
+        link: `/opgave/${assignment.exerciseid}`,
+        status: assignment.status,
+        awaits: assignment.afventer,
+        title: assignment.opgavetitel,
+        color,
+        textColor,
+      };
+    });
   }
 
   let width = 0;
@@ -47,7 +55,7 @@
     matchingAssignments = filter(
       searchTerm,
       sortedAssignments.map((assignment) => `${assignment.title} ${assignment.class}`),
-      {}
+      {},
     )
       .filter((result) => result.score > 0.5)
       .map((result) => result.string);
@@ -57,8 +65,7 @@
   $: sortedAssignments = assignments.filter((opgave) => {
     if ($selectedTab == "Afventer Feedback") {
       return opgave.status.includes("Afleveret") && opgave.awaits === "Lærer";
-    }
-    else if ($selectedTab == "Kommende") {
+    } else if ($selectedTab == "Kommende") {
       return opgave.status.includes("Venter");
     } else if ($selectedTab == "Færdige") {
       return opgave.status.includes("Afleveret");
@@ -97,12 +104,11 @@
             const diff2 = Math.abs(b.date.toMillis() - now);
             return diff1 - diff2;
           }) as assignment}
-          {@const customColor = customColors?.[assignment.class] ?? ""}
           <div class="not-prose">
             <a href={assignment.link}>
               <Card class="mb-4">
                 <CardHeader>
-                  <CardTitle>{assignment.title}<span style:--color={customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(assignment.class, 100, 90).string} style:--textColor={customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(assignment.class, 100, 30).string} class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3 dark:!bg-blue-900 dark:!text-blue-300">{assignment.class}</span></CardTitle>
+                  <CardTitle>{assignment.title}<span style:--color={assignment.color} style:--textColor={assignment.textColor} class="custom-color hidden lg:block text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3">{assignment.class}</span></CardTitle>
                   <CardDescription>{assignment.description}</CardDescription>
                 </CardHeader>
                 <CardFooter>

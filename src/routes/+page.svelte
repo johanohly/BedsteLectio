@@ -15,7 +15,8 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
-    import { NewTabLink } from "$components/ui/newtablink";
+  import { NewTabLink } from "$components/ui/newtablink";
+    import type { Settings } from "$lib/types/settings";
 
   let loading = true;
   let data: {
@@ -29,11 +30,12 @@
   let hwLoading = true;
   let hwData: RawHomework[];
 
-  let settings = {};
-  let customColors: { [key: string]: number } = {};
+  let settings: Settings;
+  let customColors: Settings["customColors"] = {};
+  let classNames: Settings["classNames"] = {};
   $: if (!loading) {
-    // @ts-ignore i CANNOT be asked
-    customColors = settings.customColors ? settings.customColors : {};
+    customColors = settings.customColors;
+    classNames = settings.classNames;
   }
 
   let lessons: { [key: string]: Lesson[] } = {};
@@ -44,7 +46,7 @@
   $: if (!loading && data) {
     const tempLessons: Lesson[] = data.skema.map((lesson) => {
       return {
-        class: lesson.hold ?? "",
+        class: classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "",
         id: lesson.absid,
         interval: constructInterval(lesson.tidspunkt),
         name: lesson.navn?.replace("prv.", "prøve").replace("mdt.", "mundtlig").replace("skr.", "skriftlig") ?? "",

@@ -24,13 +24,16 @@
   import { fade } from "svelte/transition";
   import { Label } from "$components/ui/label";
   import { Switch } from "$components/ui/switch";
+    import type { Settings } from "$lib/types/settings";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
   let userId: string;
   let searchId: string;
   let userName = "";
-  let customColors: { [key: string]: number } | undefined = undefined;
+  let loadedSettings = false;
+  let customColors: Settings["customColors"] = {};
+  let classNames: Settings["classNames"] = {};
 
   const getEvents: EventSourceFunc = (fetchInfo, successCallback) => {
     const start = DateTime.fromJSDate(fetchInfo.start);
@@ -76,18 +79,17 @@
         }
       }
 
-      if (customColors == undefined) {
+      if (!loadedSettings) {
         fetch("/api/settings", {
           headers: {
             "lectio-cookie": $authStore.cookie,
           },
         }).then((settingsResponse) => {
           if (settingsResponse.ok) {
-            settingsResponse.json().then((data: { customColors: { [key: string]: number } }) => {
+            settingsResponse.json().then((data: { customColors: Record<string, number>; classNames: Record<string, string> }) => {
               customColors = data.customColors;
+              classNames = data.classNames;
             });
-          } else {
-            customColors = {};
           }
 
           response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
@@ -109,6 +111,7 @@
               const customColor = customColors?.[lesson.hold ?? ""] ?? "";
               const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
               const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
+              const className = classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "";
 
               return {
                 color: color,
@@ -116,11 +119,11 @@
                 end,
                 extendedProps: {
                   cancelled: lesson.status === "aflyst",
-                  description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
+                  description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${className}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
                 },
                 id: lesson.absid,
                 start,
-                title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
+                title: `${lesson.navn ?? className}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
                 url: `/modul/${lesson.absid}`,
               };
             });
@@ -147,6 +150,7 @@
             const customColor = customColors?.[lesson.hold ?? ""] ?? "";
             const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
             const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
+            const className = classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "";
 
             return {
               color: color,
@@ -154,11 +158,11 @@
               end,
               extendedProps: {
                 cancelled: lesson.status === "aflyst",
-                description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${lesson.hold}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
+                description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${className}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
               },
               id: lesson.absid,
               start,
-              title: `${lesson.navn ?? lesson.hold}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
+              title: `${lesson.navn ?? className}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
               url: `/modul/${lesson.absid}`,
             };
           });

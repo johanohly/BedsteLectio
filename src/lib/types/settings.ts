@@ -1,0 +1,1 @@
+export type Settings = { customColors: Record<string, number>; classNames: Record<string, string> }
