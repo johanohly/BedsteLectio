@@ -77,21 +77,9 @@
                 "lectio-cookie": $authStore.cookie,
             },
         });
-        if (response.ok) {
-            const json = (await response.json()) as { hold_og_grupper: { hold: { [key: string]: string } } };
-            if (json.hold_og_grupper.hold) {
-                classNames = Object.entries(json.hold_og_grupper.hold).map(([key, value]) => ({ class: { name: key, id: value }, name: "", loading: false }));
-            } else {
-                addToast({
-                    data: {
-                        title: "Fejl",
-                        description: "Der kunne ikke findes nogle hold navne.",
-                        color: "bg-red-500",
-                    },
-                });
-            }
-        } else {
-            addToast({
+        loadingUserClasses = false;
+        if (!response.ok) {
+            return addToast({
                 data: {
                     title: "Fejl",
                     description: "Der skete en fejl. Holdnavne kunne ikke hentes.",
@@ -99,55 +87,72 @@
                 },
             });
         }
-        loadingUserClasses = false;
-    };
 
-    const fetchName = (entry: { name: string; id: string }) => async () => {
-        const index = classNames.findIndex((e) => e.class.name == entry.name);
-        classNames[index].loading = true;
-        classNames = classNames;
-
-        let id: string;
-        if (entry.id != "") {
-            id = entry.id;
-        } else {
-            const matches = Object.entries(classes).filter((e) => e[0] == entry.name);
-            if (matches.length) id = matches[0][1];
-            else {
-                addToast({
-                    data: {
-                        title: "Fejl",
-                        description: "Der skete en fejl. Holdets id kunne ikke findes.",
-                        color: "bg-red-500",
-                    },
-                });
-                classNames[index].loading = false;
-                classNames = classNames;
-                return;
-            }
-        }
-        const response = await fetch(`https://api.bedstelectio.tech/hold_til_fag?id=${id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "lectio-cookie": $authStore.cookie,
-            },
-        });
-        if (response.ok) {
-            const json = (await response.json()) as { fag: string };
-            classNames[index].name = json.fag;
-        } else {
-            addToast({
+        const json = (await response.json()) as { hold_og_grupper: { hold: { [key: string]: string } } };
+        if (!Object.keys(json.hold_og_grupper.hold).length) {
+            return addToast({
                 data: {
                     title: "Fejl",
-                    description: "Der skete en fejl. Holdnavn kunne ikke hentes.",
+                    description: "Der kunne ikke findes nogle hold navne.",
                     color: "bg-red-500",
                 },
             });
         }
-        classNames[index].loading = false;
-        classNames = classNames;
+
+        classNames = Object.entries(json.hold_og_grupper.hold).map(([key, value]) => ({ class: { name: key, id: value }, name: "", loading: true }));
+        classNames.forEach(async (entry) => await fetchName(entry.class, false)());
     };
+
+    const fetchName =
+        (entry: { name: string; id: string }, setLoad = true) =>
+        async () => {
+            const index = classNames.findIndex((e) => e.class.name == entry.name);
+            if (setLoad) {
+                classNames[index].loading = true;
+                classNames = classNames;
+            }
+
+            let id: string;
+            if (entry.id != "") {
+                id = entry.id;
+            } else {
+                const matches = Object.entries(classes).filter((e) => e[0] == entry.name);
+                if (matches.length) id = matches[0][1];
+                else {
+                    addToast({
+                        data: {
+                            title: "Fejl",
+                            description: "Der skete en fejl. Holdets id kunne ikke findes.",
+                            color: "bg-red-500",
+                        },
+                    });
+                    classNames[index].loading = false;
+                    classNames = classNames;
+                    return;
+                }
+            }
+            const response = await fetch(`https://api.bedstelectio.tech/hold_til_fag?id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "lectio-cookie": $authStore.cookie,
+                },
+            });
+            if (response.ok) {
+                const json = (await response.json()) as { fag: string };
+                classNames[index].name = json.fag;
+            } else {
+                addToast({
+                    data: {
+                        title: "Fejl",
+                        description: "Der skete en fejl. Holdnavn kunne ikke hentes.",
+                        color: "bg-red-500",
+                    },
+                });
+            }
+            classNames[index].loading = false;
+            classNames = classNames;
+        };
 
     $: validNames = classNames.every((entry) => entry.class.name != "" && entry.name != "");
     let submittingNames = false;
@@ -246,7 +251,9 @@
                             {#each classNames as name}
                                 <div class="flex space-x-2">
                                     <div class="w-full flex space-x-2">
-                                        <Select bind:value={name.class.name} items={Object.keys(classes)} placeholder="Vælg hold..." />
+                                        {#key name.class.name}
+                                            <Select bind:value={name.class.name} items={Object.keys(classes)} placeholder="Vælg hold..." />
+                                        {/key}
                                         <input bind:value={name.name} placeholder="Skriv navn eller hent oversætning." class="w-full h-11 border dark:border-gray-600 border-gray-400 rounded-[6px] p-2 bg-[inherit] dark:bg-[#2e2e2e]" type="text" />
                                     </div>
                                     <Button disabled={name.name != "" || name.loading} on:click={fetchName(name.class)} size="icon">
