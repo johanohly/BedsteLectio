@@ -101,6 +101,7 @@
 
         classNames = Object.entries(json.hold_og_grupper.hold).map(([key, value]) => ({ class: { name: key, id: value }, name: "", loading: true }));
         classNames.forEach(async (entry) => await fetchName(entry.class, false)());
+        classNames = classNames;
     };
 
     const fetchName =
