@@ -1,55 +1,16 @@
-<!-- 
-Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/packages/skeleton/src/lib/utilities/LightSwitch/LightSwitch.svelte
- -->
-
 <script lang="ts">
-  import { createSwitch, melt } from "@melt-ui/svelte";
-  import { onMount } from "svelte";
-
-  import {
-    getModeOsPrefers,
-    modeCurrent,
-    setModeCurrent,
-    setModeUserPrefers,
-  } from "./light-switch";
-
-  $: {
-    setModeUserPrefers($modeCurrent);
-    setModeCurrent($modeCurrent);
-  }
-
-  const {
-    elements: { input, root },
-  } = createSwitch({ checked: modeCurrent });
-
-  // Lifecycle
-  onMount(() => {
-    // Sync lightswitch with the theme
-    if (!("modeCurrent" in localStorage)) {
-      setModeCurrent(getModeOsPrefers());
-    }
-  });
+  import { Moon, Sun } from "lucide-svelte";
+  import { themeCurrent, setModeCurrent } from "./light-switch";
 </script>
 
-<form>
+<button class="w-full" on:click={() => setModeCurrent($themeCurrent === "light" ? "dark" : "light")}>
   <div class="flex items-center justify-between">
-    <label
-      class="cursor-pointer"
-      for="dark-mode"
-    >
+    {#if $themeCurrent === "light"}
       Dark Mode
-    </label>
-    <button
-      class="relative h-6 w-11 rounded-full bg-dark-hover dark:bg-light-hover transition-colors data-[state=checked]:bg-black dark:data-[state=checked]:bg-white"
-      id="dark-mode"
-      use:melt={$root}
-    >
-      <span
-        class="block h-5 w-5 translate-x-0.5 rounded-full bg-white dark:bg-black
-                transition-transform will-change-transform
-                {!$modeCurrent && 'translate-x-[22px]'}"
-      />
-    </button>
-    <input use:melt={$input} />
+      <Moon />
+    {:else}
+      Light Mode
+      <Sun />
+    {/if}
   </div>
-</form>
+</button>

@@ -1,104 +1,23 @@
-// Source: https://github.com/skeletonlabs/skeleton/blob/master/packages/skeleton/src/lib/utilities/LightSwitch/lightswitch.ts
-
-// Lightswitch Service
-
-// DO NOT replace this ⬇ import, it has to be imported directly
 import { localStorageStore } from "$lib/utilities"
 import { get } from "svelte/store";
 
-// Stores ---
-// TRUE: light, FALSE: dark
+type Theme = "light" | "dark";
+export const themeCurrent = localStorageStore<Theme>("theme", "light");
 
-/** Store: OS Preference Mode */
-export const modeOsPrefers = localStorageStore<boolean>("modeOsPrefers", false);
-/** Store: User Preference Mode */
-export const modeUserPrefers = localStorageStore<boolean | undefined>(
-	"modeUserPrefers",
-	undefined
-);
-/** Store: Current Mode State */
-export const modeCurrent = localStorageStore<boolean>("modeCurrent", false);
-
-// Get ---
-
-/** Get the OS Preference for light/dark mode */
-export function getModeOsPrefers(): boolean {
-	const prefersLightMode = window.matchMedia(
-		"(prefers-color-scheme: light)"
-	).matches;
-	modeOsPrefers.set(prefersLightMode);
-	return prefersLightMode;
-}
-
-/** Get the User for light/dark mode */
-export function getModeUserPrefers(): boolean | undefined {
-	return get(modeUserPrefers);
-}
-
-/** Get the Automatic Preference light/dark mode */
-export function getModeAutoPrefers(): boolean {
-	const os = getModeOsPrefers();
-	const user = getModeUserPrefers();
-	const modeValue = user !== undefined ? user : os;
-	return modeValue;
-}
-
-// Set ---
-
-/** Set the User Preference for light/dark mode */
-export function setModeUserPrefers(value: boolean): void {
-	modeUserPrefers.set(value);
-}
-
-/** Set the the current light/dark mode */
-export function setModeCurrent(value: boolean) {
+export function setModeCurrent(value: Theme) {
 	const elemHtmlClasses = document.documentElement.classList;
 	const classDark = `dark`;
-	value === true
+	value === "light"
 		? elemHtmlClasses.remove(classDark)
 		: elemHtmlClasses.add(classDark);
-	modeCurrent.set(value);
+	themeCurrent.set(value);
 }
 
-// Lightswitch Utility
-
-/** Set the visible light/dark mode on page load. */
 export function setInitialClassState() {
 	const elemHtmlClasses = document.documentElement.classList;
-	// Conditions
-	const condLocalStorageUserPrefs =
-		localStorage.getItem("modeUserPrefers") === "false";
-	const condLocalStorageUserPrefsExists = !(
-		"modeUserPrefers" in localStorage
-	);
-	const condMatchMedia = window.matchMedia(
-		"(prefers-color-scheme: dark)"
-	).matches;
-	// Add/remove `.dark` class to HTML element
-	if (
-		condLocalStorageUserPrefs ||
-		(condLocalStorageUserPrefsExists && condMatchMedia)
-	) {
-		elemHtmlClasses.add("dark");
-	} else {
-		elemHtmlClasses.remove("dark");
-	}
-}
-
-// Auto-Switch Utility
-
-/** Automatically set the visible light/dark, updates on change. */
-export function autoModeWatcher(): void {
-	const mql = window.matchMedia("(prefers-color-scheme: light)");
-	function setMode(value: boolean) {
-		const elemHtmlClasses = document.documentElement.classList;
-		const classDark = `dark`;
-		value === true
-			? elemHtmlClasses.remove(classDark)
-			: elemHtmlClasses.add(classDark);
-	}
-	setMode(mql.matches);
-	mql.onchange = () => {
-		setMode(mql.matches);
-	};
+	const classDark = `dark`;
+	const theme = get(themeCurrent);
+	theme === "light"
+		? elemHtmlClasses.remove(classDark)
+		: elemHtmlClasses.add(classDark);
 }

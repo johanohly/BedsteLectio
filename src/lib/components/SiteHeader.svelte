@@ -14,9 +14,7 @@
   const {
     elements: { arrow, item, menu, trigger },
     states: { open },
-  } = createDropdownMenu({
-    forceVisible: true,
-  });
+  } = createDropdownMenu();
 
   const signOut = () => {
     $authStore.cookie = "";
@@ -52,20 +50,22 @@
   </div>
 </header>
 
-<div class="{!$open ? 'hidden' : ''} z-50 flex flex-col shadow-lg rounded-md bg-white dark:bg-dark-hover p-1 min-w-[220px] !ring-0" transition:fly={{ duration: 100, y: -10 }} use:melt={$menu}>
-  <div class="pt-2 flex items-center justify-center">
-    <Avatar
-      user={{
-        id: `S${decodeUserID($authStore.cookie)}`,
-        name: $authStore.username,
-      }}
-      size="h-28 w-28"
-    />
+{#if $open}
+  <div class="z-50 flex flex-col shadow-lg rounded-md bg-white dark:bg-dark dark:border p-1 min-w-[220px] !ring-0" transition:fly={{ duration: 100, y: -10 }} use:melt={$menu}>
+    <div class="py-2 flex items-center justify-center">
+      <Avatar
+        user={{
+          id: `S${decodeUserID($authStore.cookie)}`,
+          name: $authStore.username,
+        }}
+        size="h-28 w-28"
+      />
+    </div>
+    <div class="cursor-pointer text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-hover hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" use:melt={$item}>
+      <LightSwitch />
+    </div>
+    <a class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-hover hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" href="/konto" use:melt={$item}>Konto</a>
+    <button on:click={signOut} class="text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-hover hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" use:melt={$item}>Log ud</button>
+    <div use:melt={$arrow} />
   </div>
-  <div class="cursor-pointer text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" use:melt={$item}>
-    <LightSwitch />
-  </div>
-  <a class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" href="/konto" use:melt={$item}>Konto</a>
-  <button on:click={signOut} class="text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark hover:text-gray-900 dark:hover:text-gray-100 block px-4 py-2 text-sm rounded-md" use:melt={$item}>Log ud</button>
-  <div use:melt={$arrow} />
-</div>
+{/if}
