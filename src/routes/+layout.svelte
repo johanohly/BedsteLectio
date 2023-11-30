@@ -3,7 +3,7 @@
 
   import { afterNavigate } from "$app/navigation";
   import { navigating, page } from "$app/stores";
-  import { Preloading, SiteHeader } from "$components";
+  import { Preloading, SiteFooter, SiteHeader } from "$components";
   import { setInitialClassState } from "$components/light-switch/light-switch";
   import { Toaster } from "$components/toaster";
 
@@ -70,3 +70,6 @@
 <div class="prose dark:prose-invert max-w-none" id="page">
   <slot />
 </div>
+{#if $page.url.pathname == "/log-ind"}
+  <SiteFooter />
+{/if}

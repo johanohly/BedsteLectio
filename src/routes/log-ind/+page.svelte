@@ -1,7 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { SiteFooter } from "$components";
   import { addToast } from "$components/toaster";
   import { Button } from "$components/ui/button";
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "$components/ui/card";
@@ -76,7 +75,7 @@
   }
 </script>
 
-<div class="page-container h-[calc(100vh-3.6rem)] flex items-center justify-center">
+<div class="page-container h-full flex items-center justify-center">
   <Card class="w-full">
     <CardHeader>
       <CardTitle>Log ind</CardTitle>
@@ -100,14 +99,14 @@
           <span>Gem Skole</span>
           <span class="font-normal leading-snug text-muted-foreground"> Gem skolen, så du ikke behøver at vælge den næste gang du logger ind. </span>
         </Label>
-        <Switch bind:checked={saveSchool} disabled={saveCredentials} id="save-school" />
+        <Switch bind:checked={saveSchool} disabled={saveCredentials} name="Gem Skole" id="save-school" />
       </div>
       <div class="mt-4 flex items-center justify-between space-x-2">
         <Label class="flex flex-col space-y-1" for="save-credentials">
           <span>Gem Oplysninger</span>
           <span class="font-normal leading-snug text-muted-foreground"> Gem dine oplysninger i din browser, så du aldrig behøves at logge ind igen. </span>
         </Label>
-        <Switch bind:checked={saveCredentials} id="save-credentials" />
+        <Switch bind:checked={saveCredentials} name="Gem Oplysninger" id="save-credentials" />
       </div>
     </CardContent>
     <CardFooter>
@@ -120,5 +119,3 @@
     </CardFooter>
   </Card>
 </div>
-
-<SiteFooter />
