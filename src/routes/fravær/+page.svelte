@@ -16,11 +16,13 @@
   import { type Writable, writable } from "svelte/store";
   import { Render, Subscribe, createTable } from "svelte-headless-table";
   import { addSortBy } from "svelte-headless-table/plugins";
-  import Skeleton from "$components/ui/skeleton/Skeleton.svelte";
+  import { Skeleton } from "$components/ui/skeleton";
+  import type { Settings } from "$lib/types/settings";
 
   let loading = true;
   let processing = true;
   let data: RawAbsence;
+  let settings: Settings;
 
   let selectedAbsenceType: "calculated" | "yearly" = "calculated";
 
@@ -56,7 +58,7 @@
         enabled: true,
       },
       enabled: true,
-      formatter: function (val, opt) {
+      formatter: function (_val, opt) {
         return opt.w.globals.labels[opt.dataPointIndex];
       },
     },
@@ -113,7 +115,7 @@
           return [
             ...old,
             [
-              item.hold,
+              settings.classNames?.[item.hold] ?? item.hold,
               {
                 calculated: item.opgjort_fravær_procent,
                 yearly: item.heleåret_fravær_procent,
@@ -128,7 +130,6 @@
       }
     });
 
-    console.log(data.moduler.manglende_fraværsårsager);
     [...data.moduler.oversigt, ...data.moduler.manglende_fraværsårsager].forEach((item) => {
       // @ts-ignore
       let reason = item.årsagsnote;
@@ -148,7 +149,7 @@
           ...old,
           {
             absence: item.fravær,
-            class: item.aktivitet.hold ?? "Ukendt",
+            class: settings.classNames?.[item.aktivitet.hold ?? "Ukendt"] ?? item.aktivitet.hold ?? "Ukendt",
             date: constructInterval(item.aktivitet.tidspunkt),
             lessonId: item.aktivitet.absid,
             reason: reason,
@@ -160,7 +161,7 @@
     const absentLessons = [...data.moduler.oversigt, ...data.moduler.manglende_fraværsårsager];
     const rawLessonsPerClass: Record<string, number> = {};
     for (const item of absentLessons) {
-      const hold = item.aktivitet.hold ?? "Ukendt";
+      const hold = settings.classNames?.[item.aktivitet.hold ?? "Ukendt"] ?? item.aktivitet.hold ?? "Ukendt";
       if (rawLessonsPerClass[hold]) {
         rawLessonsPerClass[hold] += 1;
       } else {
@@ -182,7 +183,7 @@
 
     const lessonsPerMonthPerClass: Record<string, Record<string, number>> = {};
     for (const item of absentLessons) {
-      const lessonClass = item.aktivitet.hold ?? "Ukendt";
+      const lessonClass = settings.classNames?.[item.aktivitet.hold ?? "Ukendt"] ?? item.aktivitet.hold ?? "Ukendt";
       const date = constructInterval(item.aktivitet.tidspunkt);
       const month = date.start?.monthLong ?? "April";
 
@@ -319,7 +320,7 @@
   const { sortKeys: absenceReasonSortKeys } = absenceReasonPluginStates.sort;
 </script>
 
-<RequestData bind:data bind:loading path="fravaer" />
+<RequestData bind:data bind:loading bind:settings path="fravaer" withSettings />
 
 <div class="page-container">
   <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
