@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { modeCurrent } from "$components/light-switch/light-switch";
+  import { themeCurrent } from "$components/light-switch";
   import ApexCharts from "apexcharts";
   import { onMount } from "svelte";
 
@@ -17,9 +17,9 @@
   });
   $: if (chart) {
     chart.updateOptions({
-      colors: $modeCurrent ? ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"] : ["#25fcb0", "#208bf3", "#6f5beb", "#3445de"],
+      colors: $themeCurrent ? ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"] : ["#25fcb0", "#208bf3", "#6f5beb", "#3445de"],
       theme: {
-        mode: $modeCurrent ? "light" : "dark",
+        mode: $themeCurrent ? "light" : "dark",
       },
     });
   }
