@@ -2,8 +2,8 @@
 ![W3C Validation](https://img.shields.io/w3c-validation/default?targetUrl=https%3A%2F%2Fbedstelectio.tech)
 ![GitHub issues](https://img.shields.io/github/issues/JohnnyJTH/BedsteLectio)
 
-# BedsteLectio
-Bedre end Better Lectio
+# Bedre end Better Lectio
+![Repo Metrics](https://github.com/JohnnyJTH/BedsteLectioMetrics/blob/main/github-metrics.svg)
 
 ## Tech Stack
 BedsteLectio is built on the following main stack:
