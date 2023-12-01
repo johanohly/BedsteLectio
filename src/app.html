@@ -11,6 +11,21 @@
 	<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
 
 	<title>BedsteLectio</title>
+	<script>
+		function setInitialClassState() {
+			const elemHtmlClasses = document.documentElement.classList;
+			const theme = localStorage.getItem("theme");
+			if (!theme) localStorage.setItem("theme", JSON.stringify("light"));
+
+			if (theme == null || JSON.parse(theme) === "light") {
+				elemHtmlClasses.remove("dark")
+			} else {
+				elemHtmlClasses.add("dark");
+			}
+		}
+
+		setInitialClassState();
+	</script>
 	%sveltekit.head%
 </head>
 

@@ -4,7 +4,6 @@
   import { afterNavigate } from "$app/navigation";
   import { navigating, page } from "$app/stores";
   import { Preloading, SiteFooter, SiteHeader } from "$components";
-  import { setInitialClassState } from "$components/light-switch/light-switch";
   import { Toaster } from "$components/toaster";
 
   import "../app.postcss";
@@ -56,9 +55,6 @@
   <meta content="image/png" property="og:image:type" />
   <meta content="256" property="og:image:width" />
   <meta content="256" property="og:image:height" />
-
-  <!-- This causes the new eslint-plugin-svelte: https://github.com/sveltejs/eslint-plugin-svelte/issues/492 -->
-  {@html `<\u{73}cript nonce="%sveltekit.nonce%">(${setInitialClassState.toString()})();</script>`}
 </svelte:head>
 
 {#if $navigating}
