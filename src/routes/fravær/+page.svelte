@@ -325,11 +325,7 @@
 <div class="page-container">
   <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
     <h1 class="!mb-0">Fravær</h1>
-    {#if processing}
-      <Skeleton class="h-12 w-48 rounded-md" />
-    {:else}
-      <Dropdown bind:value={selectedAbsenceType} options={{ "For året": "yearly", Opgjort: "calculated" }} placeholder="Opgjort" />
-    {/if}
+    <Button href="/fravær/regner" size="sm">Fraværsregner</Button>
   </div>
   <div class="flex gap-4">
     <Card class="w-full">
@@ -467,7 +463,10 @@
   </div>
   {#if !processing}
     <div class="p-4 bg-white dark:bg-dark rounded-md">
-      <h2 class="mt-0">Overblik</h2>
+      <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between">
+        <h2 class="mt-0">Overblik</h2>
+        <Dropdown bind:value={selectedAbsenceType} options={{ "For året": "yearly", Opgjort: "calculated" }} placeholder="Opgjort" />
+      </div>
       <Table.Root {...$absenceTableAttrs}>
         <Table.Header>
           {#each $absenceHeaderRows as headerRow}
