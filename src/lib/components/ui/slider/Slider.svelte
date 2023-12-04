@@ -20,5 +20,5 @@
     <span class="block h-[3px] w-full bg-black/40 dark:bg-dark-hover">
         <span use:melt={$range} class="h-[3px] bg-dark dark:bg-white" />
     </span>
-    <span use:melt={$thumb()} class="block h-5 w-5 rounded-full bg-dark dark:bg-white focus:ring-4" />
+    <span use:melt={$thumb()} class="cursor-pointer block h-5 w-5 rounded-full bg-dark dark:bg-white focus:ring-4" />
 </span>
