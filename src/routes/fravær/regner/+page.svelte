@@ -1,6 +1,7 @@
 <script lang="ts">
     import { RequestData } from "$components";
     import { Button } from "$components/ui/button";
+    import { Skeleton } from "$components/ui/skeleton";
     import { Slider } from "$components/ui/slider";
     import type { RawAbsence } from "$lib/types/absence";
     import { ArrowLeft } from "lucide-svelte";
@@ -63,9 +64,13 @@
         <h1>Fraværsregner</h1>
     </div>
     {#if loading}
-        <p>Loading...</p>
+        <Skeleton class="!mt-4 !mb-1 h-[1.5rem] w-3/4 rounded-md" />
+        <div class="!m-0 flex flex-col md:flex-row gap-2">
+            <Skeleton class="h-20 flex-1 rounded-md" />
+            <Skeleton class="h-20 flex-1 rounded-md" />
+        </div>
     {:else if step === "period"}
-        <h3 class="m-0">Vil du regne opgjort eller årligt fravær ud?</h3>
+        <h3 class="!mt-4">Vil du regne opgjort eller årligt fravær ud?</h3>
         <div class="!m-0 flex flex-col md:flex-row gap-2">
             <Button
                 on:click={() => {
@@ -85,7 +90,7 @@
             >
         </div>
     {:else if step === "type"}
-        <h3 class="m-0">Vil du angive dit ønskede fravær i procent eller moduler?</h3>
+        <h3 class="!mt-4">Vil du angive dit ønskede fravær i procent eller moduler?</h3>
         <div class="!m-0 flex flex-col md:flex-row gap-2">
             <Button
                 on:click={() => {
@@ -105,7 +110,7 @@
             >
         </div>
     {:else if step === "amount"}
-        <h3 class="m-0">Hvor meget fravær vil du ende med?</h3>
+        <h3 class="!mt-4">Hvor meget fravær vil du ende med?</h3>
         <div class="!m-0 flex">
             <span class="font-mono text-[5rem] leading-[5rem] md:text-[10rem] md:leading-[10rem]">{textAmount}</span>
             <span class="self-end font-mono text-[2.5rem] leading-[2.5rem] md:text-[5rem] md:leading-[5rem]">{type === "percent" ? "%" : "moduler"}</span>
@@ -113,6 +118,6 @@
         <Slider bind:value={amount} />
         <Button on:click={calculate}>Beregn</Button>
     {:else if step === "result"}
-        <h3 class="m-0">Du kan have {result} moduler fravær for at ende med {amount}{type === "percent" ? "%" : " moduler"} fravær.</h3>
+        <h3 class="!mt-4">Du kan have {result} moduler fravær for at ende med {amount}{type === "percent" ? "%" : " moduler"} fravær.</h3>
     {/if}
 </div>
