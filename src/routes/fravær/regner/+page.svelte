@@ -45,15 +45,17 @@
     let amount = 10;
     $: textAmount = amount.toString();
 
-    let result = 0;
-    const calculate = () => {
-        if (type === "percent") {
-            result = Math.floor(classes[period].total * (amount / 100));
-        } else {
-            result = classes[period].actual - amount;
+    let result = "";
+    $: {
+        if (!loading && data && step === "result") {
+            if (type === "percent") {
+                const total = Math.floor(classes[period].total * (amount / 100));
+                result = `${total} moduler (${Math.abs(total - classes[period].actual)} ${total - classes[period].actual > 0 ? "mere" : "for meget"})`;
+            } else {
+                result = `${amount - classes[period].actual} moduler mere`;
+            }
         }
-        step = "result";
-    };
+    }
 </script>
 
 <RequestData bind:data bind:loading path="fravaer" />
@@ -116,8 +118,21 @@
             <span class="self-end font-mono text-[2.5rem] leading-[2.5rem] md:text-[5rem] md:leading-[5rem]">{type === "percent" ? "%" : "moduler"}</span>
         </div>
         <Slider bind:value={amount} />
-        <Button on:click={calculate}>Beregn</Button>
+        <Button
+            on:click={() => {
+                step = "result";
+            }}>Beregn</Button
+        >
     {:else if step === "result"}
-        <h3 class="!mt-4">Du kan have {result} moduler fravær for at ende med {amount}{type === "percent" ? "%" : " moduler"} fravær.</h3>
+        <h3 class="!mt-4">Du kan have {result} fravær for at ende med {amount}{type === "percent" ? "%" : " moduler"} {period == "elapsed" ? "opgjort fravær" : "fravær for året"}.</h3>
+        <div class="flex items-center gap-2">
+            <Slider bind:value={amount} />
+            <Button
+                class="whitespace-nowrap"
+                on:click={() => {
+                    step = "period";
+                }}>Start forfra</Button
+            >
+        </div>
     {/if}
 </div>
