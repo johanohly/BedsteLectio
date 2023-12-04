@@ -66,8 +66,8 @@
     {#if loading}
         <Skeleton class="!mt-4 !mb-1 h-[1.5rem] w-3/4 rounded-md" />
         <div class="!m-0 flex flex-col md:flex-row gap-2">
-            <Skeleton class="h-20 flex-1 rounded-md" />
-            <Skeleton class="h-20 flex-1 rounded-md" />
+            <Skeleton class="h-20 w-full rounded-md" />
+            <Skeleton class="h-20 w-full rounded-md" />
         </div>
     {:else if step === "period"}
         <h3 class="!mt-4">Vil du regne opgjort eller årligt fravær ud?</h3>
