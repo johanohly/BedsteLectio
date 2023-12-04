@@ -5,7 +5,7 @@
 
   import { addToast } from "./toaster";
   import { constructNonceURL } from "$lib/utilities";
-    import { page } from "$app/stores";
+  import { page } from "$app/stores";
 
   export let path: string;
   export let onServerError = {
