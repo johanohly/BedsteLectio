@@ -3,7 +3,7 @@
   import { createDialog, melt } from "@melt-ui/svelte";
   import { filter } from "fuzzy";
   import { ChevronsUpDown, Loader2, LocateIcon, X } from "lucide-svelte";
-  import { Input } from "../input";
+  import { FancyInput } from "../fancyinput";
   import { Button } from "../button";
   import { addToast } from "$components/toaster";
   import type { ClosestSchool } from "$lib/types/location";
@@ -77,10 +77,10 @@
       use:melt={$content}
     >
       <h2 class="m-0 text-xl font-medium" use:melt={$title}>{valueKey ?? "Vælg Skole"}</h2>
-      <Button on:click={locate} disabled={locating || closestSchool} class="my-4"
+      <Button on:click={locate} disabled={locating || closestSchool != null} class="my-4"
         >{#if locating}<Loader2 class="w-6 h-6 animate-spin mr-2" />{:else}<LocateIcon class="mr-2" />{/if}{closestSchool ? `${valueKey} er ${closestSchool} væk` : "Find nærmeste skole"}</Button
       >
-      <Input bind:value={searchTerm} class="mb-5" placeholder="Søg efter skole..." />
+      <FancyInput bind:value={searchTerm} class="mb-5" placeholder="Søg efter skole..." />
       <div class="overflow-y-auto max-h-[40vw] lg:max-h-[25vw] space-y-2">
         {#each filteredSchools as school}
           <button

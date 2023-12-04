@@ -3,7 +3,7 @@
 
   import { MultiRequestData, RequestData } from "$components";
   import { Button } from "$components/ui/button";
-  import { Input } from "$components/ui/input";
+  import { FancyInput } from "$components/ui/fancyinput";
   import { authStore } from "$lib/stores";
   import { constructInterval, notEmpty } from "$lib/utilities";
   import { flyAndScale } from "$lib/utils";
@@ -176,7 +176,7 @@
     >
       <h2 class="m-0 text-xl font-medium" use:melt={$title}>Vælg elev</h2>
       <p class="mb-5 mt-2 leading-normal text-muted-foreground" use:melt={$description}>Søg efter elever i søgefeltet nedenfor.</p>
-      <Input bind:value={searchTerm} class="mb-5" id="student-input" />
+      <FancyInput bind:value={searchTerm} class="mb-5" id="student-input" />
       <div class="space-y-2">
         {#each filteredStudents as student}
           <button

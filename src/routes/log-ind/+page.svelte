@@ -4,7 +4,7 @@
   import { addToast } from "$components/toaster";
   import { Button } from "$components/ui/button";
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "$components/ui/card";
-  import { Input } from "$components/ui/input";
+  import { FancyInput } from "$components/ui/fancyinput";
   import { Label } from "$components/ui/label";
   import { SchoolSelect } from "$components/ui/schoolselect";
   import { Switch } from "$components/ui/switch";
@@ -84,11 +84,11 @@
     <CardContent class="grid gap-4">
       <div class="grid gap-2">
         <Label for="username">Brugernavn</Label>
-        <Input autocomplete="username" bind:value={username} id="username" type="text" />
+        <FancyInput autocomplete="username" bind:value={username} id="username" type="text" />
       </div>
       <div class="grid gap-2">
         <Label for="password">Kodeord</Label>
-        <Input autocomplete="current-password" bind:value={password} id="password" type="password" />
+        <FancyInput autocomplete="current-password" bind:value={password} id="password" type="password" />
       </div>
       <div class="grid gap-2">
         <Label for="school">Skole</Label>
