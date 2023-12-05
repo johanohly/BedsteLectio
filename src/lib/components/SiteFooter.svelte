@@ -1,4 +1,4 @@
-<footer class="hidden xl:block absolute bottom-0 py-4 md:px-8 bg-background/60 dark:bg-dark w-full border-b dark:border-white/10">
+<footer class="hidden 2xl:block absolute bottom-0 py-4 md:px-8 bg-background/60 dark:bg-dark w-full border-b dark:border-white/10">
     <div class="container flex items-center gap-1 h-12 md:h-24 flex-row">
         <a href="https://play.google.com/store/apps/details?id=tech.bedstelectio.jth" target="_blank">
             <img class="h-12 hidden dark:block m-0" alt="Get it on the Google Play Store" src="/brands/play_dark.png" />
