@@ -11,7 +11,8 @@
   import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
-    import { NewTabLink } from "$components/ui/newtablink";
+  import { NewTabLink } from "$components/ui/newtablink";
+  import type { Settings } from "$lib/types/settings";
 
   export let data: PageData;
 
@@ -19,18 +20,16 @@
   let failed = false;
   let moduleData: RawModule;
   let module: Module;
+  let settings: Settings;
   $: if (!loading && moduleData) {
     try {
       module = {
         homework: moduleData.lektier,
         lesson: {
-          class: moduleData.aktivitet.hold ?? "",
-          id: moduleData.aktivitet.absid,
+          class: settings.classNames?.[moduleData.aktivitet.hold ?? ""] ?? moduleData.aktivitet.hold ?? "",
           interval: constructInterval(moduleData.aktivitet.tidspunkt),
           name: moduleData.aktivitet.navn ?? "",
-          note: moduleData.aktivitet.andet ?? "",
           room: moduleData.aktivitet.lokale ?? "",
-          status: moduleData.aktivitet.status ?? "",
           teacher: moduleData.aktivitet.lærer ?? "",
         },
         note: moduleData.note,
@@ -46,6 +45,8 @@
 <RequestData
   bind:data={moduleData}
   bind:loading
+  bind:settings
+  withSettings
   onServerError={{
     active: true,
     path: "/skema",

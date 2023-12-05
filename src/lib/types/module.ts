@@ -1,8 +1,15 @@
-import type { Lesson, RawLesson } from "./lesson"
+import type { Interval } from "luxon";
+import type { RawLesson } from "./lesson"
 
 export type Module = {
     homework: null | string;
-    lesson: Lesson;
+    lesson: {
+        class: string;
+        name: string;
+        interval: Interval;
+        room: string;
+        teacher: string;
+    };
     note: null | string;
     otherContent: null | string;
     presentation: null | string;
