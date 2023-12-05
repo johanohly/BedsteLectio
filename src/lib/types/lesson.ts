@@ -13,6 +13,8 @@ export type RawLesson = {
 };
 
 export type Lesson = {
+    color: string;
+    textColor: string;
     class: string;
     id: string;
     interval: Interval;

@@ -1,4 +1,5 @@
-import type { Lesson, RawLesson } from "./lesson";
+import type { DateTime } from "luxon";
+import type { RawLesson } from "./lesson";
 
 export type RawHomework = {
     aktivitet: RawLesson;
@@ -7,5 +8,9 @@ export type RawHomework = {
 
 export type Homework = {
     homework: string;
-    lesson: Lesson;
+    lesson: {
+        name: string;
+        class: string;
+        interval: DateTime;
+    };
 };

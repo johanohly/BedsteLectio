@@ -16,7 +16,7 @@
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
   import { NewTabLink } from "$components/ui/newtablink";
-    import type { Settings } from "$lib/types/settings";
+  import type { Settings } from "$lib/types/settings";
 
   let loading = true;
   let data: {
@@ -46,6 +46,8 @@
   $: if (!loading && data) {
     const tempLessons: Lesson[] = data.skema.map((lesson) => {
       return {
+        color: customColors?.[lesson.hold ?? ""] ? `hsl(${customColors?.[lesson.hold ?? ""]}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string,
+        textColor: customColors?.[lesson.hold ?? ""] ? `hsl(${customColors?.[lesson.hold ?? ""]}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string,
         class: classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "",
         id: lesson.absid,
         interval: constructInterval(lesson.tidspunkt),
@@ -97,13 +99,8 @@
       homework: item.lektier,
       lesson: {
         class: item.aktivitet.hold ?? "",
-        id: item.aktivitet.absid,
-        interval: constructInterval(item.aktivitet.tidspunkt),
         name: item.aktivitet.navn ?? "",
-        note: item.aktivitet.andet ?? "",
-        room: item.aktivitet.lokale ?? "",
-        status: item.aktivitet.status ?? "",
-        teacher: item.aktivitet.lærer ?? "",
+        interval: constructInterval(item.aktivitet.tidspunkt),
       },
     }));
   }
@@ -143,8 +140,7 @@
           <Timeline class="ml-3">
             {#key filteredLessons}
               {#each filteredLessons as lesson}
-                {@const customColor = customColors?.[lesson.class] ?? ""}
-                <TimelineItem cancelled={lesson.status == "aflyst"} class="mb-10" color={customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.class, 100, 90).string} textColor={customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.class, 100, 30).string} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
+                <TimelineItem cancelled={lesson.status == "aflyst"} class="mb-10" color={lesson.color} textColor={lesson.textColor} description={`${lesson.note != "" ? `${lesson.note}<br>${lesson.room}` : lesson.room}`} link={`/modul/${lesson.id}`} time={lesson.interval.toLocaleString(DateTime.TIME_24_SIMPLE)} title={lesson.name != "" ? lesson.name : lesson.class} titleNote={lesson.teacher} />
               {/each}
             {/key}
           </Timeline>
