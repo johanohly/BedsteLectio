@@ -12,6 +12,9 @@
   import "flatpickr/dist/flatpickr.css";
   import flatpickr from "flatpickr";
   import { Danish } from "flatpickr/dist/l10n/da.js";
+  import { onMount } from "svelte";
+  import posthog from "posthog-js";
+  import { browser } from "$app/environment";
   flatpickr.localize(Danish);
 
   $: title = $page.url.pathname == "/" ? "BedsteLectio" : `${$page.url.pathname.split("/").slice(-1)[0].replace("-", " ").toTitleCase()} - BedsteLectio`;
@@ -31,6 +34,29 @@
       elemPage.scrollTop = 0;
     }
     scrollHeadingIntoView();
+  });
+
+  let currentPath = "";
+  onMount(() => {
+    if (browser) {
+      const unsubscribePage = page.subscribe(($page) => {
+        if (currentPath && currentPath !== $page.url.pathname) {
+          posthog.capture("$pageleave");
+        }
+        currentPath = $page.url.pathname;
+        posthog.capture("$pageview");
+      });
+
+      const handleBeforeUnload = () => {
+        posthog.capture("$pageleave");
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
+      return () => {
+        unsubscribePage();
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }
   });
 </script>
 

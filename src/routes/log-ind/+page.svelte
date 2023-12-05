@@ -10,8 +10,10 @@
   import { Switch } from "$components/ui/switch";
   import { authStore } from "$lib/stores";
   import { constructNonceURL } from "$lib/utilities";
+  import { decodeUserID } from "$lib/utilities/cookie";
   import { Loader } from "lucide-svelte";
   import { DateTime } from "luxon";
+  import posthog from "posthog-js";
   import { onMount } from "svelte";
 
   let saveSchool = true;
@@ -60,6 +62,15 @@
       $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
       $authStore.lastLogin = DateTime.now().toISO();
       loading = false;
+      posthog.identify(
+        decodeUserID($authStore.cookie),
+        {},
+        {
+          username: username,
+          school: school,
+        },
+      );
+      posthog.capture("login");
       return goto(redirectTo);
     }
     username = "";

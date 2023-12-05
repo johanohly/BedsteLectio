@@ -5,7 +5,9 @@
 
   import { addToast } from "./toaster";
   import { constructNonceURL } from "$lib/utilities";
-    import { page } from "$app/stores";
+  import { page } from "$app/stores";
+  import { decodeUserID } from "$lib/utilities/cookie";
+  import posthog from "posthog-js";
 
   export let paths: string[];
   export let onServerError = {
@@ -42,6 +44,14 @@
             },
           });
           if (response.ok) {
+            posthog.identify(
+              decodeUserID($authStore.cookie),
+              {},
+              {
+                username: $authStore.username,
+                school: $authStore.school,
+              },
+            );
             console.log("Succesful auto-login");
             $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
             response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
@@ -71,5 +81,9 @@
       data[path] = await response.json();
     }
     loading = false;
+
+    for (const path of paths) {
+      posthog.capture("Request data", { "Path": path });
+    }
   });
 </script>
