@@ -13,7 +13,7 @@ export const load = async () => {
                 api_host: 'https://bedstelectio.tech/ingest',
                 ui_host: 'https://eu.posthog.com',
                 capture_pageview: false,
-                capture_pageleave: false
+                capture_pageleave: false,
             }
         )
     }

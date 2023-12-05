@@ -10,6 +10,7 @@
   import { goto } from "$app/navigation";
   import { addToast } from "./toaster";
   import { page } from "$app/stores";
+    import posthog from "posthog-js";
 
   const {
     elements: { arrow, item, menu, trigger },
@@ -28,6 +29,7 @@
         color: "bg-red-500",
       },
     });
+    posthog.reset();
   };
 </script>
 

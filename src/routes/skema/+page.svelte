@@ -24,7 +24,8 @@
   import { fade } from "svelte/transition";
   import { Label } from "$components/ui/label";
   import { Switch } from "$components/ui/switch";
-    import type { Settings } from "$lib/types/settings";
+  import type { Settings } from "$lib/types/settings";
+  import posthog from "posthog-js";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
@@ -54,6 +55,14 @@
           }).then((response) => {
             if (response.ok) {
               $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
+              posthog.identify(
+                decodeUserID($authStore.cookie),
+                {},
+                {
+                  username: $authStore.username,
+                  school: $authStore.school,
+                },
+              );
               fetch(constructNonceURL(`https://api.bedstelectio.tech/skema?id=${userId}&uge=${start.weekNumber}&år=${start.year}`), {
                 headers: {
                   "lectio-cookie": $authStore.cookie,
@@ -78,6 +87,8 @@
           return goto("/log-ind");
         }
       }
+
+      posthog.capture("Request data", {"Path": "skema", "Week": start.weekNumber, "Year": start.year})
 
       if (!loadedSettings) {
         fetch("/api/settings", {
