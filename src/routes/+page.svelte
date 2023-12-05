@@ -98,6 +98,7 @@
     homework = hwData.map((item) => ({
       homework: item.lektier,
       lesson: {
+        id: item.aktivitet.absid,
         class: item.aktivitet.hold ?? "",
         name: item.aktivitet.navn ?? "",
         interval: constructInterval(item.aktivitet.tidspunkt),

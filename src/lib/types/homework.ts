@@ -1,4 +1,4 @@
-import type { DateTime } from "luxon";
+import type { Interval } from "luxon";
 import type { RawLesson } from "./lesson";
 
 export type RawHomework = {
@@ -9,8 +9,9 @@ export type RawHomework = {
 export type Homework = {
     homework: string;
     lesson: {
+        id: string;
         name: string;
         class: string;
-        interval: DateTime;
+        interval: Interval;
     };
 };
