@@ -3,7 +3,7 @@
 
   import { afterNavigate } from "$app/navigation";
   import { navigating, page } from "$app/stores";
-  import { Preloading, SiteFooter, SiteHeader } from "$components";
+  import { Preloading, SiteHeader } from "$components";
   import { Toaster } from "$components/toaster";
 
   import "../app.postcss";
@@ -66,7 +66,7 @@
   <!-- Meta Tags -->
   <meta content={title} name="title" />
   <meta content="BedsteLectio er en elegant og brugervenlig webside, der præsenterer data fra Lectio på en forbedret måde. " name="description" />
-  <meta content="bedstelectio, betterlectio, lectio, studieadministration, skoleskema, karakterer, fravær, beskeder, brugervenlig, æstetisk, intuitiv, pæn, overskuelig" name="keywords" />
+  <meta content="bedstelectio, bedste lectio, betterlectio, better lectio, lectio, lectio plus, mit lectio, studieadministration, skoleskema, karakterer, fravær, beskeder, brugervenlig, æstetisk, intuitiv, pæn, overskuelig" name="keywords" />
   <meta content="#ffffff" name="theme-color" />
   <meta content="Johnny JTH" name="author" />
   <!-- Open Graph - https://ogp.me/ -->
@@ -88,10 +88,9 @@
 {/if}
 
 <Toaster />
-<SiteHeader />
+{#if $page.url.pathname !== "/log-ind"}
+  <SiteHeader />
+{/if}
 <div class="prose dark:prose-invert max-w-none" id="page">
   <slot />
 </div>
-{#if $page.url.pathname == "/log-ind"}
-  <SiteFooter />
-{/if}
