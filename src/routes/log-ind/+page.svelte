@@ -89,8 +89,8 @@
 <div class="page-container">
   <div class="md:flex">
     <div class="hidden md:flex flex-col justify-between mr-auto not-prose">
-      <div>
-        <div class="text-black font-semibold text-2xl leading-8 items-center inline-flex mb-10">
+      <div class="xl:space-y-4">
+        <div class="text-black font-semibold text-2xl leading-8 items-center inline-flex max-xl:mb-10">
           <School class="w-8 h-8 mr-2" />
           <h1>BedsteLectio</h1>
         </div>
@@ -137,7 +137,7 @@
         <h1>BedsteLectio</h1>
       </div>
     </div>
-    <Card class="md:min-w-[45vw] md:ml-10">
+    <Card class="md:min-w-[45vw] xl:min-w-[30vw] md:ml-10">
       <CardHeader>
         <CardTitle class="text-xl mb-0">Velkommen</CardTitle>
         <CardDescription>Log ind med din Lectio konto her.</CardDescription>
