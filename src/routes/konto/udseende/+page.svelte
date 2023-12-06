@@ -5,6 +5,7 @@
     import { Button } from "$components/ui/button";
     import { ColorPicker, isColorValid } from "$components/ui/colorpicker";
     import { authStore } from "$lib/stores";
+    import type { Settings } from "$lib/types/settings";
     import { ArrowDownToLine, Loader2, X } from "lucide-svelte";
 
     let loading = true;
@@ -14,22 +15,12 @@
         classes = data.hold_og_grupper;
     }
 
-    let settings: { classNames: { [key: string]: string }; customColors: { [key: string]: string } } | undefined;
+    let settings: Settings;
     let customColors: { class: string; color: string }[] = [];
     let classNames: { class: { name: string; id: string }; name: string; loading: boolean }[] = [];
     $: if (!loading && !customColors.length) {
-        if (settings == undefined) {
-            addToast({
-                data: {
-                    title: "Fejl",
-                    description: "Der skete en fejl. Indstillinger kan ikke ændres for tiden.",
-                    color: "bg-red-500",
-                },
-            });
-        } else {
-            customColors = settings.customColors ? Object.entries(settings.customColors).map(([key, value]) => ({ class: key, color: value })) : [];
-            classNames = settings.customColors ? Object.entries(settings.classNames).map(([key, value]) => ({ class: { name: key, id: "" }, name: value, loading: false })) : [];
-        }
+        customColors = settings.customColors ? Object.entries(settings.customColors).map(([key, value]) => ({ class: key, color: value })) : [];
+        classNames = settings.customColors ? Object.entries(settings.classNames).map(([key, value]) => ({ class: { name: key, id: "" }, name: value, loading: false })) : [];
     }
 
     $: validColors = customColors.every((entry) => entry.class != "" && isColorValid(entry.color));
@@ -70,7 +61,7 @@
     let loadingUserClasses = false;
     const fetchClasses = async () => {
         loadingUserClasses = true;
-        const response = await fetch("https://api.bedstelectio.tech/forside", {
+        const response = await fetch("https://api.bedstelectio.dk/forside", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -132,7 +123,7 @@
                     return;
                 }
             }
-            const response = await fetch(`https://api.bedstelectio.tech/hold_til_fag?id=${id}`, {
+            const response = await fetch(`https://api.bedstelectio.dk/hold_til_fag?id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

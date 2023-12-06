@@ -148,7 +148,7 @@
         if (!replyTo) return;
         if (!replyContent) return;
 
-        const res = await fetch("https://api.bedstelectio.tech/besvar_besked", {
+        const res = await fetch("https://api.bedstelectio.dk/besvar_besked", {
             method: "POST",
             headers: {
                 "lectio-cookie": $authStore.cookie,

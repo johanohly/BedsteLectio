@@ -1,5 +1,5 @@
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=BedsteLectio)
-![W3C Validation](https://img.shields.io/w3c-validation/default?targetUrl=https%3A%2F%2Fbedstelectio.tech)
+![W3C Validation](https://img.shields.io/w3c-validation/default?targetUrl=https%3A%2F%2Fbedstelectio.dk)
 ![GitHub issues](https://img.shields.io/github/issues/JohnnyJTH/BedsteLectio)
 
 # Bedre end Better Lectio

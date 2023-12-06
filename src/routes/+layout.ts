@@ -10,7 +10,7 @@ export const load = async () => {
         posthog.init(
             'phc_794iCsKPStebX7N1YWzWKDgDE3ZCDYbikdpeGCdZVLh',
             {
-                api_host: 'https://bedstelectio.tech/ingest',
+                api_host: 'https://bedstelectio.dk/ingest',
                 ui_host: 'https://eu.posthog.com',
                 capture_pageview: false,
                 capture_pageleave: false,

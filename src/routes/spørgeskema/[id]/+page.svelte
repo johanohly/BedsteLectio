@@ -49,7 +49,7 @@
         color: "bg-yellow-500",
       }
     })
-    const resp = await fetch(`https://api.bedstelectio.tech/besvar_spoergeskema?id=${data.id}`, {
+    const resp = await fetch(`https://api.bedstelectio.dk/besvar_spoergeskema?id=${data.id}`, {
       method: "POST",
       headers: {
         "lectio-cookie": $authStore.cookie,

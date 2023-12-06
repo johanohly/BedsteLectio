@@ -10,7 +10,7 @@
 
   async function save() {
     submitting = true;
-    const res = await fetch(`https://api.bedstelectio.tech/aendre_termin?id=${terminer.selected}`, {
+    const res = await fetch(`https://api.bedstelectio.dk/aendre_termin?id=${terminer.selected}`, {
       headers: {
         "lectio-cookie": $authStore.cookie,
       },

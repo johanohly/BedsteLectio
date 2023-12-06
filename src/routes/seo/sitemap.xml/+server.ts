@@ -15,7 +15,7 @@ export const GET: RequestHandler = async () => {
           xmlns:video="https://www.google.com/schemas/sitemap-video/1.1"
         >
           <url>
-            <loc>https://bedstelectio.tech/log-ind</loc>
+            <loc>https://bedstelectio.dk/log-ind</loc>
             <changefreq>daily</changefreq>
             <priority>0.7</priority>
           </url>

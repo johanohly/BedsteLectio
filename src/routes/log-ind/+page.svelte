@@ -27,7 +27,7 @@
   let school = 0;
   let redirectTo = "/";
   onMount(async () => {
-    const tempSchools = (await fetch("https://api.bedstelectio.tech/skoler").then((res) => res.json())) as { id: number; skole: string }[];
+    const tempSchools = (await fetch("https://api.bedstelectio.dk/skoler").then((res) => res.json())) as { id: number; skole: string }[];
     schools = {};
     for (const item of tempSchools) {
       schools[item.skole] = +item.id;
@@ -46,7 +46,7 @@
   let loading = false;
   async function login() {
     loading = true;
-    const response = await fetch(constructNonceURL("https://api.bedstelectio.tech/auth"), {
+    const response = await fetch(constructNonceURL("https://api.bedstelectio.dk/auth"), {
       headers: {
         adgangskode: password,
         brugernavn: username,

@@ -1,7 +1,7 @@
 import { decodeUserID } from "$lib/utilities/cookie";
 
 export const validateCookie = async (cookie: string) => {
-    const response = await fetch("https://api.bedstelectio.tech/check-cookie", {
+    const response = await fetch("https://api.bedstelectio.dk/check-cookie", {
         headers: {
             "lectio-cookie": cookie
         }

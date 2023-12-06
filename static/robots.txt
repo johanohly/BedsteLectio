@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bedstelectio.tech/seo/sitemap.xml
+Sitemap: https://bedstelectio.dk/seo/sitemap.xml

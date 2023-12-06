@@ -72,12 +72,12 @@
   <!-- Open Graph - https://ogp.me/ -->
   <meta content="BedsteLectio" property="og:site_name" />
   <meta content="website" property="og:type" />
-  <meta content="https://bedstelectio.tech{$page.url.pathname}" property="og:url" />
+  <meta content="https://bedstelectio.dk{$page.url.pathname}" property="og:url" />
   <meta content="da_DK" property="og:locale" />
   <meta content={title} property="og:title" />
   <meta content="BedsteLectio er en elegant og brugervenlig webside, der præsenterer data fra Lectio på en forbedret måde. " property="og:description" />
-  <meta content="https://bedstelectio.tech/favicon-dark.png" property="og:image" />
-  <meta content="https://bedstelectio.tech/favicon-dark.png" property="og:image:secure_url" />
+  <meta content="https://bedstelectio.dk/favicon-dark.png" property="og:image" />
+  <meta content="https://bedstelectio.dk/favicon-dark.png" property="og:image:secure_url" />
   <meta content="image/png" property="og:image:type" />
   <meta content="256" property="og:image:width" />
   <meta content="256" property="og:image:height" />

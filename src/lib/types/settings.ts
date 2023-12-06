@@ -1,1 +1,1 @@
-export type Settings = { customColors: Record<string, number>; classNames: Record<string, string> }
+export type Settings = { customColors: Record<string, string>; classNames: Record<string, string> }

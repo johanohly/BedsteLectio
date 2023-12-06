@@ -20,7 +20,7 @@
   } = createAvatar();
 
   async function fetchImage() {
-    const res = await fetch(`https://api.bedstelectio.tech/profil_billed?id=${user.id}&fullsize=1`, {
+    const res = await fetch(`https://api.bedstelectio.dk/profil_billed?id=${user.id}&fullsize=1`, {
       headers: {
         "lectio-cookie": $authStore.cookie,
       },
