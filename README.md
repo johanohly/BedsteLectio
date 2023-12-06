@@ -22,6 +22,7 @@ Full tech stack [here](/techstack.md)
 1. Install [Bun](https://bun.sh/)
 2. Clone this repository
 3. Run `bun install` in the cloned repository
+4. Copy the `.env.example` file to `.env`. No need to change anything in it
 
 ## Running
 1. Run `bun run dev` to start the development server

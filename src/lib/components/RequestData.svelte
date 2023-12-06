@@ -8,6 +8,7 @@
   import { page } from "$app/stores";
   import posthog from "posthog-js";
   import { decodeUserID } from "$lib/utilities/cookie";
+    import type { Settings } from "$lib/types/settings";
 
   export let path: string;
   export let onServerError = {
@@ -24,7 +25,7 @@
 
   export let loading = true;
   export let data = {};
-  export let settings: object = {};
+  export let settings: Settings;
 
   onMount(async () => {
     let response = await fetch(constructNonceURL(`https://api.bedstelectio.tech/${path}`), {
@@ -89,7 +90,7 @@
           "lectio-cookie": $authStore.cookie,
         },
       });
-      if (!response.ok) settings = {};
+      if (!response.ok) settings = {customColors: {}, classNames: {}};
       else settings = await response.json();
     }
 

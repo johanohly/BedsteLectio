@@ -5,11 +5,12 @@ import type { Handle } from "@sveltejs/kit";
 
 export const handle = (async ({ event, resolve }) => {
     const client = await createDbClient();
-    const db = drizzle(client);
+    let db = undefined;
+    if (client) db = drizzle(client);
     event.locals = { db, redis };
 
     const response = await resolve(event);
-    client.release();
+    if (client) client.release();
 
     return response;
 }) satisfies Handle;

@@ -3,6 +3,8 @@ import { settings } from "$lib/server/schema";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const POST: RequestHandler = async ({ request, locals: { db, redis } }) => {
+    if (!db || !redis) return json({});
+
     const cookie = request.headers.get("lectio-cookie");
     if (!cookie) return new Response("Unauthorized", { status: 401 });
 

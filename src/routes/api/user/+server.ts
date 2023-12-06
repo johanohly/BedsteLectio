@@ -4,6 +4,8 @@ import type { RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
 export const DELETE: RequestHandler = async ({ request, locals: { db } }) => {
+    if (!db) return new Response("OK", { status: 200 });
+
     const cookie = request.headers.get("lectio-cookie");
     if (!cookie) return new Response("Unauthorized", { status: 401 });
 

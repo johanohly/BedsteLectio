@@ -7,8 +7,8 @@ import type { Redis } from "ioredis";
 declare global {
 	namespace App {
 		interface Locals {
-			db: NodePgDatabase;
-			redis: Redis;
+			db: NodePgDatabase | undefined;
+			redis: Redis | undefined;
 		}
 		// interface Error {}
 		// interface Locals {}

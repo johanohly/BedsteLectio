@@ -4,6 +4,8 @@ import { json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
 export const GET: RequestHandler = async ({ request, locals: { db, redis } }) => {
+    if (!db || !redis) return json({ customColors: {}, classNames: {} });
+
     const cookie = request.headers.get("lectio-cookie");
     if (!cookie) return new Response("Unauthorized", { status: 401 });
 
