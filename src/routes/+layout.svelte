@@ -17,7 +17,7 @@
   import { browser } from "$app/environment";
   flatpickr.localize(Danish);
 
-  $: title = $page.url.pathname == "/" ? "BedsteLectio" : `${$page.url.pathname.split("/").slice(-1)[0].replace("-", " ").toTitleCase()} - BedsteLectio`;
+  $: title = $page.url.pathname == "/" || $page.url.pathname == "/log-ind" ? "BedsteLectio" : `${$page.url.pathname.split("/").slice(-1)[0].replace("-", " ").toTitleCase()} - BedsteLectio`;
 
   function scrollHeadingIntoView(): void {
     if (!window.location.hash) return;
