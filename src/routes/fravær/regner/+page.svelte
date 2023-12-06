@@ -26,12 +26,12 @@
                 if (elapsed && year) {
                     classes = {
                         elapsed: {
-                            actual: +elapsed[1],
-                            total: +elapsed[2],
+                            actual: +elapsed[1].replace(",", "."),
+                            total: +elapsed[2].replace(",", "."),
                         },
                         year: {
-                            actual: +year[1],
-                            total: +year[2],
+                            actual: +year[1].replace(",", "."),
+                            total: +year[2].replace(",", "."),
                         },
                     };
                 }
