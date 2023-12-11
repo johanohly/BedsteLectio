@@ -9,3 +9,4 @@ export { getFileIcon } from "./fileIcons";
 export { round } from "./number";
 export { constructNonceURL } from "./nonce";
 export { relativeTime } from "./relativeTime";
+export { translateExamName } from "./translate";

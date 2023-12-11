@@ -11,7 +11,7 @@
   import Tabs from "$components/ui/tabs/Tabs.svelte";
   import { Timeline, TimelineItem } from "$components/ui/timeline";
   import { authStore } from "$lib/stores";
-  import { constructInterval, relativeTime, stringToColor } from "$lib/utilities";
+  import { constructInterval, relativeTime, stringToColor, translateExamName } from "$lib/utilities";
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
@@ -21,6 +21,7 @@
   let loading = true;
   let data: {
     aktuelt: RawNews[];
+    eksamener: { link: string; navn: string, dato: string }[];
     kommunikation: {
       beskeder: RawSimpleMessage[];
       dokumenter: RawSimpleDocument[];
@@ -70,6 +71,7 @@
         description: item.text.replaceAll("@", "@<!-- -->"), // Without this, the email gets obfuscated with random hex characters. https://github.com/github/markup/issues/1168
       };
     });
+    if (data.eksamener.length > 0) news.unshift({ description: `**Eksamener** \n\n ${data.eksamener.map((item) => `[${translateExamName(item.navn, classNames)}](${item.link}) ${constructInterval(item.dato).start?.toRelative()}`).join("\n")}` });
 
     messages = data.kommunikation.beskeder.map((message) => {
       return {
