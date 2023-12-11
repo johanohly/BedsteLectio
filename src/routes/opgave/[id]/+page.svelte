@@ -11,18 +11,20 @@
   import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
-    import { relativeTime } from "$lib/utilities";
-    import { NewTabLink } from "$components/ui/links";
+  import { relativeTime } from "$lib/utilities";
+  import { NewTabLink } from "$components/ui/links";
+  import type { Settings } from "$lib/types/settings";
 
   export let data: PageData;
 
   let loading = true;
   let assignmentData: RawAssignment;
   let assignment: Assignment;
+  let settings: Settings;
   $: if (!loading && assignmentData) {
     assignment = {
       billedTime: assignmentData.oplysninger.elevtid,
-      class: assignmentData.oplysninger.hold,
+      class: settings.classNames?.[assignmentData.oplysninger.hold] ?? assignmentData.oplysninger.hold,
       date: DateTime.fromFormat(assignmentData.oplysninger.afleveringsfrist, "d/M-yyyy HH:mm", {
         locale: "da",
       }),
@@ -59,6 +61,7 @@
 <RequestData
   bind:data={assignmentData}
   bind:loading
+  bind:settings
   onServerError={{
     active: true,
     path: "/opgaver",
@@ -67,8 +70,10 @@
       description: "Denne opgave findes ikke.",
       title: "Ukendt opgave",
     },
+    error: false,
   }}
   path={`opgave?exerciseid=${data.id}`}
+  withSettings
 />
 
 <div class="page-container">
