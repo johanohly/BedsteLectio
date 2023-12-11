@@ -7,7 +7,7 @@
   import { constructInterval } from "$lib/utilities";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
-    import { NewTabLink } from "$components/ui/newtablink";
+    import { NewTabLink } from "$components/ui/links";
 
   let loading = true;
   let data: RawHomework[];

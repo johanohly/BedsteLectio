@@ -12,7 +12,7 @@
 
   import type { PageData } from "./$types";
     import { relativeTime } from "$lib/utilities";
-    import { NewTabLink } from "$components/ui/newtablink";
+    import { NewTabLink } from "$components/ui/links";
 
   export let data: PageData;
 

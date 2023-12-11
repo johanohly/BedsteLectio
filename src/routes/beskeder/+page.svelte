@@ -24,7 +24,7 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import { relativeTime } from "$lib/utilities";
-    import { NewTabLink } from "$components/ui/newtablink";
+    import { MessageLink } from "$components/ui/links";
 
     let students: { id: string; name: string }[] | undefined = undefined;
     let groups: string[] | undefined = undefined;
@@ -355,11 +355,13 @@
                                 }}
                                 on:keydown={() => {}}
                             >
-                                <div use:relativeTime={message.date.toJSDate()} class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4" />
+                                {#if !selectedMessage}
+                                    <div in:fade={{ delay: 1000 }} use:relativeTime={message.date.toJSDate()} class="absolute text-xs text-gray-500 right-0 top-0 mr-4 mt-4" />
+                                {/if}
                                 <Avatar user={{ id: students.find((student) => student.name == message.sender)?.id ?? "123", name: message.sender }} />
                                 <div class="flex flex-col flex-grow ml-3">
-                                    <div class="text-sm font-medium">{message.sender}</div>
-                                    <div class="text-xs truncate">{message.title}</div>
+                                    <div class="text-sm font-medium">{message.title}</div>
+                                    <div class="text-xs truncate">{message.sender}</div>
                                 </div>
                             </div>
                         {/each}
@@ -480,7 +482,7 @@
                                                     {/each}
                                                 </div>
                                             {/if}
-                                            <SvelteMarkdown source={message.body} renderers={{ link: NewTabLink }} />
+                                            <SvelteMarkdown source={message.body} renderers={{ link: MessageLink }} />
                                             {#if message.edits.length}
                                                 {#each message.edits as edit}
                                                     <div class="flex items-center text-gray-400">
@@ -525,7 +527,7 @@
                                                     {/each}
                                                 </div>
                                             {/if}
-                                            <SvelteMarkdown source={message.body} renderers={{ link: NewTabLink }} />
+                                            <SvelteMarkdown source={message.body} renderers={{ link: MessageLink }} />
                                             {#if message.edits.length}
                                                 {#each message.edits as edit}
                                                     <div class="flex items-center text-gray-400">

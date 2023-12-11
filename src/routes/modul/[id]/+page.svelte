@@ -11,7 +11,7 @@
   import SvelteMarkdown from "svelte-markdown";
 
   import type { PageData } from "./$types";
-  import { NewTabLink } from "$components/ui/newtablink";
+  import { NewTabLink } from "$components/ui/links";
   import type { Settings } from "$lib/types/settings";
 
   export let data: PageData;

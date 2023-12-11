@@ -15,7 +15,7 @@
   import { ArrowRight, Download } from "lucide-svelte";
   import { DateTime } from "luxon";
   import SvelteMarkdown from "svelte-markdown";
-  import { NewTabLink } from "$components/ui/newtablink";
+  import { NewTabLink } from "$components/ui/links";
   import type { Settings } from "$lib/types/settings";
 
   let loading = true;
