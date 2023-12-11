@@ -1,8 +1,6 @@
-import { browser, dev } from '$app/environment';
-import { inject } from '@vercel/analytics';
+import { browser } from '$app/environment';
+import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit"
 import posthog from 'posthog-js';
-
-inject({ mode: dev ? 'development' : 'production' });
 
 export const ssr = false;
 export const load = async () => {
@@ -16,6 +14,7 @@ export const load = async () => {
                 capture_pageleave: false,
             }
         )
+        injectSpeedInsights()
     }
     return;
 }
