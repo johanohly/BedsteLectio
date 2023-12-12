@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "tech.bedstelectio.jth",
       "sha256_cert_fingerprints": [
-        "31:CB:96:BF:45:E8:EA:FD:2C:E9:85:A0:28:8A:F0:F9:AD:B3:BA:ED:4A:34:E3:03:7B:17:71:97:77:CC:E0:F6"
+        "31:CB:96:BF:45:E8:EA:FD:2C:E9:85:A0:28:8A:F0:F9:AD:B3:BA:ED:4A:34:E3:03:7B:17:71:97:77:CC:E0:F6",
+        "12:59:A3:5D:FE:08:62:E3:68:53:C2:0E:D4:46:CD:7D:BB:D2:2A:2E:85:6D:A1:B0:EE:79:C7:1A:6E:23:D4:FE"
       ]
     }
   }
