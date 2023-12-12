@@ -97,7 +97,7 @@
           },
         }).then((settingsResponse) => {
           if (settingsResponse.ok) {
-            settingsResponse.json().then((data: { customColors: Record<string, number>; classNames: Record<string, string> }) => {
+            settingsResponse.json().then((data: { customColors: Record<string, string>; classNames: Record<string, string> }) => {
               customColors = data.customColors;
               classNames = data.classNames;
             });
