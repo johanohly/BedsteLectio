@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { authStore } from "$lib/stores";
+  import { authStore, avatarStore } from "$lib/stores";
   import { getInitials } from "$lib/utilities";
   import { createAvatar, melt } from "@melt-ui/svelte";
   import IntersectionObserver from "svelte-intersection-observer";
@@ -20,6 +20,11 @@
   } = createAvatar();
 
   async function fetchImage() {
+    if ($avatarStore?.[user.id]) {
+      src.set(`data:image/png;base64, ${$avatarStore[user.id]}`);
+      return;
+    }
+
     const res = await fetch(`https://api.bedstelectio.dk/profil_billed?id=${user.id}&fullsize=1`, {
       headers: {
         "lectio-cookie": $authStore.cookie,
@@ -27,6 +32,10 @@
     });
     if (res.ok) {
       const text = await res.text();
+      avatarStore.update((store) => {
+        store[user.id] = text;
+        return store;
+      });
       src.set(`data:image/png;base64, ${text}`);
     }
   }

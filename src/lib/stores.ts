@@ -1,4 +1,4 @@
-import type { Writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 
 import { localStorageStore } from "./utilities";
 
@@ -14,3 +14,5 @@ export const calendarStore: Writable<{ date: string; onlyMandatory: boolean }> =
     date: new Date().toISOString(),
     onlyMandatory: false,
 });
+
+export const avatarStore: Writable<Record<string, string>> = writable({});
