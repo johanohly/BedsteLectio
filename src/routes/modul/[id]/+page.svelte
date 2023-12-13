@@ -16,6 +16,7 @@
   import type { Writable } from "svelte/store";
   import { MultiRequestData } from "$components";
   import { Avatar } from "$components/ui/avatar";
+  import { Tab } from "$components/ui/tab";
 
   export let data: PageData;
 
@@ -145,7 +146,14 @@
       <section>
         <div class="flex flex-col max-md:pb-4 md:flex-row md:justify-between">
           <h2 class="!m-0">Grupper</h2>
-          <Tabs bind:selectedTab={selectedGroup} defaultActive={module.groups.find((group) => group.isMe)?.name} tabs={module.groups.map((group) => group.name)} />
+          <div class="hidden md:block">
+            <Tabs bind:selectedTab={selectedGroup} defaultActive={module.groups.find((group) => group.isMe)?.name} tabs={module.groups.map((group) => group.name)} />
+          </div>
+          <div class="flex space-x-2 max-md:pt-1 md:hidden">
+            {#each module.groups as group}
+              <Tab on:click={() => {selectedGroup.set(group.name)}} selected={group.name === $selectedGroup} class="text-xl font-mono {group.isMe && "bg-[#abfcb7] dark:bg-[#8678F9] text-black dark:text-white"}">{group.name.match(/\d+/)?.[0]}</Tab>
+            {/each}
+          </div>
         </div>
         <div class="space-y-1">
           {#key $selectedGroup}
