@@ -91,6 +91,6 @@
 {#if $page.url.pathname !== "/log-ind"}
   <SiteHeader />
 {/if}
-<div class="prose dark:prose-invert max-w-none" id="page">
+<div class="prose dark:prose-invert marker:prose-li:text-black dark:marker:prose-li:text-white max-w-none" id="page">
   <slot />
 </div>
