@@ -8,6 +8,7 @@
   import { page } from "$app/stores";
   import { decodeUserID } from "$lib/utilities/cookie";
   import posthog from "posthog-js";
+  import type { Settings } from "$lib/types/settings";
 
   export let paths: string[];
   export let onServerError = {
@@ -18,10 +19,13 @@
       description: "Der skete en fejl på serveren.",
       title: "Serverfejl",
     },
+    error: false,
   };
+  export let withSettings = false;
 
   export let loading = true;
   export let data: { [key in (typeof paths)[number]]: object };
+  export let settings: Settings = { customColors: {}, classNames: {} };
 
   onMount(async () => {
     for (const path of paths) {
@@ -80,10 +84,21 @@
       }
       data[path] = await response.json();
     }
+
+    if (withSettings) {
+      const response = await fetch("/api/settings", {
+        headers: {
+          "lectio-cookie": $authStore.cookie,
+        },
+      });
+      if (!response.ok) settings = { customColors: {}, classNames: {} };
+      else settings = await response.json();
+    }
+
     loading = false;
 
     for (const path of paths) {
-      posthog.capture("Request data", { "Path": path });
+      posthog.capture("Request data", { Path: path });
     }
   });
 </script>

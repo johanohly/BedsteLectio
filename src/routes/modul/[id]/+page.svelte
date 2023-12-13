@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Module, RawModule } from "$lib/types/module";
 
-  import { RequestData } from "$components";
   import { Skeleton } from "$components/ui/skeleton";
   import { authStore } from "$lib/stores";
   import { constructInterval, relativeTime } from "$lib/utilities";
@@ -13,16 +12,45 @@
   import type { PageData } from "./$types";
   import { NewTabLink } from "$components/ui/links";
   import type { Settings } from "$lib/types/settings";
+  import { Tabs } from "$components/ui/tabs";
+  import type { Writable } from "svelte/store";
+  import { MultiRequestData } from "$components";
+  import { Avatar } from "$components/ui/avatar";
 
   export let data: PageData;
 
+  const NAME_REGEX = /^[^\(]*/;
+
   let loading = true;
   let failed = false;
-  let moduleData: RawModule;
+  let returnData = {};
   let module: Module;
   let settings: Settings;
-  $: if (!loading && moduleData) {
+  $: if (!loading && returnData) {
     try {
+      // @ts-ignore
+      const students = Object.entries((returnData["informationer"].elever as { [key: string]: string }) ?? {}).map(([name, id]) => ({
+        id,
+        name: NAME_REGEX.exec(name ?? "")?.[0].trim() ?? name ?? "",
+      }));
+      const me = students.find((student) => student.id == `S${decodeUserID($authStore.cookie)}`);
+
+      // @ts-ignore
+      const moduleData = returnData[`modul?absid=${data.id}`] as RawModule;
+      const rawGroups = moduleData.grupper ?? {};
+      const groups = Object.keys(rawGroups).map((key) => ({
+        name: key,
+        isMe: rawGroups[key].includes(me?.name ?? ""),
+        members: rawGroups[key].map((name) => {
+          const student = students.find((student) => student.name == name);
+          return {
+            name,
+            id: student?.id ?? "",
+            me: student?.id == me?.id,
+          };
+        }),
+      }));
+
       module = {
         homework: moduleData.lektier ? moduleData.lektier.replaceAll("\n", "<br>") : null,
         lesson: {
@@ -34,16 +62,19 @@
         },
         note: moduleData.note,
         otherContent: moduleData.øvrigtIndhold ? moduleData.øvrigtIndhold.replaceAll("\n", "<br>").replaceAll(")", ")<br>") : null,
+        groups,
         presentation: moduleData.præsentation,
       };
     } catch (e) {
       failed = true;
     }
   }
+
+  let selectedGroup: Writable<string>;
 </script>
 
-<RequestData
-  bind:data={moduleData}
+<MultiRequestData
+  bind:data={returnData}
   bind:loading
   bind:settings
   withSettings
@@ -57,7 +88,7 @@
     },
     error: false,
   }}
-  path={`modul?absid=${data.id}`}
+  paths={[`modul?absid=${data.id}`, "informationer"]}
 />
 
 <div class="page-container">
@@ -108,6 +139,24 @@
       <section>
         <h2 class="!mb-0">Lektier</h2>
         <SvelteMarkdown source={module.homework} renderers={{ link: NewTabLink }} />
+      </section>
+    {/if}
+    {#if module.groups.length > 0}
+      <section>
+        <div class="flex flex-col max-md:pb-4 md:flex-row md:justify-between">
+          <h2 class="!m-0">Grupper</h2>
+          <Tabs bind:selectedTab={selectedGroup} defaultActive={module.groups.find((group) => group.isMe)?.name} tabs={module.groups.map((group) => group.name)} />
+        </div>
+        <div class="space-y-1">
+          {#key $selectedGroup}
+            {#each module.groups.find((group) => group.name == $selectedGroup)?.members ?? [] as member}
+              <div class="flex gap-2 items-center">
+                <Avatar user={{ name: member.name, id: member.id }} />
+                <p class="!m-0 {member.me ? 'font-bold' : ''}">{member.name}</p>
+              </div>
+            {/each}
+          {/key}
+        </div>
       </section>
     {/if}
     {#if module.otherContent}

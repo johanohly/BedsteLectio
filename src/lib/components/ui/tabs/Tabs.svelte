@@ -16,7 +16,7 @@
 
   const hoveredRect: Writable<DOMRect | null> = writable(null);
   const hoveredTabIndex: Writable<null | number> = writable(null);
-  const selectedTabIndex = writable(0);
+  const selectedTabIndex = writable(originalTabs.indexOf(defaultActive));
 
   $: selectedRect = $buttonRefs[$selectedTabIndex]?.getBoundingClientRect() ?? null;
   const buttonRefs: Writable<Array<HTMLButtonElement>> = writable([]);

@@ -12,6 +12,7 @@ export type Module = {
     };
     note: null | string;
     otherContent: null | string;
+    groups: { name: string; isMe: boolean; members: { name: string; id: string; me: boolean }[] }[]
     presentation: null | string;
 }
 
@@ -21,4 +22,5 @@ export type RawModule = {
     note: null | string;
     "præsentation": null | string;
     "øvrigtIndhold": null | string;
+    grupper: Record<string, string[]>;
 }
