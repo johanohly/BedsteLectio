@@ -53,7 +53,7 @@
       }));
 
       module = {
-        homework: moduleData.lektier ? moduleData.lektier.replaceAll("\n", "<br>") : null,
+        homework: moduleData.lektier,
         lesson: {
           class: settings.classNames?.[moduleData.aktivitet.hold ?? ""] ?? moduleData.aktivitet.hold ?? "",
           interval: constructInterval(moduleData.aktivitet.tidspunkt),
@@ -62,7 +62,7 @@
           teacher: moduleData.aktivitet.lærer ?? "",
         },
         note: moduleData.note,
-        otherContent: moduleData.øvrigtIndhold ? moduleData.øvrigtIndhold.replaceAll("\n", "<br>").replaceAll(")", ")<br>") : null,
+        otherContent: moduleData.øvrigtIndhold,
         groups,
         presentation: moduleData.præsentation,
       };
