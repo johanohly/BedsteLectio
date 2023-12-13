@@ -24,7 +24,7 @@
   $: if (!loading && moduleData) {
     try {
       module = {
-        homework: moduleData.lektier,
+        homework: moduleData.lektier ? moduleData.lektier.replaceAll("\n", "<br>") : null,
         lesson: {
           class: settings.classNames?.[moduleData.aktivitet.hold ?? ""] ?? moduleData.aktivitet.hold ?? "",
           interval: constructInterval(moduleData.aktivitet.tidspunkt),
@@ -33,7 +33,7 @@
           teacher: moduleData.aktivitet.lærer ?? "",
         },
         note: moduleData.note,
-        otherContent: moduleData.øvrigtIndhold,
+        otherContent: moduleData.øvrigtIndhold ? moduleData.øvrigtIndhold.replaceAll("\n", "<br>").replaceAll(")", ")<br>") : null,
         presentation: moduleData.præsentation,
       };
     } catch (e) {
@@ -107,13 +107,13 @@
     {#if module.homework}
       <section>
         <h2 class="!mb-0">Lektier</h2>
-        <SvelteMarkdown source={module.homework.replaceAll("\n", "<br>")} renderers={{ link: NewTabLink }} />
+        <SvelteMarkdown source={module.homework} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
     {#if module.otherContent}
       <section>
         <h2 class="!mb-0">Øvrigt Indhold</h2>
-        <SvelteMarkdown source={module.otherContent.replaceAll(")", ")<br>")} renderers={{ link: NewTabLink }} />
+        <SvelteMarkdown source={module.otherContent} renderers={{ link: NewTabLink }} />
       </section>
     {/if}
     {#if module.presentation}
