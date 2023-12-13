@@ -13,4 +13,7 @@ String.prototype.containsAny = function (chars: string[]) {
     return chars.some((char) => this.includes(char));
 }
 
-export {};
+export const decodeHtml = (input: string) => {
+    const doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent ?? input;
+}

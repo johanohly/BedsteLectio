@@ -3,7 +3,7 @@
 
   import { Skeleton } from "$components/ui/skeleton";
   import { authStore } from "$lib/stores";
-  import { constructInterval, relativeTime } from "$lib/utilities";
+  import { constructInterval, decodeHtml, relativeTime } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { ExternalLink } from "lucide-svelte";
   import { DateTime } from "luxon";
@@ -57,7 +57,7 @@
         lesson: {
           class: settings.classNames?.[moduleData.aktivitet.hold ?? ""] ?? moduleData.aktivitet.hold ?? "",
           interval: constructInterval(moduleData.aktivitet.tidspunkt),
-          name: moduleData.aktivitet.navn ?? "",
+          name: decodeHtml(moduleData.aktivitet.navn ?? ""),
           room: moduleData.aktivitet.lokale ?? "",
           teacher: moduleData.aktivitet.lærer ?? "",
         },
