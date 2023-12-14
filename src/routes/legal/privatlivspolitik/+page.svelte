@@ -15,7 +15,7 @@
     <div id="legal-content">
         <section>
             <h1 class="mb-0">Privatlivspolitik</h1>
-            <p class="mt-0">Sidst opdatered: 06/11/2023</p>
+            <p class="mt-0">Sidst opdatered: 14/12/2023</p>
             <p>Velkommen til Bedstelectio. Denne privatlivspolitik beskriver, hvordan vi indsamler, bruger og beskytter dine personlige oplysninger, når du besøger vores hjemmeside eller bruger vores tjenester.</p>
         </section>
         <section>
@@ -24,6 +24,7 @@
             <ul>
                 <li>Lectio konto oplysninger.</li>
                 <li>Preferencer, som selvvalgte holdfarver, tilknyttet til lectio user id.</li>
+                <li>Information om din brug af vores platform, herunder din IP-adresse, browser type og version, operativsystem, geografisk placering, sidevisninger og navigation på webstedet, varighed af besøg, sideinteraktioner og andre oplysninger, der genereres, når du bruger vores platform.</li>
                 <li>Eventuelle frivilligt indsendte oplysninger, når du kontakter vores kundeservice eller deltager i undersøgelser og konkurrencer.</li>
             </ul>
         </section>
@@ -41,6 +42,7 @@
             <p>Vi kan dele dine personlige oplysninger med tredjeparter, herunder:</p>
             <ul>
                 <li>Lectio, som skal vide hvis' info der skal ses.</li>
+                <li>Udbydere af tjenester, der behandler personlige oplysninger på vores vegne, såsom analysevirksomheder, hostingudbydere og andre.</li>
                 <li>Juridiske myndigheder og myndigheder for at overholde love og reguleringer.</li>
             </ul>
         </section>
@@ -50,7 +52,7 @@
         </section>
         <section>
             <h2>Dine rettigheder</h2>
-            <p>Du har visse rettigheder vedrørende dine personlige oplysninger, herunder retten til at anmode om adgang, rettelse, sletning, begrænsning af behandling og dataportabilitet. Du kan også til enhver tid trække dit samtykke tilbage til markedsføringsformål.</p>
+            <p>Du har visse rettigheder vedrørende dine personlige oplysninger, herunder retten til at anmode om adgang, rettelse, sletning, begrænsning af behandling og dataportabilitet.</p>
         </section>
         <section>
             <h2>Kontakt os</h2>
