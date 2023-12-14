@@ -61,7 +61,7 @@
           room: moduleData.aktivitet.lokale ?? "",
           teacher: moduleData.aktivitet.lærer ?? "",
         },
-        note: moduleData.note,
+        note: moduleData.note !== "None" ? moduleData.note : null,
         otherContent: moduleData.øvrigtIndhold,
         groups,
         presentation: moduleData.præsentation,
