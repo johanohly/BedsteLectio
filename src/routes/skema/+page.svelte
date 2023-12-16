@@ -26,6 +26,7 @@
   import { Switch } from "$components/ui/switch";
   import type { Settings } from "$lib/types/settings";
   import posthog from "posthog-js";
+  import { clearAuthStore } from "$lib/utilities/http";
 
   const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
 
@@ -69,16 +70,12 @@
                 },
               }).then((response) => {
                 if (!response.ok) {
-                  $authStore.username = "";
-                  $authStore.password = "";
-                  $authStore.cookie = "";
+                  clearAuthStore();
                   return goto("/log-ind");
                 }
               });
             } else {
-              $authStore.username = "";
-              $authStore.password = "";
-              $authStore.cookie = "";
+              clearAuthStore();
               return goto("/log-ind");
             }
           });
@@ -88,7 +85,7 @@
         }
       }
 
-      posthog.capture("Request data", {"Path": "skema", "Week": start.weekNumber, "Year": start.year})
+      posthog.capture("Request data", { Path: "skema", Week: start.weekNumber, Year: start.year });
 
       if (!loadedSettings) {
         fetch("/api/settings", {
@@ -97,89 +94,51 @@
           },
         }).then((settingsResponse) => {
           if (settingsResponse.ok) {
-            settingsResponse.json().then((data: { customColors: Record<string, string>; classNames: Record<string, string> }) => {
+            settingsResponse.json().then((data: Settings) => {
               customColors = data.customColors;
               classNames = data.classNames;
             });
           }
-
-          response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
-            if (userId.startsWith("S")) {
-              const matches = nameRegex.exec(data.overskrift);
-              if (matches) {
-                userName = matches[1];
-              } else {
-                userName = data.overskrift;
-              }
-            } else {
-              userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
-            }
-            const events = data.moduler.map((lesson) => {
-              const interval = constructInterval(lesson.tidspunkt);
-              const start = interval.start?.toISO() ?? "string";
-              const end = interval.end?.toISO() ?? "string";
-
-              const customColor = customColors?.[lesson.hold ?? ""] ?? "";
-              const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
-              const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
-              const className = classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "";
-
-              return {
-                color: color,
-                textColor: textColor,
-                end,
-                extendedProps: {
-                  cancelled: lesson.status === "aflyst",
-                  description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${className}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
-                },
-                id: lesson.absid,
-                start,
-                title: `${lesson.navn ?? className}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
-                url: `/modul/${lesson.absid}`,
-              };
-            });
-            successCallback(events);
-          });
-        });
-      } else {
-        response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
-          if (userId.startsWith("S")) {
-            const matches = nameRegex.exec(data.overskrift);
-            if (matches) {
-              userName = matches[1];
-            } else {
-              userName = data.overskrift;
-            }
-          } else {
-            userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
-          }
-          const events = data.moduler.map((lesson) => {
-            const interval = constructInterval(lesson.tidspunkt);
-            const start = interval.start?.toISO() ?? "string";
-            const end = interval.end?.toISO() ?? "string";
-
-            const customColor = customColors?.[lesson.hold ?? ""] ?? "";
-            const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
-            const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
-            const className = classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "";
-
-            return {
-              color: color,
-              textColor: textColor,
-              end,
-              extendedProps: {
-                cancelled: lesson.status === "aflyst",
-                description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${className}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
-              },
-              id: lesson.absid,
-              start,
-              title: `${lesson.navn ?? className}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
-              url: `/modul/${lesson.absid}`,
-            };
-          });
-          successCallback(events);
         });
       }
+
+      response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {
+        if (userId.startsWith("S")) {
+          const matches = nameRegex.exec(data.overskrift);
+          if (matches) {
+            userName = matches[1];
+          } else {
+            userName = data.overskrift;
+          }
+        } else {
+          userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
+        }
+        const events = data.moduler.map((lesson) => {
+          const interval = constructInterval(lesson.tidspunkt);
+          const start = interval.start?.toISO() ?? "string";
+          const end = interval.end?.toISO() ?? "string";
+
+          const customColor = customColors?.[lesson.hold ?? ""] ?? "";
+          const color = customColor ? `hsl(${customColor}, 100%, 90%)` : stringToColor(lesson.hold ?? "", 100, 90).string;
+          const textColor = customColor ? `hsl(${customColor}, 100%, 30%)` : stringToColor(lesson.hold ?? "", 100, 30).string;
+          const className = classNames?.[lesson.hold ?? ""] ?? lesson.hold ?? "";
+
+          return {
+            color: color,
+            textColor: textColor,
+            end,
+            extendedProps: {
+              cancelled: lesson.status === "aflyst",
+              description: `${lesson.navn ? `${lesson.navn}<br>` : ""}${lesson.tidspunkt}<br>Hold: ${className}<br>Lærer: ${lesson.lærer}<br>Lokale: ${lesson.lokale}${lesson.andet ? `<br><br>${lesson.andet}` : ""}`,
+            },
+            id: lesson.absid,
+            start,
+            title: `${lesson.navn ?? className}${lesson.lokale ? ` • ${lesson.lokale}` : ""}`,
+            url: `/modul/${lesson.absid}`,
+          };
+        });
+        successCallback(events);
+      });
     });
   };
 

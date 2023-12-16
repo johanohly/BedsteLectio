@@ -7,8 +7,8 @@
   import { constructNonceURL } from "$lib/utilities";
   import { page } from "$app/stores";
   import posthog from "posthog-js";
-  import { decodeUserID } from "$lib/utilities/cookie";
   import type { Settings } from "$lib/types/settings";
+  import { autoLogin, clearAuthStore } from "$lib/utilities/http";
 
   export let path: string;
   export let onServerError = {
@@ -40,41 +40,19 @@
         return goto(onServerError.path);
       }
       if ($authStore.username != "" && $authStore.password != "") {
-        response = await fetch(constructNonceURL("https://api.bedstelectio.dk/auth"), {
-          headers: {
-            adgangskode: $authStore.password,
-            brugernavn: $authStore.username,
-            skoleid: String($authStore.school),
-          },
-        });
-        if (response.ok) {
-          posthog.identify(
-            decodeUserID($authStore.cookie),
-            {},
-            {
-              username: $authStore.username,
-              school: $authStore.school,
-            },
-          );
-          console.log("Succesful auto-login");
-          $authStore.cookie = response.headers.get("set-lectio-cookie") ?? "";
+        const success = await autoLogin();
+        if (success) {
           response = await fetch(constructNonceURL(`https://api.bedstelectio.dk/${path}`), {
             headers: {
               "lectio-cookie": $authStore.cookie,
             },
           });
           if (!response.ok) {
-            console.error("Failed data load after auto-login");
-            $authStore.username = "";
-            $authStore.password = "";
-            $authStore.cookie = "";
+            clearAuthStore();
             return goto(`/log-ind?redirect=${$page.url.pathname}`);
           }
         } else {
-          console.error("Failed auto-login");
-          $authStore.username = "";
-          $authStore.password = "";
-          $authStore.cookie = "";
+          clearAuthStore();
           return goto(`/log-ind?redirect=${$page.url.pathname}`);
         }
       } else {

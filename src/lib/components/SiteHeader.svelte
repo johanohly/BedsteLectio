@@ -10,7 +10,8 @@
   import { goto } from "$app/navigation";
   import { addToast } from "./toaster";
   import { page } from "$app/stores";
-    import posthog from "posthog-js";
+  import posthog from "posthog-js";
+  import { clearAuthStore } from "$lib/utilities/http";
 
   const {
     elements: { arrow, item, menu, trigger },
@@ -18,10 +19,9 @@
   } = createDropdownMenu();
 
   const signOut = () => {
-    $authStore.cookie = "";
-    $authStore.username = "";
-    $authStore.password = "";
+    clearAuthStore();
     goto("/log-ind", { replaceState: true });
+
     addToast({
       data: {
         title: "Du er nu logget ud",

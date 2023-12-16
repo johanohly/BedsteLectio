@@ -3,6 +3,8 @@
   import { addToast } from "$components/toaster";
   import { Confirm } from "$components/ui/confirm";
   import { authStore } from "$lib/stores";
+  import { clearAuthStore } from "$lib/utilities/http";
+  import posthog from "posthog-js";
   import { get } from "svelte/store";
 
   let cookie = get(authStore).cookie;
@@ -23,9 +25,7 @@
         },
       });
     } else {
-      $authStore.cookie = "";
-      $authStore.username = "";
-      $authStore.password = "";
+      clearAuthStore();
       goto("/log-ind", { replaceState: true });
 
       addToast({
@@ -35,6 +35,7 @@
           color: "bg-green-500",
         },
       });
+      posthog.reset();
     }
   };
 </script>
