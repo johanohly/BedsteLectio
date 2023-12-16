@@ -94,7 +94,7 @@
         <h1 class="!mb-0">{assignment.title} ({assignment.class})</h1>
         <a class="flex items-center h-8 px-3 rounded-[6px] no-underline bg-dark hover:bg-dark-hover dark:bg-light dark:hover:bg-light-hover text-white dark:text-black" href={`https://www.lectio.dk/lectio/${$authStore.school}/ElevAflevering.aspx?exerciseid=${data.id}&elevid=${decodeUserID($authStore.cookie)}`} target="_blank">Lectio <ExternalLink class="ml-2 h-4 w-4" /></a>
       </div>
-      <p class="!mt-0 !mb-0">{assignment.description}</p>
+      <SvelteMarkdown source={assignment.description} renderers={{ link: NewTabLink }} />
       {#if assignment.details}
         <h3 class="!mt-1 !mb-0">Opgavebeskrivelse</h3>
         <SvelteMarkdown source={assignment.details} renderers={{ link: NewTabLink }} />

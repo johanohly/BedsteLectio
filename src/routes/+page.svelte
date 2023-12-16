@@ -21,7 +21,7 @@
   let loading = true;
   let data: {
     aktuelt: RawNews[];
-    eksamener: { link: string; navn: string, dato: string }[];
+    eksamener: { link: string; navn: string; dato: string }[];
     kommunikation: {
       beskeder: RawSimpleMessage[];
       dokumenter: RawSimpleDocument[];
@@ -71,7 +71,7 @@
         description: item.text.replaceAll("@", "@<!-- -->"), // Without this, the email gets obfuscated with random hex characters. https://github.com/github/markup/issues/1168
       };
     });
-    if (data.eksamener.length > 0) news.unshift({ description: `**Eksamener** \n\n ${data.eksamener.map((item) => `[${translateExamName(item.navn, classNames)}](${item.link}) ${constructInterval(item.dato).start?.toRelative()}`).join("\n")}` });
+    if (data.eksamener.length > 0) news.unshift({ description: `**Eksamener** \n\n ${data.eksamener.map((item) => `[${translateExamName(item.navn, classNames)}](${item.link}) ${constructInterval(item.dato).start?.toRelative()}`).join("\n\n")}` });
 
     messages = data.kommunikation.beskeder.map((message) => {
       return {
@@ -96,12 +96,12 @@
     });
   }
 
-  $: if (!hwLoading && hwData) {
+  $: if (!hwLoading && hwData && !loading) {
     homework = hwData.map((item) => ({
       homework: item.lektier,
       lesson: {
         id: item.aktivitet.absid,
-        class: item.aktivitet.hold ?? "",
+        class: settings.classNames?.[item.aktivitet.hold ?? ""] ?? item.aktivitet.hold ?? "",
         name: item.aktivitet.navn ?? "",
         interval: constructInterval(item.aktivitet.tidspunkt),
       },
@@ -193,15 +193,14 @@
           {#each homework as hwItem}
             <a class="no-underline flex items-center space-x-4 hover:bg-gray-100 dark:hover:bg-dark-hover hover:rounded-2xl px-4" href="/modul/{hwItem.lesson.id}" target="_blank">
               <div class="flex-1 min-w-0">
-                <p class="text-md font-semibold text-gray-900 truncate dark:text-white">
+                <p class="mb-0 text-md font-semibold text-gray-900 truncate dark:text-white">
                   {hwItem.lesson.name != "" ? hwItem.lesson.name : hwItem.lesson.class}
                 </p>
-                <!-- <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                  {hwItem.homework}
-                </p> -->
-                <SvelteMarkdown source={hwItem.homework} renderers={{ link: NewTabLink }} />
+                <div class="!m-0">
+                  <SvelteMarkdown source={hwItem.homework} renderers={{ link: NewTabLink }} />
+                </div>
 
-                <p use:relativeTime={(hwItem.lesson.interval.start ?? DateTime.now()).toJSDate()} class="text-sm text-gray-500 truncate dark:text-gray-400" />
+                <p use:relativeTime={(hwItem.lesson.interval.start ?? DateTime.now()).toJSDate()} class="mt-0 text-sm text-gray-500 truncate dark:text-gray-400" />
               </div>
             </a>
           {/each}
