@@ -1,5 +1,6 @@
 <script lang="ts">
     import { RequestData } from "$components";
+    import { Skeleton } from "$components/ui/skeleton";
     import { authStore } from "$lib/stores";
     import type { DocumentItem, RawDocumentItem } from "$lib/types/documents";
     import { getFileIcon } from "$lib/utilities";
@@ -69,9 +70,9 @@
 {/if}
 
 <div class="page-container">
-    {#if (!initialLoading || !folderLoading) && items.length}
-        <h1>{folderTitle ? folderTitle : "Dokumenter"}</h1>
-        <div class="bg-white dark:bg-dark border-[1px] rounded-md">
+    <h1>{folderTitle ? folderTitle : "Dokumenter"}</h1>
+    <div class="bg-white dark:bg-dark border-[1px] rounded-md">
+        {#if (!initialLoading || !folderLoading) && items.length}
             {#each items as item, i}
                 {#if item.type === "folder"}
                     <div
@@ -117,8 +118,10 @@
                     </a>
                 {/if}
             {/each}
-        </div>
-    {:else}
-        <p>Loading...</p>
-    {/if}
+        {:else}
+            {#each Array(6) as _, i}
+                <Skeleton class="w-full h-[45px] hover:bg-light dark:hover:bg-dark-hover relative flex p-4 py-2 rounded-none {i != 0 ? (i != 6 - 1 ? 'border-t-[1px]' : 'border-t-[1px] rounded-b-md') : 'rounded-t-md'}" />
+            {/each}
+        {/if}
+    </div>
 </div>

@@ -31,23 +31,16 @@
   <div class="flex flex-col">
     <h1>Spørgeskemaer</h1>
     {#if loading}
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px] mb-4" />
-      <Skeleton class="w-full h-36 rounded-[10px]" />
+      {#each Array(10) as _, i}
+        <Skeleton class="w-full h-36 rounded-[10px] {i !== 10 - 1 ? 'mb-4' : ''}" />
+      {/each}
     {:else if filteredForms.length}
       {#each filteredForms as form}
         <div class="not-prose">
           <a href={`/spørgeskema/${form.id}`}>
             <Card class="mb-4">
               <CardHeader>
-                <CardTitle>{form.title}<span class="hidden lg:block text-sm font-medium ml-2 px-2.5 py-0.5 rounded {form.anonymous ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"}">{form.anonymous ? "Anonym" : "Ikke Anonym"}</span></CardTitle>
+                <CardTitle>{form.title}<span class="hidden lg:block text-sm font-medium ml-2 px-2.5 py-0.5 rounded {form.anonymous ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'}">{form.anonymous ? "Anonym" : "Ikke Anonym"}</span></CardTitle>
                 <CardDescription>{form.owner}</CardDescription>
               </CardHeader>
               <CardFooter>
