@@ -88,7 +88,7 @@
     <div class="flex justify-between">
         <h1>Lokaler</h1>
         <div>
-            <Input bind:value={$filterValue} disabled={loading} placeholder="Søg efter personer..." />
+            <Input bind:value={$filterValue} disabled={loading} placeholder="Søg efter lokaler..." />
         </div>
     </div>
     {#if loading}
