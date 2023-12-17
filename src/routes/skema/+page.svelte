@@ -28,7 +28,7 @@
   import posthog from "posthog-js";
   import { clearAuthStore } from "$lib/utilities/http";
 
-  const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/gm;
+  const nameRegex = /^(?:[\w]+) (.*)(?:,.*)/;
 
   let userId: string;
   let searchId: string;
@@ -113,6 +113,7 @@
         } else {
           userName = data.overskrift.replace("Lokalet ", "").replace(" - Skema", "");
         }
+
         const events = data.moduler.map((lesson) => {
           const interval = constructInterval(lesson.tidspunkt);
           const start = interval.start?.toISO() ?? "string";
@@ -152,13 +153,13 @@
     searchId = $page.url.searchParams.get("id") ?? "";
     const meId = `S${decodeUserID($authStore.cookie)}`;
     if (searchId) {
-      if (searchId.length == 12 && (searchId.startsWith("S") || searchId.startsWith("T") || searchId.startsWith("H") || searchId.startsWith("R")) && !isNaN(Number(searchId.slice(1)))) {
+      if (searchId.length == 12 && (searchId.startsWith("S") || searchId.startsWith("T") || searchId.startsWith("H") || searchId.startsWith("R")) && !isNaN(+searchId.slice(1))) {
         userId = searchId;
       } else {
         addToast({
           data: {
             title: "Ugyldigt ID",
-            description: "Det ID du har indtastet er ugyldigt. Viser eget skema.",
+            description: "Det ID du har indtastet er ugyldigt. Eget skema vises.",
             color: "bg-red-500",
           },
         });
