@@ -187,7 +187,7 @@
         </a>
       </div>
       <div class="block overflow-y-auto">
-        {#if hwLoading}
+        {#if hwLoading || loading}
           loading
         {:else if homework.length > 0}
           {#each homework as hwItem}
