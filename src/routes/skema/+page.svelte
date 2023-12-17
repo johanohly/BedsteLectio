@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { RawLesson } from "$lib/types/lesson";
 
-  import { authStore, calendarStore } from "$lib/stores";
+  import { SETTINGS_CACHE_DURATION, authStore, calendarStore, settingsStore } from "$lib/stores";
   import { constructInterval, constructNonceURL, nameBlacklisted, stringToColor } from "$lib/utilities";
   import { decodeUserID } from "$lib/utilities/cookie";
   import { Calendar, type EventSourceFunc } from "@fullcalendar/core";
@@ -88,18 +88,32 @@
       posthog.capture("Request data", { Path: "skema", Week: start.weekNumber, Year: start.year });
 
       if (!loadedSettings) {
-        fetch("/api/settings", {
-          headers: {
-            "lectio-cookie": $authStore.cookie,
-          },
-        }).then((settingsResponse) => {
-          if (settingsResponse.ok) {
-            settingsResponse.json().then((data: Settings) => {
-              customColors = data.customColors;
-              classNames = data.classNames;
+        if (!$settingsStore.age || ($settingsStore.age && Math.abs(DateTime.fromISO($settingsStore.age).diffNow().as("days")) > SETTINGS_CACHE_DURATION)) {
+          fetch("/api/settings", {
+            headers: {
+              "lectio-cookie": $authStore.cookie,
+            },
+          }).then((settingsResponse) => {
+            if (settingsResponse.ok) {
+              settingsResponse.json().then((data: Settings) => {
+                customColors = data.customColors;
+                classNames = data.classNames;
+              });
+            }
+            settingsStore.set({
+              age: DateTime.now().toISO(),
+              settings: {
+                customColors,
+                classNames,
+              },
             });
-          }
-        });
+          });
+        } else {
+          const settings = $settingsStore.settings;
+          customColors = settings.customColors;
+          classNames = settings.classNames;
+        }
+        loadedSettings = true;
       }
 
       response.json().then((data: { moduler: RawLesson[]; overskrift: string }) => {

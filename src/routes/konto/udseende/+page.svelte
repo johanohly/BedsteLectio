@@ -4,7 +4,7 @@
     import { Select } from "$components/ui/assignableselect";
     import { Button } from "$components/ui/button";
     import { ColorPicker, isColorValid } from "$components/ui/colorpicker";
-    import { authStore } from "$lib/stores";
+    import { authStore, settingsStore } from "$lib/stores";
     import type { Settings } from "$lib/types/settings";
     import { ArrowDownToLine, Loader2, X } from "lucide-svelte";
 
@@ -48,6 +48,7 @@
                 },
             });
         } else {
+            $settingsStore.settings.customColors = Object.fromEntries(customColors.map((entry) => [entry.class, entry.color]));
             addToast({
                 data: {
                     title: "Succes",
@@ -171,6 +172,7 @@
                 },
             });
         } else {
+            $settingsStore.settings.classNames = Object.fromEntries(classNames.map((entry) => [entry.class.name, entry.name]));
             addToast({
                 data: {
                     title: "Succes",
