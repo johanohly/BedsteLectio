@@ -9,7 +9,7 @@
   import posthog from "posthog-js";
   import type { Settings } from "$lib/types/settings";
   import { autoLogin, clearAuthStore } from "$lib/utilities/http";
-    import { DateTime } from "luxon";
+  import { DateTime } from "luxon";
 
   export let path: string;
   export let onServerError = {
