@@ -3,7 +3,7 @@ import { writable, type Writable } from "svelte/store";
 import { localStorageStore } from "./utilities";
 import type { Settings } from "./types/settings";
 
-export const authStore = localStorageStore("auth", {
+export const authStore: Writable<{ cookie: string; lastLogin: string | null; password: string; school: number; username: string }> = localStorageStore("auth", {
     cookie: "",
     lastLogin: null,
     password: "",

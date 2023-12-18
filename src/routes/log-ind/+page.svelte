@@ -160,14 +160,14 @@
             <span>Gem Skole</span>
             <span class="font-normal leading-snug text-muted-foreground"> Gem skolen, så du ikke behøver at vælge den næste gang du logger ind. </span>
           </Label>
-          <Switch bind:checked={saveSchool} disabled={saveCredentials} name="Gem Skole" id="save-school" />
+          <Switch bind:checked={saveSchool} disabled={saveCredentials} title="Gem Skole" id="save-school" />
         </div>
         <div class="mt-4 flex items-center justify-between space-x-2">
           <Label class="flex flex-col space-y-1" for="save-credentials">
             <span>Gem Oplysninger</span>
             <span class="font-normal leading-snug text-muted-foreground"> Gem dine oplysninger i din browser, så du aldrig behøves at logge ind igen. </span>
           </Label>
-          <Switch bind:checked={saveCredentials} name="Gem Oplysninger" id="save-credentials" />
+          <Switch bind:checked={saveCredentials} title="Gem Oplysninger" id="save-credentials" />
         </div>
       </CardContent>
       <CardFooter>
